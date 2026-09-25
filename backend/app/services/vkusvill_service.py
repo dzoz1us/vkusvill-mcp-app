@@ -249,6 +249,12 @@ async def match_ingredient(
         existing.last_checked_at = datetime.now(timezone.utc)
         db.flush()
 
+        logger.info(
+        "MATCH ingredient=%r query=%r status=%s score=%.2f candidate=%r",
+        ingredient.name, query, status, score,
+        best.name if best else None,
+    )
+        
     return MatchResult(
         ingredient_id=ingredient.id,
         ingredient_name=ingredient.name,

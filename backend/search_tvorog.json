@@ -1,0 +1,9 @@
+{
+  "jsonrpc": "2.0",
+  "id": 10,
+  "method": "tools/call",
+  "params": {
+    "name": "vkusvill_products_search",
+    "arguments": {"q": "творог", "mode": "custom", "fields": ["id","xml_id","name","price","weight","unit","url"], "vvonly": 1}
+  }
+}

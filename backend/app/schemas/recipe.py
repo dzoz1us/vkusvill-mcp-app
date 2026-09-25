@@ -35,6 +35,7 @@ class RecipeShort(BaseModel):
     id: str
     name: str
     image_url: str | None = None
+    meal_type: str | None = None
     cook_time_minutes: int = Field(..., ge=0)
     servings: int = Field(..., ge=1)
     nutrition: NutritionInfo | None = None

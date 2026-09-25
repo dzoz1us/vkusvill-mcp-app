@@ -93,3 +93,23 @@ def test_different_seed_can_produce_different_plan(seeded):
     slots_b = [(m.day, m.meal_type, m.recipe_id) for m in b.meals]
     # With 25+ recipes and 6 slots, different seeds will practically always differ.
     assert slots_a != slots_b
+
+
+def test_breakfast_slot_uses_breakfast_recipes(seeded):
+    """Recipes assigned to breakfast must have meal_type breakfast or any."""
+    plan = generate_plan(seeded, _req(days=["mon", "tue", "wed"]))
+    for meal in plan.meals:
+        if meal.meal_type == "breakfast":
+            recipe = seeded.get(Recipe, meal.recipe_id)
+            assert recipe.meal_type in (None, "any", "breakfast"), (
+                f"breakfast slot got recipe {recipe.name!r} "
+                f"with meal_type={recipe.meal_type!r}"
+            )
+
+
+def test_dinner_slot_uses_dinner_recipes(seeded):
+    plan = generate_plan(seeded, _req(days=["mon", "tue", "wed"]))
+    for meal in plan.meals:
+        if meal.meal_type == "dinner":
+            recipe = seeded.get(Recipe, meal.recipe_id)
+            assert recipe.meal_type in (None, "any", "dinner")

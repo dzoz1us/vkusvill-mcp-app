@@ -15,6 +15,7 @@
 import type {
   CartResponse,
   GenerateRequest,
+  GroceryItem,
   GroceryList,
   MealPlan,
   Recipe,
@@ -104,8 +105,8 @@ export const api = {
     );
   },
 
-  updateGroceryItem(itemId: string, isBought: boolean): Promise<{ success: boolean }> {
-    return request<{ success: boolean }>(
+  updateGroceryItem(itemId: string, isBought: boolean): Promise<GroceryItem> {
+    return request<GroceryItem>(
       `/api/grocery-items/${encodeURIComponent(itemId)}`,
       {
         method: 'PATCH',

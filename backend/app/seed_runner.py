@@ -80,6 +80,7 @@ def seed_recipes(db: Session, ingredients: dict[str, Ingredient]) -> int:
         recipe.fat = item.get("fat")
         recipe.carbs = item.get("carbs")
         recipe.diet = item.get("diet", "none")
+        recipe.meal_type = item.get("meal_type")
         recipe.steps = json.dumps(item.get("steps", []), ensure_ascii=False)
 
         # reset relationships so re-runs are idempotent

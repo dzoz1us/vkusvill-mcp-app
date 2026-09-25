@@ -70,7 +70,9 @@ _CONFLICT_TOKENS = {
 
 
 def _tokens(text: str) -> set[str]:
-    return set(re.findall(r"[а-яёa-z0-9]+", text.lower()))
+    # normalize ё -> е so "мёд" matches "мед" from MCP
+    normalized = text.lower().replace("ё", "е")
+    return set(re.findall(r"[а-яa-z0-9]+", normalized))
 
 
 def normalize_ingredient_query(name: str) -> str:
@@ -82,10 +84,11 @@ def normalize_ingredient_query(name: str) -> str:
     "помидоры черри свежие"        -> "помидоры черри"
     "лук репчатый крупный"          -> "лук репчатый"
     """
-    tokens = name.lower().split()
+    normalized = name.lower().replace("ё", "е")
+    tokens = normalized.split()
     filtered = [t for t in tokens if t not in _NOISE_TOKENS]
     query = " ".join(filtered).strip()
-    return query or name.lower()
+    return query or normalized
 
 
 def score_candidate(

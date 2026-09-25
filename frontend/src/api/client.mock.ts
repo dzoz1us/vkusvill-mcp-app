@@ -280,9 +280,20 @@ export const api = {
     return generateGroceryList(plan);
   },
 
-  async updateGroceryItem(itemId: string, isBought: boolean): Promise<{ success: boolean }> {
+  async updateGroceryItem(itemId: string, isBought: boolean): Promise<GroceryItem> {
     await delay(300);
-    return { success: true };
+    return {
+      id: itemId,
+      product_name: 'Мок-товар',
+      needed_quantity: 1,
+      needed_unit: 'pcs',
+      package_quantity: 1,
+      package_count: 1,
+      price_per_package: 0,
+      match_status: 'matched',
+      is_bought: isBought,
+      ingredient_id: null,
+    };
   },
 
   async createVkusvillCart(planId: string): Promise<CartResponse> {

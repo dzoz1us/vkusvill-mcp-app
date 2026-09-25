@@ -5,6 +5,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
 
+from app.models.ingredient import Ingredient  # noqa: F401
+
 
 class Recipe(Base):
     __tablename__ = "recipes"
@@ -23,6 +25,10 @@ class Recipe(Base):
     carbs: Mapped[float | None] = mapped_column(Float, nullable=True)
 
     diet: Mapped[str] = mapped_column(String(30), nullable=False, default="none")
+
+    meal_type: Mapped[str | None] = mapped_column(
+        String(20), nullable=True
+    )  # breakfast | lunch | dinner | any
 
     # JSON-encoded list of step strings.
     steps: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -77,6 +83,7 @@ class RecipeIngredient(Base):
     unit: Mapped[str] = mapped_column(String(20), nullable=False)
 
     recipe: Mapped["Recipe"] = relationship(back_populates="ingredients")
+    ingredient: Mapped["Ingredient"] = relationship()
 
 
 class RecipeTag(Base):

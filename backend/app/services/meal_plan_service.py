@@ -78,26 +78,41 @@ def _select_recipes(
     candidates: list[Recipe],
     request: GenerateRequest,
 ) -> list[Recipe]:
-    """Sort by score desc, break ties by id, then shuffle deterministically.
-
-    If there are fewer recipes than needed slots, the pool is cycled.
+    """For each (day, meal_type) slot, pick the best-scored recipe that
+    matches the slot type (or is universal "any"). Deterministic with seed.
     """
-    scored = [
-        ScoredRecipe(recipe=r, score=_score(r, request.preferences))
-        for r in candidates
-    ]
-    scored.sort(key=lambda x: (-x.score, x.recipe.id))
-
-    pool = [s.recipe for s in scored]
     rng = random.Random(request.random_seed)
-    rng.shuffle(pool)
 
-    slots_needed = len(request.days) * MEALS_PER_DAY
-    if not pool:
-        return []
-    if len(pool) < slots_needed:
-        return [pool[i % len(pool)] for i in range(slots_needed)]
-    return pool[:slots_needed]
+    def pool_for(meal_type: MealType) -> list[Recipe]:
+        eligible = [
+            r
+            for r in candidates
+            if (r.meal_type in (None, "any", meal_type.value))
+        ]
+        if not eligible:
+            # fallback: if a recipe pool is empty, allow all
+            eligible = list(candidates)
+        scored = sorted(
+            eligible,
+            key=lambda r: (-_score(r, request.preferences), r.id),
+        )
+        rng.shuffle(scored)  # type: ignore[arg-type]
+        # stable sort by score, keeping shuffle within equal score
+        scored.sort(key=lambda r: -_score(r, request.preferences))
+        return scored
+
+    pools = {mt: pool_for(mt) for mt in MEAL_TYPE_ORDER}
+    idx = {mt: 0 for mt in MEAL_TYPE_ORDER}
+
+    selected: list[Recipe] = []
+    for _day in request.days:
+        for meal_type in MEAL_TYPE_ORDER:
+            pool = pools[meal_type]
+            if idx[meal_type] >= len(pool):
+                idx[meal_type] = 0  # cycle if we run out
+            selected.append(pool[idx[meal_type]])
+            idx[meal_type] += 1
+    return selected
 
 
 def generate_plan(db: Session, request: GenerateRequest) -> MealPlan:

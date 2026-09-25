@@ -1,0 +1,14 @@
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "method": "tools/call",
+  "params": {
+    "name": "vkusvill_cart_link_create",
+    "arguments": {
+      "products": [
+        {"xml_id": 17525, "q": 1},
+        {"xml_id": 173, "q": 2}
+      ]
+    }
+  }
+}

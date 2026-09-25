@@ -71,6 +71,7 @@ class VkusVillMCPClient:
         timeout = httpx.Timeout(self.timeout_ms / 1000.0)
 
         try:
+            logger.info("MCP -> %s id=%d params=%s", method, self._request_id, params)
             async with httpx.AsyncClient(
                 timeout=timeout, transport=self._transport
             ) as client:
@@ -104,7 +105,9 @@ class VkusVillMCPClient:
             ) from e
 
         if "error" in data:
+            logger.error("MCP <- error: %s", data["error"])
             raise MCPBadResponseError(f"MCP error: {data['error']}")
+        logger.info("MCP <- %s id=%d ok", method, self._request_id)
 
         return data.get("result")
 

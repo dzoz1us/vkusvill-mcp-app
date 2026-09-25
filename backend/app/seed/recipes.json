@@ -2,6 +2,7 @@
   {
     "name": "Овсянка с ягодами и мёдом",
     "description": "Быстрый и полезный завтрак",
+    "meal_type": "breakfast",
     "servings": 2,
     "cook_time_minutes": 10,
     "calories": 320, "protein": 10, "fat": 6, "carbs": 55,
@@ -23,6 +24,7 @@
   {
     "name": "Сырники со сметаной",
     "description": "Классические сырники на завтрак",
+    "meal_type": "breakfast",
     "servings": 2,
     "cook_time_minutes": 25,
     "calories": 480, "protein": 28, "fat": 20, "carbs": 45,
@@ -47,6 +49,7 @@
   {
     "name": "Омлет с овощами",
     "description": "Пышный омлет с помидорами и перцем",
+    "meal_type": "breakfast",
     "servings": 2,
     "cook_time_minutes": 15,
     "calories": 290, "protein": 18, "fat": 20, "carbs": 8,
@@ -70,6 +73,7 @@
   {
     "name": "Творожная запеканка",
     "description": "Нежная запеканка из творога",
+    "meal_type": "breakfast",
     "servings": 4,
     "cook_time_minutes": 45,
     "calories": 260, "protein": 20, "fat": 10, "carbs": 22,
@@ -94,6 +98,7 @@
   {
     "name": "Гречка с молоком",
     "description": "Простая и сытная каша",
+    "meal_type": "breakfast",
     "servings": 2,
     "cook_time_minutes": 25,
     "calories": 340, "protein": 12, "fat": 8, "carbs": 55,
@@ -114,32 +119,31 @@
     ]
   },
   {
-    "name": "Шарлотка с яблоками",
-    "description": "Классический яблочный пирог",
-    "servings": 6,
-    "cook_time_minutes": 55,
-    "calories": 220, "protein": 5, "fat": 6, "carbs": 38,
+    "name": "Банановый смузи с овсянкой",
+    "description": "Питательный завтрак за 5 минут",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 5,
+    "calories": 280, "protein": 8, "fat": 5, "carbs": 55,
     "diet": "vegetarian",
-    "tags": ["family", "budget"],
-    "appliances": ["oven"],
+    "tags": ["quick", "healthy", "budget"],
+    "appliances": ["blender"],
     "ingredients": [
-      {"normalized_name": "яйца", "quantity": 4, "unit": "pcs"},
-      {"normalized_name": "сахар", "quantity": 150, "unit": "g"},
-      {"normalized_name": "мука пшеничная", "quantity": 180, "unit": "g"},
-      {"normalized_name": "яблоки", "quantity": 4, "unit": "pcs"},
-      {"normalized_name": "масло сливочное", "quantity": 20, "unit": "g"}
+      {"normalized_name": "бананы", "quantity": 3, "unit": "pcs"},
+      {"normalized_name": "овсяные хлопья", "quantity": 60, "unit": "g"},
+      {"normalized_name": "молоко", "quantity": 300, "unit": "ml"},
+      {"normalized_name": "мёд", "quantity": 20, "unit": "g"}
     ],
     "steps": [
-      "Разогреть духовку до 180°C.",
-      "Взбить яйца с сахаром до пышной массы.",
-      "Аккуратно вмешать муку.",
-      "Нарезать яблоки, выложить в форму, залить тестом.",
-      "Запекать 40 минут."
+      "Сложить все ингредиенты в блендер.",
+      "Взбить до однородной массы.",
+      "Подавать охлаждённым."
     ]
   },
   {
     "name": "Курица с рисом и овощами",
     "description": "Домашнее блюдо на каждый день",
+    "meal_type": "lunch",
     "servings": 2,
     "cook_time_minutes": 40,
     "calories": 520, "protein": 35, "fat": 12, "carbs": 65,
@@ -164,6 +168,7 @@
   {
     "name": "Паста болоньезе",
     "description": "Спагетти с мясным соусом",
+    "meal_type": "dinner",
     "servings": 2,
     "cook_time_minutes": 40,
     "calories": 620, "protein": 30, "fat": 20, "carbs": 75,
@@ -190,6 +195,7 @@
   {
     "name": "Плов с курицей",
     "description": "Рассыпчатый плов по-домашнему",
+    "meal_type": "lunch",
     "servings": 4,
     "cook_time_minutes": 60,
     "calories": 580, "protein": 28, "fat": 18, "carbs": 78,
@@ -215,6 +221,7 @@
   {
     "name": "Греческий салат с курицей",
     "description": "Свежий салат с курицей и сыром",
+    "meal_type": "any",
     "servings": 2,
     "cook_time_minutes": 25,
     "calories": 380, "protein": 32, "fat": 18, "carbs": 18,
@@ -240,6 +247,7 @@
   {
     "name": "Борщ с говядиной",
     "description": "Наваристый борщ",
+    "meal_type": "lunch",
     "servings": 4,
     "cook_time_minutes": 90,
     "calories": 320, "protein": 22, "fat": 12, "carbs": 30,
@@ -267,6 +275,7 @@
   {
     "name": "Ризотто с грибами",
     "description": "Кремовое ризотто с шампиньонами",
+    "meal_type": "lunch",
     "servings": 2,
     "cook_time_minutes": 40,
     "calories": 480, "protein": 14, "fat": 16, "carbs": 70,
@@ -293,6 +302,7 @@
   {
     "name": "Куриная грудка с гречкой",
     "description": "Диетическое блюдо для спортсменов",
+    "meal_type": "any",
     "servings": 2,
     "cook_time_minutes": 35,
     "calories": 450, "protein": 42, "fat": 10, "carbs": 50,
@@ -316,6 +326,7 @@
   {
     "name": "Запечённый лосось с брокколи",
     "description": "Лёгкое и полезное блюдо",
+    "meal_type": "dinner",
     "servings": 2,
     "cook_time_minutes": 35,
     "calories": 420, "protein": 38, "fat": 22, "carbs": 12,
@@ -340,6 +351,7 @@
   {
     "name": "Котлеты с пюре",
     "description": "Домашние котлеты с картофельным пюре",
+    "meal_type": "dinner",
     "servings": 4,
     "cook_time_minutes": 50,
     "calories": 620, "protein": 28, "fat": 28, "carbs": 60,
@@ -367,6 +379,7 @@
   {
     "name": "Рыбные котлеты с рисом",
     "description": "Лёгкие котлеты из лосося",
+    "meal_type": "dinner",
     "servings": 4,
     "cook_time_minutes": 50,
     "calories": 480, "protein": 30, "fat": 16, "carbs": 55,
@@ -391,6 +404,7 @@
   {
     "name": "Тушёная капуста с курицей",
     "description": "Бюджетное и сытное блюдо",
+    "meal_type": "dinner",
     "servings": 4,
     "cook_time_minutes": 60,
     "calories": 340, "protein": 28, "fat": 12, "carbs": 25,
@@ -415,6 +429,7 @@
   {
     "name": "Паста карбонара",
     "description": "Классическая итальянская паста",
+    "meal_type": "dinner",
     "servings": 2,
     "cook_time_minutes": 25,
     "calories": 680, "protein": 26, "fat": 30, "carbs": 75,
@@ -439,6 +454,7 @@
   {
     "name": "Куриный суп с лапшой",
     "description": "Домашний суп с курицей",
+    "meal_type": "lunch",
     "servings": 4,
     "cook_time_minutes": 60,
     "calories": 260, "protein": 22, "fat": 8, "carbs": 25,
@@ -464,6 +480,7 @@
   {
     "name": "Стейк из индейки с салатом",
     "description": "Лёгкое диетическое блюдо",
+    "meal_type": "dinner",
     "servings": 2,
     "cook_time_minutes": 30,
     "calories": 380, "protein": 40, "fat": 15, "carbs": 15,
@@ -488,6 +505,7 @@
   {
     "name": "Овощное рагу",
     "description": "Овощное рагу с картофелем",
+    "meal_type": "any",
     "servings": 4,
     "cook_time_minutes": 45,
     "calories": 220, "protein": 6, "fat": 8, "carbs": 32,
@@ -513,6 +531,7 @@
   {
     "name": "Салат Цезарь с курицей",
     "description": "Классический салат с курицей",
+    "meal_type": "any",
     "servings": 2,
     "cook_time_minutes": 25,
     "calories": 420, "protein": 35, "fat": 22, "carbs": 20,
@@ -538,6 +557,7 @@
   {
     "name": "Томатный суп с базиликом",
     "description": "Ароматный суп из помидоров",
+    "meal_type": "lunch",
     "servings": 4,
     "cook_time_minutes": 40,
     "calories": 180, "protein": 6, "fat": 8, "carbs": 22,
@@ -559,29 +579,9 @@
     ]
   },
   {
-    "name": "Банановый смузи с овсянкой",
-    "description": "Питательный завтрак за 5 минут",
-    "servings": 2,
-    "cook_time_minutes": 5,
-    "calories": 280, "protein": 8, "fat": 5, "carbs": 55,
-    "diet": "vegetarian",
-    "tags": ["quick", "healthy", "budget"],
-    "appliances": ["blender"],
-    "ingredients": [
-      {"normalized_name": "бананы", "quantity": 3, "unit": "pcs"},
-      {"normalized_name": "овсяные хлопья", "quantity": 60, "unit": "g"},
-      {"normalized_name": "молоко", "quantity": 300, "unit": "ml"},
-      {"normalized_name": "мёд", "quantity": 20, "unit": "g"}
-    ],
-    "steps": [
-      "Сложить все ингредиенты в блендер.",
-      "Взбить до однородной массы.",
-      "Подавать охлаждённым."
-    ]
-  },
-  {
     "name": "Рис с овощами",
     "description": "Простое вегетарианское блюдо",
+    "meal_type": "any",
     "servings": 2,
     "cook_time_minutes": 30,
     "calories": 380, "protein": 8, "fat": 10, "carbs": 65,
