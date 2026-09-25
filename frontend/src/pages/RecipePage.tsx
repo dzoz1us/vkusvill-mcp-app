@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../api/client';
 import type { Recipe } from '../types';
-import { ArrowLeft, Clock, Users, Flame, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Clock, Users, Flame } from 'lucide-react';
+import IngredientItem from '../components/IngredientItem';
 
 export default function RecipePage() {
   const { id } = useParams<{ id: string }>();
@@ -119,14 +120,9 @@ export default function RecipePage() {
         {/* Ingredients */}
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
           <h3 className="font-bold text-gray-900 mb-4">Ингредиенты</h3>
-          <div className="space-y-3">
+          <div className="space-y-1">
             {recipe.ingredients.map((ing, i) => (
-              <div key={i} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
-                <span className="text-gray-700">{ing.name}</span>
-                <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-lg">
-                  {ing.quantity} {ing.unit}
-                </span>
-              </div>
+              <IngredientItem key={i} ingredient={ing} />
             ))}
           </div>
         </div>

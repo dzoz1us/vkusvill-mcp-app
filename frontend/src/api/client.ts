@@ -6,9 +6,10 @@ import type {
   CartResponse,
   ReplaceMealResponse,
   GroceryItem,
-  DayMeal,
   Ingredient,
+  DayMeal,
 } from '../types';
+import { API_ENDPOINTS } from '../utils/api-config';
 
 // Simulate network delay
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -150,7 +151,6 @@ function generateGroceryList(plan: MealPlan): GroceryList {
     });
   });
 
-  const statuses: ('matched' | 'requires_review' | 'not_found')[] = ['matched', 'matched', 'matched', 'requires_review', 'not_found'];
   let totalCost = 0;
   let matchedCount = 0;
   let reviewCount = 0;
@@ -196,19 +196,19 @@ function generateGroceryList(plan: MealPlan): GroceryList {
 }
 
 // API Client
+// NOTE: In production, replace mock implementations with actual fetch/axios calls
+// using API_ENDPOINTS from utils/api-config.ts
 export const api = {
   async generateMealPlan(request: GenerateRequest): Promise<MealPlan> {
-    await delay(2500); // Simulate generation time
+    await delay(2500);
     return generateMealPlan(request);
   },
 
   async getMealPlan(id: string): Promise<MealPlan> {
     await delay(500);
-    // Return a stored plan from localStorage or generate mock
     const stored = localStorage.getItem(`meal-plan-${id}`);
     if (stored) return JSON.parse(stored);
     
-    // Generate a default plan for demo
     return generateMealPlan({
       people_count: 2,
       days: ['mon', 'tue', 'wed', 'thu', 'fri'],
@@ -292,7 +292,6 @@ export const api = {
         items_count: itemCount,
       });
     } else {
-      // Split into multiple carts
       let remaining = itemCount;
       let cartNum = 1;
       while (remaining > 0) {
