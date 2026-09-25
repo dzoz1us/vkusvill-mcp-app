@@ -20,6 +20,11 @@ from sqlalchemy.orm import Session
 from app.models import GroceryItem, MealPlan, MealPlanMeal
 from app.services.quantity_service import to_canonical
 
+from app.integrations.vkusvill.mcp_client import VkusVillMCPClient  # noqa: E402
+from app.models import Ingredient  # noqa: E402
+from app.services.pricing_service import packages_for, total_price  # noqa: E402
+from app.services.vkusvill_service import match_ingredient  # noqa: E402
+
 
 
 @dataclass(frozen=True)
@@ -189,3 +194,83 @@ def build_grocery_items(db: Session, plan: MealPlan) -> list[GroceryItem]:
 
     db.flush()
     return created
+
+
+async def enrich_plan_prices(
+    db: Session,
+    plan: MealPlan,
+    client: VkusVillMCPClient | None = None,
+) -> int:
+    """For every unresolved/unknown item in the plan, run MCP matching.
+
+    Updates GroceryItem rows in place:
+      - product_xml_id, product_name, product_url
+      - package_quantity, package_unit, package_count
+      - price_per_package, total_price
+      - match_status
+
+    Returns count of items updated (i.e. where we found a product).
+    """
+    items = (
+        db.query(GroceryItem)
+        .filter_by(meal_plan_id=plan.id)
+        .all()
+    )
+    if not items:
+        return 0
+
+    updated = 0
+    total = 0.0
+
+    for item in items:
+        if item.ingredient_id is None:
+            # manual item — leave as is, but include its price in the total
+            total += item.total_price or 0.0
+            continue
+
+        ingredient = db.get(Ingredient, item.ingredient_id)
+        if ingredient is None:
+            continue
+
+        result = await match_ingredient(db, ingredient, client=client)
+
+        item.match_status = result.status
+        if result.candidate is None:
+            # keep whatever package/price we had (likely None)
+            continue
+
+        item.product_xml_id = result.candidate.xml_id
+        item.product_name = result.candidate.name
+        item.product_url = result.candidate.url
+
+        item.package_quantity = result.candidate.package_quantity
+        item.package_unit = result.candidate.package_unit
+
+        packages = packages_for(
+            needed_quantity=item.needed_quantity,
+            needed_unit=item.needed_unit,
+            package_quantity=result.candidate.package_quantity,
+            package_unit=result.candidate.package_unit,
+        )
+        item.package_count = packages
+
+        if packages is not None and result.candidate.price is not None:
+            item.price_per_package = result.candidate.price
+            item.total_price = total_price(packages, result.candidate.price)
+            total += item.total_price
+        else:
+            item.price_per_package = None
+            item.total_price = None
+
+        updated += 1
+
+    plan.cart_estimated_cost = round(total, 2)
+    plan.unresolved_items_count = (
+        db.query(GroceryItem)
+        .filter_by(meal_plan_id=plan.id)
+        .filter(GroceryItem.match_status != "matched")
+        .count()
+    )
+    db.commit()
+    db.refresh(plan)
+    return updated

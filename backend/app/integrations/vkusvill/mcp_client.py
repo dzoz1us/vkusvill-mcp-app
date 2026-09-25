@@ -176,5 +176,5 @@ class VkusVillMCPClient:
         """Create a share_basket link. `items` is [{xml_id, q}, ...]."""
         return await self.call_tool(
             "vkusvill_cart_link_create",
-            {"items": products},
+            {"products": products},
         )

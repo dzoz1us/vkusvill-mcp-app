@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.meal_plans import router as meal_plans_router
 from app.api.grocery import router as grocery_router
+from app.api.vkusvill import router as vkusvill_router
 from app.database.config import get_settings
 from app.database.init_db import init_db
 
@@ -35,6 +36,7 @@ app.add_middleware(
 
 app.include_router(meal_plans_router)
 app.include_router(grocery_router)
+app.include_router(vkusvill_router)
 
 
 @app.get("/health", tags=["system"])

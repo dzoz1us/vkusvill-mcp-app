@@ -1,9 +1,4 @@
-"""VkusVill service layer: search, match, cache.
-
-Sits between the MCP client (low-level) and the grocery builder (high-level).
-Tests use a mock transport or monkeypatch, so this module works without
-internet.
-"""
+"""VkusVill service layer: search, match, cache."""
 
 from __future__ import annotations
 
@@ -19,10 +14,7 @@ from app.integrations.vkusvill.mapper import (
     pick_best_candidate,
 )
 from app.integrations.vkusvill.mcp_client import (
-    MCPBadResponseError,
     MCPError,
-    MCPTimeoutError,
-    MCPUnavailableError,
     VkusVillMCPClient,
 )
 from app.integrations.vkusvill.schemas import MatchResult, ProductCandidate
@@ -31,75 +23,130 @@ from app.models import Ingredient, MCPProductCache, ProductMapping
 logger = logging.getLogger(__name__)
 
 
-def _candidate_from_dict(raw: dict) -> ProductCandidate | None:
-    """Best-effort parsing of an MCP product dict.
+# ---------------------------------------------------------------------------
+# Parsing
+# ---------------------------------------------------------------------------
 
-    MCP responses are experimental; different fields may be missing.
-    We accept several naming conventions to avoid being brittle.
+_WEIGHT_TO_CANONICAL = {
+    "кг": ("g", 1000.0),
+    "kg": ("g", 1000.0),
+    "г": ("g", 1.0),
+    "g": ("g", 1.0),
+    "л": ("ml", 1000.0),
+    "l": ("ml", 1000.0),
+    "мл": ("ml", 1.0),
+    "ml": ("ml", 1.0),
+    "шт": ("pcs", 1.0),
+    "pcs": ("pcs", 1.0),
+}
+
+
+def _candidate_from_dict(raw: object) -> ProductCandidate | None:
+    """Parse one MCP product dict into a ProductCandidate.
+
+    Handles the shape we saw from the live MCP:
+        {
+          "id": 17525,
+          "xml_id": 17525,
+          "name": "Молоко 3,2% ...",
+          "price": {"current": 104, "currency": "RUB", ...},
+          "weight": {"value": 0.9, "unit": "кг"},
+          "unit": "шт",
+          "url": "https://..."
+        }
     """
-    xml_id = (
-        raw.get("xml_id")
-        or raw.get("xmlId")
-        or raw.get("id")
-        or raw.get("product_id")
-    )
-    name = raw.get("name") or raw.get("title")
+    if not isinstance(raw, dict):
+        return None
+
+    product_id = raw.get("id")
+    xml_id = raw.get("xml_id") or product_id
+    name = raw.get("name")
     if not xml_id or not name:
         return None
 
-    price = raw.get("price")
-    package_quantity = (
-        raw.get("package_quantity")
-        or raw.get("weight")
-        or raw.get("volume")
-    )
-    package_unit = (
-        raw.get("package_unit")
-        or raw.get("unit")
-    )
-    url = raw.get("url") or raw.get("link")
+    # price may be a dict {current, currency, ...} or a plain number
+    price_raw = raw.get("price")
+    price: float | None = None
+    if isinstance(price_raw, dict):
+        current = price_raw.get("current")
+        if current is not None:
+            try:
+                price = float(current)
+            except (TypeError, ValueError):
+                price = None
+    elif isinstance(price_raw, (int, float)):
+        price = float(price_raw)
 
-    def _as_float(v):
-        try:
-            return float(v) if v is not None else None
-        except (TypeError, ValueError):
-            return None
+    # weight -> canonical quantity/unit
+    package_quantity: float | None = None
+    package_unit: str | None = None
+    weight_raw = raw.get("weight")
+    if isinstance(weight_raw, dict):
+        w_val = weight_raw.get("value")
+        w_unit = weight_raw.get("unit")
+        if w_val is not None and isinstance(w_unit, str):
+            key = w_unit.strip().lower()
+            if key in _WEIGHT_TO_CANONICAL:
+                canon_unit, multiplier = _WEIGHT_TO_CANONICAL[key]
+                try:
+                    package_quantity = float(w_val) * multiplier
+                    package_unit = canon_unit
+                except (TypeError, ValueError):
+                    pass
+    elif isinstance(weight_raw, (int, float)):
+        # assume kilograms
+        package_quantity = float(weight_raw) * 1000.0
+        package_unit = "g"
+
+    # fallback: if sold by "шт" and no weight info, treat as 1 pcs
+    if package_quantity is None and raw.get("unit") == "шт":
+        package_quantity = 1.0
+        package_unit = "pcs"
 
     return ProductCandidate(
+        product_id=int(product_id) if product_id is not None else None,
         xml_id=str(xml_id),
         name=str(name),
-        price=_as_float(price),
-        package_quantity=_as_float(package_quantity),
-        package_unit=str(package_unit) if package_unit else None,
-        url=str(url) if url else None,
+        price=price,
+        package_quantity=package_quantity,
+        package_unit=package_unit,
+        url=raw.get("url") if isinstance(raw.get("url"), str) else None,
     )
 
 
 def _extract_products(raw: object) -> list[ProductCandidate]:
-    """Extract product list from any MCP response shape we've seen."""
+    """Extract product list from the shape MCP returns.
+
+    Actual shape:
+        {"ok": true, "data": {"meta": {...}, "items": [...]}}
+    Older heuristic shapes (products/results/lists) are also accepted
+    so tests with mocks don't have to reproduce the exact envelope.
+    """
     if raw is None:
         return []
+
     if isinstance(raw, list):
         items = raw
     elif isinstance(raw, dict):
-        items = (
-            raw.get("products")
-            or raw.get("items")
-            or raw.get("results")
-            or []
-        )
+        # unwrap {ok, data}
+        inner = raw.get("data") if "data" in raw else raw
+        if not isinstance(inner, dict):
+            return []
+        items = inner.get("items") or inner.get("products") or inner.get("results") or []
     else:
         return []
 
     candidates: list[ProductCandidate] = []
     for item in items:
-        if not isinstance(item, dict):
-            continue
         c = _candidate_from_dict(item)
         if c is not None:
             candidates.append(c)
     return candidates
 
+
+# ---------------------------------------------------------------------------
+# Cache
+# ---------------------------------------------------------------------------
 
 def _cache_get(db: Session, query: str) -> list[ProductCandidate] | None:
     now = datetime.now(timezone.utc)
@@ -112,7 +159,6 @@ def _cache_get(db: Session, query: str) -> list[ProductCandidate] | None:
     if row is None:
         return None
     expires = row.expires_at
-    # sqlite stores naive datetimes; normalize
     if expires.tzinfo is None:
         expires = expires.replace(tzinfo=timezone.utc)
     if expires < now:
@@ -142,28 +188,26 @@ def _cache_put(
     db.flush()
 
 
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
 async def search_products(
     db: Session,
     query: str,
     client: VkusVillMCPClient | None = None,
     use_cache: bool = True,
 ) -> list[ProductCandidate]:
-    """Search VkusVill for products matching `query`.
-
-    Uses MCPProductCache; on any MCP failure returns [] and does not raise,
-    so callers can decide whether to degrade gracefully.
-    """
     if use_cache:
         cached = _cache_get(db, query)
         if cached is not None:
             return cached
 
-    client = client or VkusVillMCPClient()
     settings = get_settings()
     if not settings.enable_live_mcp:
-        # live MCP disabled (tests, offline dev): return empty, don't cache
         return []
 
+    client = client or VkusVillMCPClient()
     try:
         raw = await client.products_search(query)
     except MCPError as e:
@@ -181,16 +225,10 @@ async def match_ingredient(
     ingredient: Ingredient,
     client: VkusVillMCPClient | None = None,
 ) -> MatchResult:
-    """Look up the best VkusVill product for an ingredient.
-
-    Returns a MatchResult. Never raises on MCP failure; the caller sees
-    status="not_found".
-    """
     query = normalize_ingredient_query(ingredient.name)
     candidates = await search_products(db, query, client=client)
     best, status, score = pick_best_candidate(ingredient.name, candidates)
 
-    # Persist mapping only on confident match
     if best is not None and status == "matched":
         existing = (
             db.query(ProductMapping)

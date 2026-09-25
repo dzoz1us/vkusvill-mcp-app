@@ -6,16 +6,24 @@ from pydantic import BaseModel, Field
 
 
 class ProductCandidate(BaseModel):
-    """A raw candidate returned by MCP product search."""
+    """A normalized product from MCP search."""
 
+    # MCP "id" — used for product_details endpoint
+    product_id: int | None = None
+
+    # MCP "xml_id" — used for cart_link_create
     xml_id: str
+
     name: str
-    price: float | None = None
+    price: float | None = None  # RUB per package
+
+    # net weight/volume per package, in canonical unit
     package_quantity: float | None = None
-    package_unit: str | None = None
+    package_unit: str | None = None  # g | ml | pcs
+
     url: str | None = None
 
-    # filled by scorer, not by MCP
+    # filled by scorer
     match_score: float = Field(default=0.0)
 
 
