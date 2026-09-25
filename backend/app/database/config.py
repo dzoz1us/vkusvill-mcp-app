@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     vkusvill_mcp_url: str = "https://mcp.vkusvill.ru/mcp"
     vkusvill_mcp_timeout_ms: int = 10_000
     product_search_cache_ttl_seconds: int = 1800
+    enable_live_mcp: bool = False
 
 
 @lru_cache

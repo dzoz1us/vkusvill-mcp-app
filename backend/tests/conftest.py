@@ -15,7 +15,7 @@ from app import models  # noqa: F401
 
 
 @pytest.fixture()
-def db_session(tmp_path) -> Session:
+def db_session(tmp_path) -> Session: # type: ignore
     db_file = tmp_path / "test.db"
     engine = create_engine(f"sqlite:///{db_file}", future=True)
 

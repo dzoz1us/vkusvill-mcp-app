@@ -1,0 +1,14 @@
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/call",
+  "params": {
+    "name": "vkusvill_products_search",
+    "arguments": {
+      "q": "молоко 3.2",
+      "mode": "custom",
+      "fields": ["id", "xml_id", "name", "price", "weight", "unit", "url"],
+      "vvonly": 1
+    }
+  }
+}
