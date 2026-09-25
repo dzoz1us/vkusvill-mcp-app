@@ -182,8 +182,10 @@ function generateGroceryList(plan: MealPlan): GroceryList {
       needed_quantity: ing.quantity,
       needed_unit: ing.unit,
       package_quantity: packageQty,
+      package_unit: ing.unit,
       package_count: packageCount,
       price_per_package: pricePerPackage,
+      total_price: pricePerPackage * packageCount,
       match_status: status,
       is_bought: false,
       ingredient_id: `ing-${i}`,
@@ -280,21 +282,23 @@ export const api = {
     return generateGroceryList(plan);
   },
 
-  async updateGroceryItem(itemId: string, isBought: boolean): Promise<GroceryItem> {
-    await delay(300);
-    return {
-      id: itemId,
-      product_name: 'Мок-товар',
-      needed_quantity: 1,
-      needed_unit: 'pcs',
-      package_quantity: 1,
-      package_count: 1,
-      price_per_package: 0,
-      match_status: 'matched',
-      is_bought: isBought,
-      ingredient_id: null,
-    };
-  },
+    async updateGroceryItem(itemId: string, isBought: boolean): Promise<GroceryItem> {
+      await delay(300);
+      return {
+        id: itemId,
+        product_name: 'Мок-товар',
+        needed_quantity: 1,
+        needed_unit: 'pcs',
+        package_quantity: 1,
+        package_unit: 'pcs',
+        package_count: 1,
+        price_per_package: 0,
+        total_price: 0,
+        match_status: 'matched',
+        is_bought: isBought,
+        ingredient_id: null,
+      };
+    },
 
   async createVkusvillCart(planId: string): Promise<CartResponse> {
     await delay(1500);

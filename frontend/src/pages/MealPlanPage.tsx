@@ -98,12 +98,13 @@ export default function MealPlanPage() {
 
   const handleCreateCart = async () => {
     if (!id) return;
-    // Optionally refresh prices first
     try {
       const result = await refreshPrices(id);
       if (result.cost_changed) {
         setPriceWarning(true);
       }
+      // reload plan so unresolved_items_count and cost get updated
+      await loadPlan(id);
     } catch {
       // Continue anyway
     }

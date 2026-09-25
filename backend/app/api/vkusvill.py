@@ -93,6 +93,25 @@ async def create_vkusvill_cart(plan_id: int, db: Session = Depends(get_db)):
             status.HTTP_404_NOT_FOUND,
         )
 
+    # Auto-enrich from MCP before building cart: this makes both
+    # the plan page and the grocery list page behave the same.
+    try:
+        await enrich_plan_prices(db, plan)
+    except MCPTimeoutError as e:
+        return _error(
+            ErrorCode.VKUSVILL_MCP_TIMEOUT,
+            str(e) or "MCP timed out while refreshing prices",
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            retryable=True,
+        )
+    except (MCPUnavailableError, MCPError) as e:
+        return _error(
+            ErrorCode.VKUSVILL_MCP_UNAVAILABLE,
+            str(e) or "VkusVill MCP unavailable",
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            retryable=True,
+        )
+
     items = (
         db.query(GroceryItem)
         .filter_by(meal_plan_id=plan.id)

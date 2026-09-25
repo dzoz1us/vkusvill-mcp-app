@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { api } from '../api/client.mock';
+import { api } from '../api/client';
 import type { Recipe } from '../types';
 import { ArrowLeft, Clock, Users, Flame, ArrowRight } from 'lucide-react';
 

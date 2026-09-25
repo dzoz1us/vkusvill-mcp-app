@@ -92,7 +92,9 @@ export interface GroceryItem {
   needed_quantity: number;
   needed_unit: string;
   package_quantity: number | null;
+  package_unit: string | null;
   package_count: number | null;
+  total_price: number | null;  
   price_per_package: number | null;
   match_status: MatchStatus;
   is_bought: boolean;

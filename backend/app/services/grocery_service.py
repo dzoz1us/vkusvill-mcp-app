@@ -255,14 +255,17 @@ async def enrich_plan_prices(
         item.package_count = packages
 
         if packages is not None and result.candidate.price is not None:
-            item.price_per_package = result.candidate.price
-            item.total_price = total_price(packages, result.candidate.price)
-            total += item.total_price
+                item.price_per_package = result.candidate.price
+                item.total_price = total_price(packages, result.candidate.price)
+                total += item.total_price
+                updated += 1
         else:
-            item.price_per_package = None
-            item.total_price = None
-
-        updated += 1
+                # matched by search but not usable: incompatible units or no price.
+                # Downgrade so UI never promises a product that won't reach the cart.
+                item.match_status = "requires_review"
+                item.package_count = None
+                item.price_per_package = None
+                item.total_price = None
 
     plan.cart_estimated_cost = round(total, 2)
     plan.unresolved_items_count = (

@@ -35,6 +35,7 @@ export default function GroceryListPage() {
     groceryList, groceryState, currentPlan,
     loadGroceryList, toggleBought,
     createCart, cartResponse, cartState, cartError, clearCart,
+    refreshPrices,
   } = useAppStore();
 
   useEffect(() => {
@@ -71,7 +72,9 @@ export default function GroceryListPage() {
             </button>
             <div>
               <h1 className="font-bold text-gray-900">Список покупок</h1>
-              <p className="text-xs text-gray-500">{groceryList.items.length} товаров</p>
+              <p className="text-xs text-gray-500">
+                {groceryList.matched_count} из {groceryList.items.length} в корзину
+              </p>
             </div>
           </div>
           {id && (
@@ -158,20 +161,34 @@ export default function GroceryListPage() {
                         <Package className="w-3 h-3" />
                         {item.needed_quantity} {item.needed_unit}
                       </span>
-                      <span>
-                        {item.package_count} × {item.package_quantity} {item.needed_unit}
-                      </span>
+                      {item.match_status === 'matched' && item.package_count != null ? (
+                        <span>
+                          {item.package_count} × {item.package_quantity} {item.package_unit}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">
+                          {item.match_status === 'requires_review'
+                            ? 'Не будет добавлен в корзину'
+                            : ''}
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   {/* Price */}
                   <div className="text-right flex-shrink-0">
-                    <p className={`font-semibold ${item.is_bought ? 'text-gray-400' : 'text-gray-900'}`}>
-                      {((item.price_per_package ?? 0) * (item.package_count ?? 0)).toLocaleString()} ₽
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      {item.price_per_package} ₽/уп
-                    </p>
+                    {item.match_status === 'matched' && item.total_price != null ? (
+                      <>
+                        <p className={`font-semibold ${item.is_bought ? 'text-gray-400' : 'text-gray-900'}`}>
+                          {item.total_price.toLocaleString()} ₽
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {item.price_per_package} ₽/уп
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-sm text-gray-400">—</p>
+                    )}
                   </div>
                 </div>
               );
@@ -188,10 +205,19 @@ export default function GroceryListPage() {
             </p>
             <button
               onClick={async () => {
-                if (id) {
-                  await createCart(id);
+                if (!id) return;
+                // Refresh prices first (also enriches items via MCP on the backend),
+                // then reload the list so the UI reflects the new match_status/price,
+                // and only after that create the cart.
+                try {
+                  await refreshPrices(id);
+                  await loadGroceryList(id);
+                } catch {
+                  // best-effort: continue anyway, backend will enrich again in cart endpoint
                 }
+                await createCart(id);
               }}
+              
               disabled={cartState === 'loading'}
               className="w-full py-3 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-xl font-medium hover:from-emerald-600 hover:to-green-600 transition shadow-md shadow-emerald-200 disabled:opacity-50 flex items-center justify-center gap-2"
             >

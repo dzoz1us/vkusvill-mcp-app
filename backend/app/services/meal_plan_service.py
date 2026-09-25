@@ -84,22 +84,21 @@ def _select_recipes(
     rng = random.Random(request.random_seed)
 
     def pool_for(meal_type: MealType) -> list[Recipe]:
-        eligible = [
-            r
-            for r in candidates
-            if (r.meal_type in (None, "any", meal_type.value))
+        specific = [
+            r for r in candidates
+            if r.meal_type == meal_type.value
         ]
-        if not eligible:
-            # fallback: if a recipe pool is empty, allow all
-            eligible = list(candidates)
-        scored = sorted(
-            eligible,
-            key=lambda r: (-_score(r, request.preferences), r.id),
-        )
-        rng.shuffle(scored)  # type: ignore[arg-type]
-        # stable sort by score, keeping shuffle within equal score
-        scored.sort(key=lambda r: -_score(r, request.preferences))
-        return scored
+        universal = [
+            r for r in candidates
+            if r.meal_type in (None, "any")
+        ]
+        # Prefer specific first; only fall back to universal if we run out.
+        pool = specific + universal
+        if not pool:
+            pool = list(candidates)
+        rng.shuffle(pool)
+        pool.sort(key=lambda r: -_score(r, request.preferences))
+        return pool
 
     pools = {mt: pool_for(mt) for mt in MEAL_TYPE_ORDER}
     idx = {mt: 0 for mt in MEAL_TYPE_ORDER}

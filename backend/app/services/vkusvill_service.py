@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import html
 import logging
 from datetime import datetime, timedelta, timezone
 
@@ -106,7 +107,7 @@ def _candidate_from_dict(raw: object) -> ProductCandidate | None:
     return ProductCandidate(
         product_id=int(product_id) if product_id is not None else None,
         xml_id=str(xml_id),
-        name=str(name),
+        name=html.unescape(str(name)),
         price=price,
         package_quantity=package_quantity,
         package_unit=package_unit,
