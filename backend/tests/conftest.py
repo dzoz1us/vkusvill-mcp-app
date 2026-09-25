@@ -1,6 +1,7 @@
 """Shared pytest fixtures.
 
-Uses an in-memory SQLite so tests never touch the real app.db.
+Each test gets its own SQLite file under pytest's tmp_path. This is
+bulletproof: no in-memory pool weirdness, no cross-test contamination.
 """
 
 import pytest
@@ -9,15 +10,23 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.database.base import Base
 
-# Register models on Base.metadata
+# Register all models on Base.metadata
 from app import models  # noqa: F401
 
 
 @pytest.fixture()
-def db_session() -> Session:
-    engine = create_engine("sqlite:///:memory:", future=True)
+def db_session(tmp_path) -> Session:
+    db_file = tmp_path / "test.db"
+    engine = create_engine(f"sqlite:///{db_file}", future=True)
+
     Base.metadata.create_all(engine)
-    TestSessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+    TestSessionLocal = sessionmaker(
+        bind=engine,
+        autoflush=False,
+        autocommit=False,
+        expire_on_commit=False,
+    )
     session = TestSessionLocal()
     try:
         yield session

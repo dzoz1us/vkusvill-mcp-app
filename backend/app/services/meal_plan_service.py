@@ -131,6 +131,17 @@ def generate_plan(db: Session, request: GenerateRequest) -> MealPlan:
                 )
             )
 
+    db.flush()
+
+    # build grocery list from all meals of this plan
+    from app.services.grocery_service import build_grocery_items
+
+    items = build_grocery_items(db, plan)
+    plan.unresolved_items_count = sum(
+        1 for it in items if it.match_status == "not_found"
+    )
+    plan.cart_estimated_cost = 0.0  # real cost arrives with MCP
+
     db.commit()
     db.refresh(plan)
     return plan

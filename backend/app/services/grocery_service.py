@@ -16,6 +16,11 @@ from dataclasses import dataclass
 from app.schemas.enums import Unit
 from app.services.quantity_service import scale_quantity
 
+from sqlalchemy.orm import Session
+from app.models import GroceryItem, MealPlan, MealPlanMeal
+from app.services.quantity_service import to_canonical
+
+
 
 @dataclass(frozen=True)
 class RecipeIngredientInput:
@@ -101,3 +106,86 @@ def aggregate_ingredients(
         )
         for ingredient_id, data in totals.items()
     ]
+
+def _recipe_input_from_orm(recipe) -> RecipeInput:
+    """Convert an ORM Recipe into the plain RecipeInput used by aggregation."""
+    ingredients = tuple(
+        RecipeIngredientInput(
+            ingredient_id=ri.ingredient_id,
+            name=ri.recipe and ri.ingredient.name or "",
+            quantity=ri.quantity,
+            unit=ri.unit,
+        )
+        for ri in recipe.ingredients
+    )
+    return RecipeInput(
+        recipe_id=recipe.id,
+        base_servings=recipe.servings,
+        ingredients=ingredients,
+    )
+
+
+def build_grocery_items(db: Session, plan: MealPlan) -> list[GroceryItem]:
+    """(Re)build GroceryItems for a plan.
+
+    Idempotent: deletes existing items for the plan and inserts fresh ones.
+    Called from MealPlanService.generate_plan and later from replace-meal.
+    """
+    # wipe existing items for this plan
+    db.query(GroceryItem).filter_by(meal_plan_id=plan.id).delete()
+    db.flush()
+
+    # collect recipes of the plan
+    meals = (
+        db.query(MealPlanMeal).filter_by(meal_plan_id=plan.id).all()
+    )
+    if not meals:
+        return []
+
+    recipe_inputs: list[RecipeInput] = []
+    for meal in meals:
+        recipe = meal.recipe
+        # name of the ingredient is on ri.ingredient; join via Ingredient
+        from app.models import Ingredient
+
+        ri_tuple = tuple(
+            RecipeIngredientInput(
+                ingredient_id=ri.ingredient_id,
+                name=(
+                    db.get(Ingredient, ri.ingredient_id).name
+                    if ri.ingredient_id
+                    else ""
+                ),
+                quantity=ri.quantity,
+                unit=ri.unit,
+            )
+            for ri in recipe.ingredients
+        )
+        recipe_inputs.append(
+            RecipeInput(
+                recipe_id=recipe.id,
+                base_servings=recipe.servings,
+                ingredients=ri_tuple,
+            )
+        )
+
+    aggregated = aggregate_ingredients(recipe_inputs, plan.people_count)
+
+    created: list[GroceryItem] = []
+    for agg in aggregated:
+        canonical = to_canonical(agg.needed_quantity, agg.unit.value)
+        item = GroceryItem(
+            meal_plan_id=plan.id,
+            ingredient_id=agg.ingredient_id,
+            product_name=agg.name,
+            needed_quantity=canonical.value,
+            needed_unit=canonical.unit.value,
+            match_status="not_found",
+            is_bought=False,
+            is_manual=False,
+        )
+        db.add(item)
+        created.append(item)
+
+    db.flush()
+    return created
