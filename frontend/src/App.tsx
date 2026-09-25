@@ -1,9 +1,9 @@
-import { HashRouter, Routes, Route } from 'react-router-dom';
-import OnboardingPage from './pages/OnboardingPage';
-import GeneratingPage from './pages/GeneratingPage';
-import MealPlanPage from './pages/MealPlanPage';
-import RecipePage from './pages/RecipePage';
-import GroceryListPage from './pages/GroceryListPage';
+import { HashRouter, Routes, Route } from "react-router-dom";
+import OnboardingPage from "./pages/OnboardingPage";
+import GeneratingPage from "./pages/GeneratingPage";
+import MealPlanPage from "./pages/MealPlanPage";
+import RecipePage from "./pages/RecipePage";
+import GroceryListPage from "./pages/GroceryListPage";
 
 function App() {
   return (

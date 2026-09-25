@@ -1,12 +1,19 @@
-import { TrendingUp } from 'lucide-react';
-import { formatPrice, getBudgetColor, getBudgetBarColor } from '../utils/helpers';
+import { TrendingUp } from "lucide-react";
+import {
+  formatPrice,
+  getBudgetColor,
+  getBudgetBarColor,
+} from "../utils/helpers";
 
 interface BudgetProgressProps {
   currentCost: number;
   budget: number;
 }
 
-export default function BudgetProgress({ currentCost, budget }: BudgetProgressProps) {
+export default function BudgetProgress({
+  currentCost,
+  budget,
+}: BudgetProgressProps) {
   const percent = Math.min(100, (currentCost / budget) * 100);
   const budgetColor = getBudgetColor(percent);
   const budgetBarColor = getBudgetBarColor(percent);
@@ -30,7 +37,9 @@ export default function BudgetProgress({ currentCost, budget }: BudgetProgressPr
       </div>
       <div className="flex justify-between mt-2">
         <span className="text-xs text-gray-400">Ориентировочная стоимость</span>
-        <span className="text-xs text-gray-400">{Math.round(percent)}% использовано</span>
+        <span className="text-xs text-gray-400">
+          {Math.round(percent)}% использовано
+        </span>
       </div>
     </div>
   );

@@ -1,28 +1,28 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppStore } from '../store';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "../store";
 
 const STAGES = [
-  { text: 'Анализируем ваши предпочтения...', emoji: '🔍' },
-  { text: 'Подбираем рецепты из каталога...', emoji: '📖' },
-  { text: 'Оптимизируем список продуктов...', emoji: '🛒' },
-  { text: 'Рассчитываем бюджет...', emoji: '💰' },
-  { text: 'Формируем план питания...', emoji: '✨' },
+  { text: "Анализируем ваши предпочтения...", emoji: "🔍" },
+  { text: "Подбираем рецепты из каталога...", emoji: "📖" },
+  { text: "Оптимизируем список продуктов...", emoji: "🛒" },
+  { text: "Рассчитываем бюджет...", emoji: "💰" },
+  { text: "Формируем план питания...", emoji: "✨" },
 ];
 
 export default function GeneratingPage() {
   const navigate = useNavigate();
   const { currentPlan, planState, planError, generatePlan } = useAppStore();
-  
+
   // Запускаем генерацию при монтировании
   useEffect(() => {
-    if (planState === 'idle') {
+    if (planState === "idle") {
       generatePlan();
     }
   }, []);
 
   useEffect(() => {
-    if (planState === 'success' && currentPlan) {
+    if (planState === "success" && currentPlan) {
       const timer = setTimeout(() => {
         navigate(`/plan/${currentPlan.id}`);
       }, 500);
@@ -33,13 +33,17 @@ export default function GeneratingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50 flex items-center justify-center p-4">
       <div className="text-center max-w-md w-full">
-        {planState === 'error' ? (
+        {planState === "error" ? (
           <div className="bg-white rounded-2xl shadow-lg border border-red-100 p-8">
             <div className="text-5xl mb-4">😔</div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">Ошибка генерации</h2>
-            <p className="text-gray-500 mb-6">{planError || 'Что-то пошло не так'}</p>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
+              Ошибка генерации
+            </h2>
+            <p className="text-gray-500 mb-6">
+              {planError || "Что-то пошло не так"}
+            </p>
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
               className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 transition"
             >
               Попробовать снова
@@ -58,7 +62,9 @@ export default function GeneratingPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Создаём ваш план</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                Создаём ваш план
+              </h2>
               <p className="text-gray-500">Это займёт пару минут</p>
             </div>
 

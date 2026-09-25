@@ -1,4 +1,4 @@
-import type { Ingredient } from '../types';
+import type { Ingredient } from "../types";
 
 interface IngredientItemProps {
   ingredient: Ingredient;

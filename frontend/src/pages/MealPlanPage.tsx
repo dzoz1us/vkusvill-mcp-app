@@ -1,25 +1,44 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAppStore } from '../store';
-import type { DayMeal, DayOfWeek } from '../types';
-import { DAY_LABELS } from '../utils/helpers';
-import { ShoppingCart, ArrowLeft, AlertTriangle, RefreshCw } from 'lucide-react';
-import MealCard from '../components/MealCard';
-import BudgetProgress from '../components/BudgetProgress';
-import CartModal from '../components/CartModal';
-import { useReplaceMeal } from '../hooks/useReplaceMeal';
-import { useCartCreation } from '../hooks/useCartCreation';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useAppStore } from "../store";
+import type { DayMeal, DayOfWeek } from "../types";
+import { DAY_LABELS } from "../utils/helpers";
+import {
+  ShoppingCart,
+  ArrowLeft,
+  AlertTriangle,
+  RefreshCw,
+} from "lucide-react";
+import MealCard from "../components/MealCard";
+import BudgetProgress from "../components/BudgetProgress";
+import CartModal from "../components/CartModal";
+import { useReplaceMeal } from "../hooks/useReplaceMeal";
+import { useCartCreation } from "../hooks/useCartCreation";
 
 export default function MealPlanPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
-    currentPlan, planState, planError,
-    loadPlan, cartResponse, cartState, cartError, clearCart,
+    currentPlan,
+    planState,
+    planError,
+    loadPlan,
+    cartResponse,
+    cartState,
+    cartError,
+    clearCart,
   } = useAppStore();
 
-  const { replacingMealId, error: replaceError, handleReplace } = useReplaceMeal(id);
-  const { isLoading: isCreatingCart, error: cartCreationError, handleCreateCart } = useCartCreation(id);
+  const {
+    replacingMealId,
+    error: replaceError,
+    handleReplace,
+  } = useReplaceMeal(id);
+  const {
+    isLoading: isCreatingCart,
+    error: cartCreationError,
+    handleCreateCart,
+  } = useCartCreation(id);
   const [showCartModal, setShowCartModal] = useState(false);
 
   useEffect(() => {
@@ -29,12 +48,30 @@ export default function MealPlanPage() {
   }, [id]);
 
   useEffect(() => {
-    if (cartState === 'success') {
+    if (cartState === "success") {
       setShowCartModal(true);
     }
   }, [cartState]);
 
-  if (planState === 'loading' || !currentPlan) {
+  if (planState === "error") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md">
+          <div className="text-4xl mb-4">😔</div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Ошибка</h2>
+          <p className="text-gray-500 mb-6">{planError}</p>
+          <button
+            onClick={() => navigate("/")}
+            className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 transition"
+          >
+            На главную
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (planState === "loading" || !currentPlan) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -45,27 +82,15 @@ export default function MealPlanPage() {
     );
   }
 
-  if (planState === 'error') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-        <div className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md">
-          <div className="text-4xl mb-4">😔</div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Ошибка</h2>
-          <p className="text-gray-500 mb-6">{planError}</p>
-          <button onClick={() => navigate('/')} className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 transition">
-            На главную
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   // Group meals by day
-  const mealsByDay = currentPlan.meals.reduce((acc, meal) => {
-    if (!acc[meal.day]) acc[meal.day] = [];
-    acc[meal.day].push(meal);
-    return acc;
-  }, {} as Record<string, DayMeal[]>);
+  const mealsByDay = currentPlan.meals.reduce(
+    (acc, meal) => {
+      if (!acc[meal.day]) acc[meal.day] = [];
+      acc[meal.day].push(meal);
+      return acc;
+    },
+    {} as Record<string, DayMeal[]>,
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -73,13 +98,17 @@ export default function MealPlanPage() {
       <header className="bg-white border-b border-gray-100 sticky top-0 z-30">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/')} className="p-2 hover:bg-gray-100 rounded-lg transition">
+            <button
+              onClick={() => navigate("/")}
+              className="p-2 hover:bg-gray-100 rounded-lg transition"
+            >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
             <div>
               <h1 className="font-bold text-gray-900">Ваш план питания</h1>
               <p className="text-xs text-gray-500">
-                {currentPlan.params.people_count} чел. • {currentPlan.params.days.length} дней
+                {currentPlan.params.people_count} чел. •{" "}
+                {currentPlan.params.days.length} дней
               </p>
             </div>
           </div>
@@ -107,8 +136,10 @@ export default function MealPlanPage() {
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />
             <p className="text-sm text-amber-700">
-              {currentPlan.unresolved_items_count} {currentPlan.unresolved_items_count === 1 ? 'товар' : 'товаров'} не удалось подобрать в ВкусВилл. 
-              Проверьте список покупок для деталей.
+              {currentPlan.unresolved_items_count}{" "}
+              {currentPlan.unresolved_items_count === 1 ? "товар" : "товаров"}{" "}
+              не удалось подобрать в ВкусВилл. Проверьте список покупок для
+              деталей.
             </p>
           </div>
         )}
@@ -120,7 +151,7 @@ export default function MealPlanPage() {
               <span>{DAY_LABELS[day as DayOfWeek]}</span>
             </h2>
             <div className="grid gap-3">
-              {meals.map(meal => (
+              {meals.map((meal) => (
                 <MealCard
                   key={meal.id}
                   meal={meal}
@@ -144,7 +175,8 @@ export default function MealPlanPage() {
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
           <h3 className="font-bold text-gray-900 mb-2">Перейти в ВкусВилл</h3>
           <p className="text-sm text-gray-500 mb-4">
-            Создадим корзину с продуктами из вашего плана. Цены и наличие могут измениться.
+            Создадим корзину с продуктами из вашего плана. Цены и наличие могут
+            измениться.
           </p>
           <button
             onClick={handleCreateCart}
@@ -170,12 +202,15 @@ export default function MealPlanPage() {
       {showCartModal && cartResponse && (
         <CartModal
           cartResponse={cartResponse}
-          onClose={() => { setShowCartModal(false); clearCart(); }}
+          onClose={() => {
+            setShowCartModal(false);
+            clearCart();
+          }}
         />
       )}
 
       {/* Cart error toast */}
-      {(cartState === 'error' || cartCreationError) && (
+      {(cartState === "error" || cartCreationError) && (
         <div className="fixed bottom-4 left-4 right-4 z-50 bg-red-500 text-white p-4 rounded-xl shadow-lg max-w-md mx-auto">
           <p className="text-sm">{cartError || cartCreationError}</p>
         </div>

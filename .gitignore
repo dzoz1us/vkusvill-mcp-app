@@ -6,3 +6,9 @@ dist/
 __pycache__/
 *.pyc
 venv/
+.venv/
+*.py[cod]
+*.db
+*.sqlite3
+.env.*
+!.env.example

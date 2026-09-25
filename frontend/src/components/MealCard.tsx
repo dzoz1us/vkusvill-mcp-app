@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import type { DayMeal } from '../types';
-import { MEAL_LABELS, MEAL_EMOJIS } from '../utils/helpers';
-import { Clock, RefreshCw, ChevronRight } from 'lucide-react';
+import { Link } from "react-router-dom";
+import type { DayMeal } from "../types";
+import { MEAL_LABELS, MEAL_EMOJIS } from "../utils/helpers";
+import { Clock, RefreshCw, ChevronRight } from "lucide-react";
 
 interface MealCardProps {
   meal: DayMeal;
@@ -9,7 +9,11 @@ interface MealCardProps {
   onReplace: (mealId: string) => void;
 }
 
-export default function MealCard({ meal, isReplacing, onReplace }: MealCardProps) {
+export default function MealCard({
+  meal,
+  isReplacing,
+  onReplace,
+}: MealCardProps) {
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition group">
       <div className="flex items-start gap-4">
@@ -37,7 +41,9 @@ export default function MealCard({ meal, isReplacing, onReplace }: MealCardProps
           </Link>
           {meal.recipe.nutrition && (
             <p className="text-xs text-gray-400 mt-1">
-              {meal.recipe.nutrition.calories} ккал • Б:{meal.recipe.nutrition.protein} Ж:{meal.recipe.nutrition.fat} У:{meal.recipe.nutrition.carbs}
+              {meal.recipe.nutrition.calories} ккал • Б:
+              {meal.recipe.nutrition.protein} Ж:{meal.recipe.nutrition.fat} У:
+              {meal.recipe.nutrition.carbs}
             </p>
           )}
         </div>
@@ -49,12 +55,14 @@ export default function MealCard({ meal, isReplacing, onReplace }: MealCardProps
             disabled={isReplacing}
             className={`p-2 rounded-lg transition ${
               isReplacing
-                ? 'bg-emerald-100 text-emerald-500'
-                : 'hover:bg-gray-100 text-gray-400 hover:text-emerald-500 opacity-0 group-hover:opacity-100'
+                ? "bg-emerald-100 text-emerald-500"
+                : "hover:bg-gray-100 text-gray-400 hover:text-emerald-500 opacity-0 group-hover:opacity-100"
             }`}
             title="Заменить блюдо"
           >
-            <RefreshCw className={`w-4 h-4 ${isReplacing ? 'animate-spin' : ''}`} />
+            <RefreshCw
+              className={`w-4 h-4 ${isReplacing ? "animate-spin" : ""}`}
+            />
           </button>
           <Link
             to={`/recipe/${meal.recipe.id}`}
