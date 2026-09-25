@@ -13,6 +13,7 @@ Real costs and VkusVill product matching are added later.
 from __future__ import annotations
 
 import json
+import logging
 import random
 from dataclasses import dataclass
 
@@ -20,7 +21,11 @@ from sqlalchemy.orm import Session
 
 from app.models import MealPlan, MealPlanMeal, Recipe
 from app.schemas import GenerateRequest
-from app.schemas.enums import Diet, MealType, Preference
+from app.schemas.enums import Day, Diet, MealType, Preference
+
+from app.integrations.vkusvill.mcp_client import MCPError, VkusVillMCPClient  
+from app.models import MealPlanMeal  
+from app.schemas.enums import Appliance  
 
 MEALS_PER_DAY = 3
 MEAL_TYPE_ORDER: list[MealType] = [
@@ -28,6 +33,8 @@ MEAL_TYPE_ORDER: list[MealType] = [
     MealType.LUNCH,
     MealType.DINNER,
 ]
+
+logger = logging.getLogger(__name__)
 
 # Which recipe.diet values are allowed for a given user diet selection.
 _DIET_COMPATIBILITY: dict[Diet, set[str]] = {
@@ -145,3 +152,102 @@ def generate_plan(db: Session, request: GenerateRequest) -> MealPlan:
     db.commit()
     db.refresh(plan)
     return plan
+
+
+
+class MealNotFoundError(Exception):
+    """Raised when the requested meal slot does not belong to the plan."""
+
+
+class NoAlternativeRecipeError(Exception):
+    """Raised when no valid substitute recipe can be found."""
+
+
+def _request_from_plan(plan: MealPlan) -> GenerateRequest:
+    """Reconstruct a GenerateRequest from stored plan parameters."""
+    return GenerateRequest(
+        people_count=plan.people_count,
+        days=[Day(d) for d in json.loads(plan.days_json)],
+        budget=plan.budget,
+        preferences=[Preference(p) for p in json.loads(plan.preferences_json)],
+        diet=Diet(plan.diet),
+        appliances=[Appliance(a) for a in json.loads(plan.appliances_json)],
+        random_seed=plan.random_seed,
+    )
+
+
+async def replace_meal(
+    db: Session,
+    plan: MealPlan,
+    meal_id: int,
+    new_recipe_id: int | None = None,
+    client: VkusVillMCPClient | None = None,
+) -> tuple[MealPlan, Recipe]:
+    """Replace one meal's recipe, rebuild grocery list, refresh prices.
+
+    Transactional on the DB side: meal update + grocery rebuild either
+    both succeed or both roll back. MCP enrichment is best-effort — if
+    it fails, the plan is still saved and can be refreshed later.
+    """
+    meal = db.get(MealPlanMeal, meal_id)
+    if meal is None or meal.meal_plan_id != plan.id:
+        raise MealNotFoundError(
+            f"Meal {meal_id} not found in plan {plan.id}"
+        )
+
+    old_recipe_id = meal.recipe_id
+    request = _request_from_plan(plan)
+
+    candidates = _filter_candidates(db, request)
+    candidates = [r for r in candidates if r.id != old_recipe_id]
+    if not candidates:
+        raise NoAlternativeRecipeError(
+            "No alternative recipe matches the plan's diet and appliances."
+        )
+
+    # Pick the alternative.
+    if new_recipe_id is not None:
+        chosen = next((r for r in candidates if r.id == new_recipe_id), None)
+        if chosen is None:
+            raise NoAlternativeRecipeError(
+                f"Recipe {new_recipe_id} is not a valid alternative for this plan."
+            )
+    else:
+        scored = sorted(
+            candidates,
+            key=lambda r: (-_score(r, request.preferences), r.id),
+        )
+        chosen = scored[0]
+
+    # ---- Phase 1: transactional DB update --------------------------------
+    try:
+        meal.recipe_id = chosen.id
+        db.flush()
+
+        from app.services.grocery_service import build_grocery_items
+
+        items = build_grocery_items(db, plan)
+        plan.unresolved_items_count = sum(
+            1 for it in items if it.match_status != "matched"
+        )
+        plan.cart_estimated_cost = 0.0
+        db.commit()
+        db.refresh(plan)
+        db.refresh(chosen)
+    except Exception:
+        db.rollback()
+        raise
+
+    # ---- Phase 2: best-effort MCP enrichment -----------------------------
+    try:
+        from app.services.grocery_service import enrich_plan_prices
+
+        await enrich_plan_prices(db, plan, client=client)
+    except MCPError as e:
+        logger.warning(
+            "MCP enrichment failed after replace_meal (plan %s): %s",
+            plan.id,
+            e,
+        )
+
+    return plan, chosen

@@ -95,11 +95,14 @@ class MealPlanRead(BaseModel):
 
 
 class ReplaceMealRequest(BaseModel):
-    """Replace the recipe for a given (day, meal_type) slot."""
+    """Replace the recipe in a specific meal slot.
 
-    day: Day
-    meal_type: MealType
-    new_recipe_id: str | None = Field(
+    `meal_id` — id of the MealPlanMeal row (frontend sends it as string,
+    Pydantic coerces it to int).
+    """
+
+    meal_id: int
+    new_recipe_id: int | None = Field(
         default=None,
         description="If omitted, the backend picks the best alternative.",
     )
