@@ -6,17 +6,15 @@ from app.schemas.enums import MatchStatus
 
 
 class GroceryItemRead(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, coerce_numbers_to_str=True)
 
-    id: int
-    ingredient_id: int | None = None
-    name: str
+    id: str
+    ingredient_id: str | None = None
 
+    product_name: str
     needed_quantity: float
-    unit: str
+    needed_unit: str
 
-    # product data, may be missing if not matched
-    product_name: str | None = None
     product_url: str | None = None
     product_xml_id: str | None = None
 
@@ -32,12 +30,11 @@ class GroceryItemRead(BaseModel):
 
 
 class GroceryListResponse(BaseModel):
-    meal_plan_id: int
     items: list[GroceryItemRead]
-    total_items: int
-    resolved_items: int
-    unresolved_items: int
-    estimated_total: float = Field(..., ge=0)
+    total_cost: float = Field(..., ge=0)
+    matched_count: int = Field(..., ge=0)
+    review_count: int = Field(..., ge=0)
+    not_found_count: int = Field(..., ge=0)
 
 
 class GroceryItemUpdate(BaseModel):
@@ -49,7 +46,7 @@ class GroceryItemUpdate(BaseModel):
 class ManualGroceryItemCreate(BaseModel):
     """Add a custom product that is not tied to an ingredient."""
 
-    name: str = Field(..., min_length=1, max_length=200)
+    product_name: str = Field(..., min_length=1, max_length=200)
     needed_quantity: float = Field(..., gt=0)
-    unit: str = Field(..., min_length=1, max_length=20)
+    needed_unit: str = Field(..., min_length=1, max_length=20)
     price: float | None = Field(default=None, ge=0)

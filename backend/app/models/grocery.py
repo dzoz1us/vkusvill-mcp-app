@@ -19,13 +19,12 @@ class GroceryItem(Base):
     )
 
     # what was actually needed after aggregation
-    name: Mapped[str] = mapped_column(String(200), nullable=False)
+    product_name: Mapped[str] = mapped_column(String(200), nullable=False)
     needed_quantity: Mapped[float] = mapped_column(Float, nullable=False)
-    unit: Mapped[str] = mapped_column(String(20), nullable=False)
+    needed_unit: Mapped[str] = mapped_column(String(20), nullable=False)
 
     # matched vkusvill product, may be missing
     product_xml_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    product_name: Mapped[str | None] = mapped_column(String(300), nullable=True)
     product_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     # packaging
@@ -42,4 +41,4 @@ class GroceryItem(Base):
     is_manual: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     def __repr__(self) -> str:
-        return f"<GroceryItem id={self.id} name={self.name!r} status={self.match_status}>"
+        return f"<GroceryItem id={self.id} name={self.product_name!r}>"

@@ -1,21 +1,29 @@
 """Domain enums shared across the whole backend.
 
-Values intentionally match the strings used in the frontend TypeScript
-types. Do not rename existing members without a coordinated frontend
-change — this would be a breaking change for the mobile client.
+Values intentionally match the strings used by the frontend
+TypeScript types. See frontend/src/types/index.ts.
+
+Do not rename existing members without coordinating with the frontend —
+this would be a breaking change for the mobile client.
 """
 
 from enum import Enum
 
 
 class Day(str, Enum):
-    MONDAY = "monday"
-    TUESDAY = "tuesday"
-    WEDNESDAY = "wednesday"
-    THURSDAY = "thursday"
-    FRIDAY = "friday"
-    SATURDAY = "saturday"
-    SUNDAY = "sunday"
+    MON = "mon"
+    TUE = "tue"
+    WED = "wed"
+    THU = "thu"
+    FRI = "fri"
+    SAT = "sat"
+    SUN = "sun"
+
+
+class MealType(str, Enum):
+    BREAKFAST = "breakfast"
+    LUNCH = "lunch"
+    DINNER = "dinner"
 
 
 class Diet(str, Enum):
@@ -25,7 +33,9 @@ class Diet(str, Enum):
     PESCATARIAN = "pescatarian"
 
 
-class Equipment(str, Enum):
+class Appliance(str, Enum):
+    """Kitchen appliances a recipe may require."""
+
     STOVE = "stove"
     OVEN = "oven"
     MICROWAVE = "microwave"
@@ -64,9 +74,9 @@ class MatchStatus(str, Enum):
 
 
 class MealPlanStatus(str, Enum):
-    DRAFT = "draft"
-    GENERATED = "generated"
-    CART_CREATED = "cart_created"
+    GENERATING = "generating"
+    READY = "ready"
+    ERROR = "error"
 
 
 class ErrorCode(str, Enum):

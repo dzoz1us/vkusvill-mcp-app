@@ -10,7 +10,7 @@ import type {
   DietType,
   ApplianceType,
 } from '../types';
-import { api } from '../api/client';
+import { api } from '../api/client.mock';
 
 interface AppState {
   // Onboarding form state

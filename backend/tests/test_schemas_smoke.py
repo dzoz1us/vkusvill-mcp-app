@@ -1,21 +1,21 @@
-"""Smoke test for schemas: contracts must validate the reference payload."""
+"""Smoke tests for schemas: contracts must validate the reference payload."""
+
+from datetime import datetime, timezone
 
 import pytest
 from pydantic import ValidationError
 
-from app.schemas import GenerateRequest, MealPlanShort
-from datetime import datetime
+from app.schemas import GenerateRequest, MealPlanRead
 
 
 def test_generate_request_valid_payload():
-    """Payload from the tech spec (section 7.1)."""
     payload = {
         "people_count": 2,
-        "days": ["monday", "tuesday", "wednesday"],
+        "days": ["mon", "tue", "wed"],
         "budget": 5000,
         "preferences": ["quick", "high_protein"],
         "diet": "none",
-        "equipment": ["stove", "oven"],
+        "appliances": ["stove", "oven"],
         "random_seed": 42,
     }
     req = GenerateRequest.model_validate(payload)
@@ -26,14 +26,10 @@ def test_generate_request_valid_payload():
 
 
 def test_generate_request_optional_fields_default():
-    payload = {
-        "people_count": 1,
-        "days": ["monday"],
-        "budget": 1000,
-    }
+    payload = {"people_count": 1, "days": ["mon"], "budget": 1000}
     req = GenerateRequest.model_validate(payload)
     assert req.preferences == []
-    assert req.equipment == []
+    assert req.appliances == []
     assert req.diet.value == "none"
     assert req.random_seed is None
 
@@ -41,31 +37,17 @@ def test_generate_request_optional_fields_default():
 @pytest.mark.parametrize(
     "payload",
     [
-        # people_count too small
-        {"people_count": 0, "days": ["monday"], "budget": 1000},
-        # people_count too large
-        {"people_count": 99, "days": ["monday"], "budget": 1000},
-        # no days
+        {"people_count": 0, "days": ["mon"], "budget": 1000},
+        {"people_count": 99, "days": ["mon"], "budget": 1000},
         {"people_count": 2, "days": [], "budget": 1000},
-        # budget <= 0
-        {"people_count": 2, "days": ["monday"], "budget": 0},
-        # duplicate days
-        {"people_count": 2, "days": ["monday", "monday"], "budget": 1000},
-        # unknown diet
-        {"people_count": 2, "days": ["monday"], "budget": 1000, "diet": "keto"},
-        # unknown day
+        {"people_count": 2, "days": ["mon"], "budget": 0},
+        {"people_count": 2, "days": ["mon", "mon"], "budget": 1000},
+        {"people_count": 2, "days": ["mon"], "budget": 1000, "diet": "keto"},
         {"people_count": 2, "days": ["funday"], "budget": 1000},
-        # unknown equipment
+        {"people_count": 2, "days": ["mon"], "budget": 1000, "appliances": ["grill"]},
         {
             "people_count": 2,
-            "days": ["monday"],
-            "budget": 1000,
-            "equipment": ["grill"],
-        },
-        # duplicate preferences
-        {
-            "people_count": 2,
-            "days": ["monday"],
+            "days": ["mon"],
             "budget": 1000,
             "preferences": ["quick", "quick"],
         },
@@ -76,34 +58,77 @@ def test_generate_request_invalid_payloads(payload):
         GenerateRequest.model_validate(payload)
 
 
-def test_meal_plan_short_response_shape():
-    """Minimal contract from tech spec section 7.2."""
+def test_meal_plan_response_shape():
+    """Matches frontend/src/types/index.ts MealPlan."""
     payload = {
-        "id": 21,
-        "people_count": 2,
-        "budget": 5000,
-        "estimated_cost": 4682,
-        "cart_estimated_cost": 4682,
-        "over_budget": False,
-        "status": "generated",
-        "created_at": datetime.utcnow(),
-        "days": [
+        "id": "21",
+        "created_at": datetime.now(timezone.utc),
+        "params": {
+            "people_count": 2,
+            "days": ["mon", "tue"],
+            "budget": 5000,
+            "preferences": ["quick"],
+            "diet": "none",
+            "appliances": ["stove"],
+        },
+        "meals": [
             {
-                "day": "monday",
+                "id": "1",
+                "day": "mon",
+                "meal_type": "breakfast",
                 "recipe": {
-                    "id": 12,
-                    "name": "Курица с рисом",
-                    "cooking_time": 35,
+                    "id": "12",
+                    "name": "Овсянка",
+                    "cook_time_minutes": 10,
+                    "servings": 2,
                     "diet": "none",
-                    "tags": ["quick", "high_protein"],
                 },
-            }
+            },
+            {
+                "id": "2",
+                "day": "mon",
+                "meal_type": "lunch",
+                "recipe": {
+                    "id": "13",
+                    "name": "Курица с рисом",
+                    "cook_time_minutes": 35,
+                    "servings": 2,
+                    "diet": "none",
+                },
+            },
         ],
-        "grocery_items_count": 32,
+        "cart_estimated_cost": 4682,
+        "budget": 5000,
         "unresolved_items_count": 1,
+        "status": "ready",
     }
-    resp = MealPlanShort.model_validate(payload)
-    assert resp.id == 21
-    assert resp.days[0].day.value == "monday"
-    assert resp.days[0].recipe.name == "Курица с рисом"
-    assert resp.unresolved_items_count == 1
+    resp = MealPlanRead.model_validate(payload)
+    assert resp.id == "21"
+    assert len(resp.meals) == 2
+    assert resp.meals[0].day.value == "mon"
+    assert resp.meals[0].meal_type.value == "breakfast"
+    assert resp.status.value == "ready"
+
+
+def test_coerce_int_id_to_str():
+    """ORM id is int; API must expose it as string for the frontend."""
+    payload = {
+        "id": 42,  # int on purpose
+        "created_at": datetime.now(timezone.utc),
+        "params": {
+            "people_count": 1,
+            "days": ["mon"],
+            "budget": 1000,
+            "preferences": [],
+            "diet": "none",
+            "appliances": [],
+        },
+        "meals": [],
+        "cart_estimated_cost": 0,
+        "budget": 1000,
+        "unresolved_items_count": 0,
+        "status": "generating",
+    }
+    resp = MealPlanRead.model_validate(payload)
+    assert resp.id == "42"
+    assert isinstance(resp.id, str)

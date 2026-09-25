@@ -5,12 +5,13 @@ so future refactors of file layout do not leak into business code.
 """
 
 from app.schemas.enums import (
+    Appliance,
     Day,
     Diet,
-    Equipment,
     ErrorCode,
     MatchStatus,
     MealPlanStatus,
+    MealType,
     Preference,
     Unit,
 )
@@ -22,30 +23,33 @@ from app.schemas.grocery import (
     ManualGroceryItemCreate,
 )
 from app.schemas.meal_plan import (
-    CartChunk,
+    CartLink,
     CartResponse,
+    DayMealRead,
     GenerateRequest,
-    MealPlanDayRead,
-    MealPlanShort,
+    MealPlanRead,
+    OnboardingParams,
     RefreshPricesResponse,
     ReplaceMealRequest,
+    ReplaceMealResponse,
 )
 from app.schemas.recipe import (
-    IngredientBase,
+    IngredientRead,
+    NutritionInfo,
     RecipeDetail,
-    RecipeIngredientRead,
     RecipeListResponse,
     RecipeShort,
 )
 
 __all__ = [
     # enums
+    "Appliance",
     "Day",
     "Diet",
-    "Equipment",
     "ErrorCode",
     "MatchStatus",
     "MealPlanStatus",
+    "MealType",
     "Preference",
     "Unit",
     # errors
@@ -57,17 +61,19 @@ __all__ = [
     "GroceryListResponse",
     "ManualGroceryItemCreate",
     # meal plan
-    "CartChunk",
+    "CartLink",
     "CartResponse",
+    "DayMealRead",
     "GenerateRequest",
-    "MealPlanDayRead",
-    "MealPlanShort",
+    "MealPlanRead",
+    "OnboardingParams",
     "RefreshPricesResponse",
     "ReplaceMealRequest",
+    "ReplaceMealResponse",
     # recipe
-    "IngredientBase",
+    "IngredientRead",
+    "NutritionInfo",
     "RecipeDetail",
-    "RecipeIngredientRead",
     "RecipeListResponse",
     "RecipeShort",
 ]

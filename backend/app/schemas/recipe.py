@@ -1,28 +1,27 @@
 """Recipe and ingredient schemas.
 
-Kept intentionally lean for mobile clients: list endpoints return a
-compact `RecipeShort`, detail endpoints return `RecipeDetail`.
+Field names match the frontend TypeScript contract in
+frontend/src/types/index.ts.
 """
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.schemas.enums import Diet, Equipment
+from app.schemas.enums import Appliance, Diet
 
 
-class IngredientBase(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: int
-    name: str
-    normalized_name: str
-    default_unit: str
-    category: str | None = None
+class NutritionInfo(BaseModel):
+    calories: float
+    protein: float
+    fat: float
+    carbs: float
 
 
-class RecipeIngredientRead(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+class IngredientRead(BaseModel):
+    """Ingredient as it appears inside a recipe."""
 
-    ingredient_id: int
+    model_config = ConfigDict(from_attributes=True, coerce_numbers_to_str=True)
+
+    id: str
     name: str
     quantity: float
     unit: str
@@ -31,28 +30,23 @@ class RecipeIngredientRead(BaseModel):
 class RecipeShort(BaseModel):
     """Compact representation for lists and meal plan cards."""
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, coerce_numbers_to_str=True)
 
-    id: int
+    id: str
     name: str
     image_url: str | None = None
-    cooking_time: int = Field(..., ge=0)
-    calories: float | None = None
+    cook_time_minutes: int = Field(..., ge=0)
+    servings: int = Field(..., ge=1)
+    nutrition: NutritionInfo | None = None
     diet: Diet
-    tags: list[str] = Field(default_factory=list)
 
 
 class RecipeDetail(RecipeShort):
     """Full representation for the recipe page."""
 
-    description: str | None = None
-    base_servings: int = Field(..., ge=1)
-    protein: float | None = None
-    fat: float | None = None
-    carbs: float | None = None
-    equipment: list[Equipment] = Field(default_factory=list)
-    ingredients: list[RecipeIngredientRead] = Field(default_factory=list)
-    instructions: str | None = None
+    appliances: list[Appliance] = Field(default_factory=list)
+    ingredients: list[IngredientRead] = Field(default_factory=list)
+    steps: list[str] = Field(default_factory=list)
 
 
 class RecipeListResponse(BaseModel):

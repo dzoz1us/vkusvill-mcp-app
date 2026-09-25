@@ -55,7 +55,10 @@ export default function GroceryListPage() {
   }
 
   const boughtItems = groceryList.items.filter(i => i.is_bought);
-  const totalBoughtCost = boughtItems.reduce((sum, i) => sum + i.price_per_package * i.package_count, 0);
+  const totalBoughtCost = boughtItems.reduce(
+    (sum, i) => sum + (i.price_per_package ?? 0) * (i.package_count ?? 0),
+    0
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -164,7 +167,7 @@ export default function GroceryListPage() {
                   {/* Price */}
                   <div className="text-right flex-shrink-0">
                     <p className={`font-semibold ${item.is_bought ? 'text-gray-400' : 'text-gray-900'}`}>
-                      {(item.price_per_package * item.package_count).toLocaleString()} ₽
+                      {((item.price_per_package ?? 0) * (item.package_count ?? 0)).toLocaleString()} ₽
                     </p>
                     <p className="text-xs text-gray-400">
                       {item.price_per_package} ₽/уп
