@@ -16,6 +16,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
 
+from app.models.recipe import Recipe
+
 
 class MealPlan(Base):
     __tablename__ = "meal_plans"
@@ -48,6 +50,20 @@ class MealPlan(Base):
         order_by="MealPlanMeal.id",
     )
 
+    @property
+    def params(self) -> dict:
+        """Bundle onboarding fields into a nested dict for Pydantic."""
+        import json
+
+        return {
+            "people_count": self.people_count,
+            "days": json.loads(self.days_json),
+            "budget": self.budget,
+            "preferences": json.loads(self.preferences_json),
+            "diet": self.diet,
+            "appliances": json.loads(self.appliances_json),
+        }
+
     def __repr__(self) -> str:
         return f"<MealPlan id={self.id} meals={len(self.meals)}>"
 
@@ -69,6 +85,7 @@ class MealPlanMeal(Base):
     recipe_id: Mapped[int] = mapped_column(
         ForeignKey("recipes.id", ondelete="RESTRICT"), nullable=False, index=True
     )
+    recipe: Mapped["Recipe"] = relationship(lazy="joined")
 
     meal_plan: Mapped["MealPlan"] = relationship(back_populates="meals")
 

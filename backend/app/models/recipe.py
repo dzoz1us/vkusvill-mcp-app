@@ -46,6 +46,18 @@ class Recipe(Base):
     def __repr__(self) -> str:
         return f"<Recipe id={self.id} name={self.name!r}>"
 
+    @property
+    def nutrition(self) -> dict | None:
+        """Expose flat KБЖУ columns as nested dict for Pydantic."""
+        if self.calories is None:
+            return None
+        return {
+            "calories": self.calories,
+            "protein": self.protein or 0,
+            "fat": self.fat or 0,
+            "carbs": self.carbs or 0,
+        }
+
 
 class RecipeIngredient(Base):
     __tablename__ = "recipe_ingredients"
