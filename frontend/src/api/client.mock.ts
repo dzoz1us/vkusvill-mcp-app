@@ -167,7 +167,10 @@ function generateGroceryList(plan: MealPlan): GroceryList {
   plan.meals.forEach((meal) => {
     // Mock stores full Recipe objects even though the type says RecipeShort.
     const fullRecipe = meal.recipe as Recipe;
-    fullRecipe.ingredients.forEach((ing: Ingredient) => {
+    const ingredients = Array.isArray(fullRecipe.ingredients)
+      ? fullRecipe.ingredients
+      : [];
+    ingredients.forEach((ing: Ingredient) => {
       const existing = allIngredientsMap.get(ing.name);
       if (existing) {
         existing.quantity += ing.quantity;
@@ -259,12 +262,13 @@ export const api = {
 
   async getMealPlan(id: string): Promise<MealPlan> {
     await delay(500);
-    // Return a stored plan from localStorage or generate mock
+    // Return a stored plan from localStorage or generate and persist a
+    // deterministic plan for the requested route id.
     const stored = localStorage.getItem(`meal-plan-${id}`);
     if (stored) return JSON.parse(stored);
 
     // Generate a default plan for demo
-    return generateMealPlan({
+    const plan = generateMealPlan({
       people_count: 2,
       days: ["mon", "tue", "wed", "thu", "fri"],
       budget: 5000,
@@ -272,6 +276,9 @@ export const api = {
       diet: "none",
       appliances: ["stove", "oven"],
     });
+    plan.id = id;
+    localStorage.setItem(`meal-plan-${id}`, JSON.stringify(plan));
+    return plan;
   },
 
   async getRecipe(id: string): Promise<Recipe> {
@@ -311,12 +318,14 @@ export const api = {
         diet: "none",
         appliances: ["stove"],
       });
+      plan.id = planId;
     }
 
     const mealIdx = plan.meals.findIndex((m) => m.id === dayMealId);
-    if (mealIdx >= 0) {
-      plan.meals[mealIdx].recipe = newRecipe;
+    if (mealIdx < 0) {
+      throw new Error(`Meal ${dayMealId} not found in plan ${planId}`);
     }
+    plan.meals[mealIdx].recipe = newRecipe;
 
     localStorage.setItem(`meal-plan-${planId}`, JSON.stringify(plan));
 
