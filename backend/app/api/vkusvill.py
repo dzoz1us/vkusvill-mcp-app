@@ -113,27 +113,23 @@ async def create_vkusvill_cart(plan_id: int, db: Session = Depends(get_db)):
             retryable=True,
         )
 
-    items = (
-        db.query(GroceryItem)
-        .filter_by(meal_plan_id=plan.id)
-        .filter(GroceryItem.match_status == "matched")
-        .filter(GroceryItem.product_xml_id.isnot(None))
-        .filter(GroceryItem.package_count.isnot(None))
-        .all()
-    )
+    all_items = db.query(GroceryItem).filter_by(meal_plan_id=plan.id).all()
 
-    unresolved = (
-        db.query(GroceryItem)
-        .filter_by(meal_plan_id=plan.id)
-        .filter(GroceryItem.match_status != "matched")
-        .count()
-    )
+    items = [
+        item
+        for item in all_items
+        if (
+            item.match_status == "matched"
+            and item.product_xml_id is not None
+            and item.package_count is not None
+        )
+    ]
 
     if not items:
         return CartResponse(
             carts=[],
             price_changed=False,
-            unresolved_items=unresolved,
+            unresolved_items=len(all_items),
         )
 
     # build payload for MCP: [{xml_id: int, q: float}]
@@ -149,6 +145,10 @@ async def create_vkusvill_cart(plan_id: int, db: Session = Depends(get_db)):
         if q > MAX_Q_PER_ITEM:
             q = MAX_Q_PER_ITEM
         payload.append({"xml_id": xml_id, "q": q})
+
+    # Count every grocery item that cannot be represented in the cart
+    # payload, including manual items and malformed product IDs.
+    unresolved = len(all_items) - len(payload)
 
     # chunk by 20 (share_basket limit)
     chunks = [payload[i : i + CART_CHUNK_SIZE] for i in range(0, len(payload), CART_CHUNK_SIZE)]
