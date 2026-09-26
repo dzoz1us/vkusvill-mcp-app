@@ -19,7 +19,7 @@ cd backend
 python -m venv .venv
 # Windows
 .venv\Scripts\python -m pip install -r requirements.txt
-.venv\Scripts\python -m uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 8000
 ```
 
 При первом запуске база и каталог рецептов создаются автоматически. API: <http://localhost:8000>, Swagger: <http://localhost:8000/docs>.
