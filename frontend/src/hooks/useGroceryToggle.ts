@@ -1,4 +1,4 @@
-import { useAppStore } from '../store';
+import { useAppStore } from "../store";
 
 export function useGroceryToggle() {
   const { toggleBought } = useAppStore();

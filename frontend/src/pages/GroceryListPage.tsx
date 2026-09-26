@@ -1,23 +1,37 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAppStore } from '../store';
-import { ArrowLeft, ShoppingCart, AlertTriangle, RefreshCw } from 'lucide-react';
-import ProductMatchCard from '../components/ProductMatchCard';
-import CartModal from '../components/CartModal';
-import { useGroceryToggle } from '../hooks/useGroceryToggle';
-import { useCartCreation } from '../hooks/useCartCreation';
-import { formatPrice } from '../utils/helpers';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useAppStore } from "../store";
+import {
+  ArrowLeft,
+  ShoppingCart,
+  AlertTriangle,
+  RefreshCw,
+} from "lucide-react";
+import ProductMatchCard from "../components/ProductMatchCard";
+import CartModal from "../components/CartModal";
+import { useGroceryToggle } from "../hooks/useGroceryToggle";
+import { useCartCreation } from "../hooks/useCartCreation";
+import { formatPrice } from "../utils/helpers";
 
 export default function GroceryListPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
-    groceryList, groceryState,
-    loadGroceryList, cartResponse, cartState, cartError, clearCart,
+    groceryList,
+    groceryState,
+    loadGroceryList,
+    cartResponse,
+    cartState,
+    cartError,
+    clearCart,
   } = useAppStore();
 
   const { handleToggle } = useGroceryToggle();
-  const { isLoading: isCreatingCart, error: cartCreationError, handleCreateCart } = useCartCreation(id);
+  const {
+    isLoading: isCreatingCart,
+    error: cartCreationError,
+    handleCreateCart,
+  } = useCartCreation(id);
   const [showCartModal, setShowCartModal] = useState(false);
 
   useEffect(() => {
@@ -27,12 +41,34 @@ export default function GroceryListPage() {
   }, [id]);
 
   useEffect(() => {
-    if (cartState === 'success') {
+    if (cartState === "success") {
       setShowCartModal(true);
     }
   }, [cartState]);
 
-  if (groceryState === 'loading' || !groceryList) {
+  if (groceryState === "error") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="bg-white rounded-2xl shadow-lg p-8 text-center max-w-md">
+          <AlertTriangle className="w-10 h-10 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-900 mb-2">
+            Не удалось загрузить список
+          </h2>
+          <p className="text-gray-500 mb-6">
+            Проверьте соединение и попробуйте ещё раз.
+          </p>
+          <button
+            onClick={() => id && loadGroceryList(id)}
+            className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 transition"
+          >
+            Повторить
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (groceryState === "loading" || !groceryList) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -43,8 +79,16 @@ export default function GroceryListPage() {
     );
   }
 
-  const boughtItems = groceryList.items.filter(i => i.is_bought);
-  const totalBoughtCost = boughtItems.reduce((sum, i) => sum + i.price_per_package * i.package_count, 0);
+  const boughtItems = groceryList.items.filter((i) => i.is_bought);
+  const totalBoughtCost = boughtItems.reduce(
+    (sum, item) =>
+      sum +
+      (item.total_price ??
+        (item.price_per_package !== null && item.package_count !== null
+          ? item.price_per_package * item.package_count
+          : 0)),
+    0,
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -52,12 +96,17 @@ export default function GroceryListPage() {
       <header className="bg-white border-b border-gray-100 sticky top-0 z-30">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-lg transition">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition"
+            >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
             <div>
               <h1 className="font-bold text-gray-900">Список покупок</h1>
-              <p className="text-xs text-gray-500">{groceryList.items.length} товаров</p>
+              <p className="text-xs text-gray-500">
+                {groceryList.items.length} товаров
+              </p>
             </div>
           </div>
           {id && (
@@ -75,15 +124,21 @@ export default function GroceryListPage() {
         {/* Summary */}
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-emerald-50 rounded-xl p-3 text-center">
-            <div className="text-xl font-bold text-emerald-600">{groceryList.matched_count}</div>
+            <div className="text-xl font-bold text-emerald-600">
+              {groceryList.matched_count}
+            </div>
             <div className="text-xs text-emerald-600 mt-1">Найдено</div>
           </div>
           <div className="bg-amber-50 rounded-xl p-3 text-center">
-            <div className="text-xl font-bold text-amber-600">{groceryList.review_count}</div>
+            <div className="text-xl font-bold text-amber-600">
+              {groceryList.review_count}
+            </div>
             <div className="text-xs text-amber-600 mt-1">Проверить</div>
           </div>
           <div className="bg-red-50 rounded-xl p-3 text-center">
-            <div className="text-xl font-bold text-red-600">{groceryList.not_found_count}</div>
+            <div className="text-xl font-bold text-red-600">
+              {groceryList.not_found_count}
+            </div>
             <div className="text-xs text-red-600 mt-1">Не найдено</div>
           </div>
         </div>
@@ -93,13 +148,21 @@ export default function GroceryListPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500">Итого</p>
-              <p className="text-2xl font-bold text-gray-900">{formatPrice(groceryList.total_cost)}</p>
-              <p className="text-xs text-gray-400 mt-1">Ориентировочная стоимость</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {formatPrice(groceryList.total_cost)}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                Ориентировочная стоимость
+              </p>
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-500">Куплено</p>
-              <p className="text-lg font-bold text-emerald-600">{formatPrice(totalBoughtCost)}</p>
-              <p className="text-xs text-gray-400">{boughtItems.length} из {groceryList.items.length}</p>
+              <p className="text-lg font-bold text-emerald-600">
+                {formatPrice(totalBoughtCost)}
+              </p>
+              <p className="text-xs text-gray-400">
+                {boughtItems.length} из {groceryList.items.length}
+              </p>
             </div>
           </div>
         </div>
@@ -107,7 +170,7 @@ export default function GroceryListPage() {
         {/* Items */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="divide-y divide-gray-50">
-            {groceryList.items.map(item => (
+            {groceryList.items.map((item) => (
               <ProductMatchCard
                 key={item.id}
                 item={item}
@@ -122,7 +185,8 @@ export default function GroceryListPage() {
           <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-900 mb-2">Перейти в ВкусВилл</h3>
             <p className="text-sm text-gray-500 mb-4">
-              Создадим корзину с этими продуктами. Цены и наличие могут измениться.
+              Создадим корзину с этими продуктами. Цены и наличие могут
+              измениться.
             </p>
             <button
               onClick={handleCreateCart}
@@ -148,13 +212,16 @@ export default function GroceryListPage() {
         {showCartModal && cartResponse && (
           <CartModal
             cartResponse={cartResponse}
-            onClose={() => { setShowCartModal(false); clearCart(); }}
+            onClose={() => {
+              setShowCartModal(false);
+              clearCart();
+            }}
           />
         )}
 
-        {cartState === 'error' && cartError && (
+        {(cartState === "error" || cartCreationError) && (
           <div className="fixed bottom-4 left-4 right-4 z-50 bg-red-500 text-white p-4 rounded-xl shadow-lg max-w-md mx-auto">
-            <p className="text-sm">{cartError}</p>
+            <p className="text-sm">{cartError || cartCreationError}</p>
           </div>
         )}
       </main>
