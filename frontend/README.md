@@ -1,11 +1,11 @@
-# Mise Planner — Планировщик питания
+# Edimo — Планировщик питания
 
 Персональный план питания с интеграцией ВкусВилл.
 
 ## Структура проекта
 
 ```
-mise-planner/
+edimo/
 ├── frontend/   # React + TypeScript + Vite
 └── backend/    # FastAPI (Python) — в разработке
 ```

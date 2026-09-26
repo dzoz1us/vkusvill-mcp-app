@@ -140,7 +140,7 @@ export default function OnboardingPage() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-3">
             <span className="text-4xl">🍽️</span>
-            <h1 className="text-3xl font-bold text-gray-900">Mise Planner</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Edimo</h1>
           </div>
           <p className="text-gray-500">
             Персональный план питания с доставкой из ВкусВилл
