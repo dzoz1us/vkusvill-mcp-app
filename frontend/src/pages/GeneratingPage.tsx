@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "../store";
 
@@ -13,13 +13,14 @@ const STAGES = [
 export default function GeneratingPage() {
   const navigate = useNavigate();
   const { currentPlan, planState, planError, generatePlan } = useAppStore();
+  const generationStarted = useRef(false);
 
   // Запускаем генерацию при монтировании
   useEffect(() => {
-    if (planState === "idle") {
-      generatePlan();
-    }
-  }, []);
+    if (planState !== "idle" || generationStarted.current) return;
+    generationStarted.current = true;
+    void generatePlan();
+  }, [generatePlan, planState]);
 
   useEffect(() => {
     if (planState === "success" && currentPlan) {
