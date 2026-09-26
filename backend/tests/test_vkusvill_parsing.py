@@ -77,3 +77,21 @@ def test_candidate_null_price():
     assert c is not None
     assert c.price is None
     assert c.package_quantity == 1000
+
+
+def test_candidate_ignores_malformed_numeric_fields():
+    raw = {
+        "id": "not-a-number",
+        "xml_id": "abc",
+        "name": "Товар",
+        "price": -10,
+        "weight": {"value": -1, "unit": "кг"},
+    }
+
+    c = _candidate_from_dict(raw)
+
+    assert c is not None
+    assert c.product_id is None
+    assert c.price is None
+    assert c.package_quantity is None
+    assert c.package_unit is None
