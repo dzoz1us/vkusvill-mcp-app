@@ -129,8 +129,8 @@ def score_candidate(
     return score
 
 
-MATCH_THRESHOLD = 3.0
-REVIEW_THRESHOLD = 1.0
+MATCH_THRESHOLD = 0.5
+REVIEW_THRESHOLD = -3.0
 
 
 def pick_best_candidate(
