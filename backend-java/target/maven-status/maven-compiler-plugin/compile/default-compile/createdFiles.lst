@@ -1,9 +1,13 @@
 com\vkusplan\repository\IngredientRepository.class
-com\vkusplan\domain\RecipeIngredient.class
+com\vkusplan\repository\MealPlanRepository.class
 com\vkusplan\repository\RecipeRepository.class
-com\vkusplan\domain\Recipe.class
 com\vkusplan\HealthController.class
-com\vkusplan\VkusplanApplication.class
 com\vkusplan\domain\Ingredient.class
 com\vkusplan\domain\RecipeTag.class
+com\vkusplan\repository\MealPlanMealRepository.class
+com\vkusplan\domain\MealPlanMeal.class
+com\vkusplan\domain\MealPlan.class
+com\vkusplan\domain\RecipeIngredient.class
+com\vkusplan\domain\Recipe.class
+com\vkusplan\VkusplanApplication.class
 com\vkusplan\domain\RecipeAppliance.class
