@@ -1,4 +1,9 @@
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\Ingredient.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\Recipe.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeAppliance.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeIngredient.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeTag.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\HealthController.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\IngredientRepository.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\RecipeRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\VkusplanApplication.java
