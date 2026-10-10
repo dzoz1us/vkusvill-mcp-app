@@ -46,4 +46,7 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\reposit
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\MealPlanRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\ProductMappingRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\RecipeRepository.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\CanonicalQuantity.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\QuantityService.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\UnknownUnitException.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\VkusplanApplication.java

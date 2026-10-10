@@ -27,6 +27,7 @@ com\vkusplan\dto\OnboardingParams.class
 com\vkusplan\domain\RecipeIngredient.class
 com\vkusplan\domain\Recipe.class
 com\vkusplan\repository\MCPProductCacheRepository.class
+com\vkusplan\service\UnknownUnitException.class
 com\vkusplan\dto\CartResponse.class
 com\vkusplan\enums\Appliance.class
 com\vkusplan\config\JacksonConfig.class
@@ -39,7 +40,9 @@ com\vkusplan\dto\ReplaceMealRequest.class
 com\vkusplan\enums\MealType.class
 com\vkusplan\enums\Unit.class
 com\vkusplan\dto\IngredientRead.class
+com\vkusplan\service\CanonicalQuantity.class
 com\vkusplan\domain\Ingredient.class
+com\vkusplan\service\QuantityService.class
 com\vkusplan\enums\MealPlanStatus.class
 com\vkusplan\VkusplanApplication.class
 com\vkusplan\dto\RecipeDetail.class
