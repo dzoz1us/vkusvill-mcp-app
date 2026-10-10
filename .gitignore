@@ -12,3 +12,7 @@ venv/
 *.sqlite3
 !.env.example
 .env.*
+# IDE
+.vscode/
+.idea/
+*.iml
