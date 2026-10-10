@@ -4,3 +4,17 @@ server:
 spring:
   application:
     name: vkusplan-backend
+
+  datasource:
+    url: jdbc:sqlite:./app-java.db
+    driver-class-name: org.sqlite.JDBC
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+        format_sql: true
+    show-sql: true
+    open-in-view: false
