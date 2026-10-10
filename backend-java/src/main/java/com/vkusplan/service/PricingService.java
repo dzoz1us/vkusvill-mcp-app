@@ -1,7 +1,5 @@
 package com.vkusplan.service;
 
-import java.util.Set;
-
 import org.springframework.stereotype.Service;
 
 /**
@@ -46,22 +44,22 @@ public class PricingService {
     }
 
     /**
-     * Pairs of units that can be compared in the package calculation.
+     * Are two units compatible in the package calculation?
      *
      * In the recipe world we work with g / ml / pcs.
      * VkusVill reports package weight in g even for liquids like milk.
      * For kitchen purposes g and ml are treated as interchangeable —
      * density ~1. That is a documented MVP simplification.
      */
-    private static final Set<Set<String>> COMPATIBLE_PAIRS = Set.of(
-            Set.of("g", "g"),
-            Set.of("g", "ml"),
-            Set.of("ml", "ml"),
-            Set.of("pcs", "pcs")
-    );
-
     public boolean unitsCompatible(String a, String b) {
-        return COMPATIBLE_PAIRS.contains(Set.of(a, b));
+        if (a == null || b == null) {
+            return false;
+        }
+        if (a.equals(b)) {
+            return true;
+        }
+        return (a.equals("g") && b.equals("ml"))
+                || (a.equals("ml") && b.equals("g"));
     }
 
     /**

@@ -1,0 +1,10 @@
+com\vkusplan\service\PricingServiceTest$UnitsCompatible.class
+com\vkusplan\service\PricingServiceTest$PackagesFor.class
+com\vkusplan\service\GroceryServiceTest.class
+com\vkusplan\service\PricingServiceTest$TotalPrice.class
+com\vkusplan\service\QuantityServiceTest$AddCanonical.class
+com\vkusplan\service\QuantityServiceTest$ToCanonical.class
+com\vkusplan\service\PricingServiceTest$PackagesNeeded.class
+com\vkusplan\service\PricingServiceTest.class
+com\vkusplan\service\QuantityServiceTest$ScaleQuantity.class
+com\vkusplan\service\QuantityServiceTest.class
