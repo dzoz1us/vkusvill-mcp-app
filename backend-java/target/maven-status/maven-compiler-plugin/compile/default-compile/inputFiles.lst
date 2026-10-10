@@ -8,6 +8,15 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeAppliance.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeIngredient.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeTag.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Appliance.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Day.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Diet.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\ErrorCode.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\MatchStatus.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\MealPlanStatus.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\MealType.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Preference.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Unit.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\HealthController.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\GroceryItemRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\IngredientRepository.java
