@@ -11,7 +11,12 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeTag.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\GenerateRequest.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\GroceryItemUpdate.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\IngredientRead.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\ManualGroceryItemCreate.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\NutritionInfo.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\RecipeDetail.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\RecipeListResponse.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\RecipeShort.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\ReplaceMealRequest.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Appliance.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Day.java
