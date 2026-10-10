@@ -1,2 +1,4 @@
+com\vkusplan\domain\Ingredient.class
+com\vkusplan\repository\IngredientRepository.class
 com\vkusplan\HealthController.class
 com\vkusplan\VkusplanApplication.class
