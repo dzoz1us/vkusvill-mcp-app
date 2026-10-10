@@ -45,6 +45,7 @@ com\vkusplan\service\dto\AggregatedIngredient.class
 com\vkusplan\dto\IngredientRead.class
 com\vkusplan\service\CanonicalQuantity.class
 com\vkusplan\domain\Ingredient.class
+com\vkusplan\service\PricingService.class
 com\vkusplan\service\QuantityService.class
 com\vkusplan\enums\MealPlanStatus.class
 com\vkusplan\VkusplanApplication.class
