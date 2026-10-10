@@ -50,7 +50,10 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\dto\AggregatedIngredient.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\dto\RecipeIngredientInput.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\dto\RecipeInput.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\dto\ScoredRecipe.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\GroceryService.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\MealPlanService.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\NoSuitableRecipesException.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\PricingService.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\QuantityService.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\UnknownUnitException.java
