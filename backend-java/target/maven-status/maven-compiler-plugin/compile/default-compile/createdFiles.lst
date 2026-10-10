@@ -1,13 +1,17 @@
+com\vkusplan\config\JacksonConfig.class
 com\vkusplan\domain\ProductMapping.class
 com\vkusplan\repository\MealPlanRepository.class
+com\vkusplan\dto\ManualGroceryItemCreate.class
 com\vkusplan\HealthController.class
 com\vkusplan\domain\RecipeTag.class
 com\vkusplan\enums\Diet.class
 com\vkusplan\domain\MealPlanMeal.class
 com\vkusplan\repository\GroceryItemRepository.class
 com\vkusplan\domain\MealPlan.class
+com\vkusplan\dto\GroceryItemUpdate.class
 com\vkusplan\enums\MatchStatus.class
 com\vkusplan\enums\Day.class
+com\vkusplan\dto\ReplaceMealRequest.class
 com\vkusplan\enums\Preference.class
 com\vkusplan\domain\GroceryItem.class
 com\vkusplan\repository\IngredientRepository.class
@@ -17,6 +21,7 @@ com\vkusplan\repository\RecipeRepository.class
 com\vkusplan\domain\Ingredient.class
 com\vkusplan\domain\MCPProductCache.class
 com\vkusplan\repository\MealPlanMealRepository.class
+com\vkusplan\dto\GenerateRequest.class
 com\vkusplan\enums\MealPlanStatus.class
 com\vkusplan\domain\RecipeIngredient.class
 com\vkusplan\domain\Recipe.class

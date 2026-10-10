@@ -5,6 +5,13 @@ spring:
   application:
     name: vkusplan-backend
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
   datasource:
     url: jdbc:sqlite:./app-java.db
     driver-class-name: org.sqlite.JDBC

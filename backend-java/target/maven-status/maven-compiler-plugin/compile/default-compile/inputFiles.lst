@@ -1,3 +1,4 @@
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\JacksonConfig.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\GroceryItem.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\Ingredient.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\MCPProductCache.java
@@ -8,6 +9,10 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeAppliance.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeIngredient.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeTag.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\GenerateRequest.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\GroceryItemUpdate.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\ManualGroceryItemCreate.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\ReplaceMealRequest.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Appliance.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Day.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Diet.java
