@@ -1,7 +1,9 @@
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\GroceryItem.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\Ingredient.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\MCPProductCache.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\MealPlan.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\MealPlanMeal.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\ProductMapping.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\Recipe.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeAppliance.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeIngredient.java
@@ -9,7 +11,9 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\HealthController.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\GroceryItemRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\IngredientRepository.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\MCPProductCacheRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\MealPlanMealRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\MealPlanRepository.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\ProductMappingRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\RecipeRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\VkusplanApplication.java
