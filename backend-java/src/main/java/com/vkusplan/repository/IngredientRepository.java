@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.vkusplan.domain.Ingredient;
 
 @Repository
-public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
+public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
 
     Optional<Ingredient> findByNormalizedName(String normalizedName);
 }
