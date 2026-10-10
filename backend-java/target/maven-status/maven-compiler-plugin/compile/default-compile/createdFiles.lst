@@ -14,6 +14,7 @@ com\vkusplan\dto\GroceryItemUpdate.class
 com\vkusplan\enums\MatchStatus.class
 com\vkusplan\enums\Day.class
 com\vkusplan\enums\Preference.class
+com\vkusplan\service\GroceryService$AggregationEntry.class
 com\vkusplan\domain\GroceryItem.class
 com\vkusplan\dto\RecipeListResponse.class
 com\vkusplan\repository\IngredientRepository.class
@@ -39,6 +40,8 @@ com\vkusplan\domain\MealPlan.class
 com\vkusplan\dto\ReplaceMealRequest.class
 com\vkusplan\enums\MealType.class
 com\vkusplan\enums\Unit.class
+com\vkusplan\service\dto\RecipeIngredientInput.class
+com\vkusplan\service\dto\AggregatedIngredient.class
 com\vkusplan\dto\IngredientRead.class
 com\vkusplan\service\CanonicalQuantity.class
 com\vkusplan\domain\Ingredient.class
@@ -48,5 +51,7 @@ com\vkusplan\VkusplanApplication.class
 com\vkusplan\dto\RecipeDetail.class
 com\vkusplan\repository\ProductMappingRepository.class
 com\vkusplan\dto\ErrorResponse.class
+com\vkusplan\service\dto\RecipeInput.class
 com\vkusplan\domain\RecipeAppliance.class
 com\vkusplan\enums\ErrorCode.class
+com\vkusplan\service\GroceryService.class
