@@ -15,11 +15,7 @@
       {"normalized_name": "ягоды замороженные", "quantity": 150, "unit": "g"},
       {"normalized_name": "мёд", "quantity": 30, "unit": "g"}
     ],
-    "steps": [
-      "Вскипятить молоко в кастрюле.",
-      "Добавить овсяные хлопья и варить 5 минут, помешивая.",
-      "Разложить по тарелкам, добавить ягоды и мёд."
-    ]
+    "steps": ["Вскипятить молоко.", "Добавить хлопья, варить 5 мин.", "Подать с ягодами и мёдом."]
   },
   {
     "name": "Сырники со сметаной",
@@ -39,12 +35,7 @@
       {"normalized_name": "сметана", "quantity": 100, "unit": "g"},
       {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
     ],
-    "steps": [
-      "Смешать творог, яйца, сахар и муку.",
-      "Сформировать сырники.",
-      "Обжарить на разогретом масле до золотистой корочки с двух сторон.",
-      "Подавать со сметаной."
-    ]
+    "steps": ["Смешать творог, яйца, сахар, муку.", "Сформировать сырники.", "Обжарить до золотистой корочки.", "Подать со сметаной."]
   },
   {
     "name": "Омлет с овощами",
@@ -64,11 +55,7 @@
       {"normalized_name": "масло сливочное", "quantity": 15, "unit": "g"},
       {"normalized_name": "соль", "quantity": 2, "unit": "g"}
     ],
-    "steps": [
-      "Взбить яйца с молоком и солью.",
-      "Нарезать овощи, обжарить на сливочном масле 2 минуты.",
-      "Залить овощи яичной смесью, готовить под крышкой 5 минут."
-    ]
+    "steps": ["Взбить яйца с молоком.", "Обжарить овощи.", "Залить яичной смесью, готовить под крышкой 5 мин."]
   },
   {
     "name": "Творожная запеканка",
@@ -88,12 +75,7 @@
       {"normalized_name": "сметана", "quantity": 100, "unit": "g"},
       {"normalized_name": "масло сливочное", "quantity": 20, "unit": "g"}
     ],
-    "steps": [
-      "Разогреть духовку до 180°C.",
-      "Смешать творог, яйца, сахар, муку и сметану.",
-      "Выложить в форму, смазанную маслом.",
-      "Запекать 35 минут до золотистой корочки."
-    ]
+    "steps": ["Смешать всё.", "Выложить в форму.", "Запекать 35 мин при 180°C."]
   },
   {
     "name": "Гречка с молоком",
@@ -112,11 +94,7 @@
       {"normalized_name": "сахар", "quantity": 20, "unit": "g"},
       {"normalized_name": "соль", "quantity": 2, "unit": "g"}
     ],
-    "steps": [
-      "Промыть гречку.",
-      "Залить молоком, добавить соль и сахар, варить 20 минут.",
-      "Добавить масло перед подачей."
-    ]
+    "steps": ["Промыть гречку.", "Залить молоком, варить 20 мин.", "Добавить масло."]
   },
   {
     "name": "Банановый смузи с овсянкой",
@@ -134,11 +112,256 @@
       {"normalized_name": "молоко", "quantity": 300, "unit": "ml"},
       {"normalized_name": "мёд", "quantity": 20, "unit": "g"}
     ],
-    "steps": [
-      "Сложить все ингредиенты в блендер.",
-      "Взбить до однородной массы.",
-      "Подавать охлаждённым."
-    ]
+    "steps": ["Сложить всё в блендер.", "Взбить.", "Подавать охлаждённым."]
+  },
+  {
+    "name": "Смузи-боул с ягодами",
+    "description": "Веганский завтрак-боул",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 5,
+    "calories": 260, "protein": 8, "fat": 6, "carbs": 44,
+    "diet": "vegan",
+    "tags": ["quick", "healthy"],
+    "appliances": ["blender"],
+    "ingredients": [
+      {"normalized_name": "бананы", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "ягоды замороженные", "quantity": 200, "unit": "g"},
+      {"normalized_name": "овсяные хлопья", "quantity": 60, "unit": "g"}
+    ],
+    "steps": ["Сложить всё в блендер.", "Взбить до однородности.", "Перелить в боул."]
+  },
+  {
+    "name": "Овсянка в микроволновке",
+    "description": "Завтрак за 3 минуты",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 5,
+    "calories": 320, "protein": 10, "fat": 6, "carbs": 55,
+    "diet": "vegetarian",
+    "tags": ["quick", "budget"],
+    "appliances": ["microwave"],
+    "ingredients": [
+      {"normalized_name": "овсяные хлопья", "quantity": 100, "unit": "g"},
+      {"normalized_name": "молоко", "quantity": 400, "unit": "ml"},
+      {"normalized_name": "мёд", "quantity": 30, "unit": "g"}
+    ],
+    "steps": ["Смешать овсянку с молоком.", "Греть 2 мин в микроволновке.", "Добавить мёд."]
+  },
+  {
+    "name": "Яичница с помидорами",
+    "description": "Простой завтрак на скорую руку",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 10,
+    "calories": 260, "protein": 16, "fat": 18, "carbs": 6,
+    "diet": "vegetarian",
+    "tags": ["quick", "low_calorie", "high_protein"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "яйца", "quantity": 4, "unit": "pcs"},
+      {"normalized_name": "помидоры", "quantity": 200, "unit": "g"},
+      {"normalized_name": "масло растительное", "quantity": 15, "unit": "ml"},
+      {"normalized_name": "соль", "quantity": 2, "unit": "g"}
+    ],
+    "steps": ["Обжарить помидоры.", "Разбить яйца.", "Готовить 3 мин под крышкой."]
+  },
+  {
+    "name": "Овсянка на воде с ягодами",
+    "description": "Лёгкий веганский завтрак",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 12,
+    "calories": 240, "protein": 6, "fat": 4, "carbs": 46,
+    "diet": "vegan",
+    "tags": ["healthy", "low_calorie", "budget"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "овсяные хлопья", "quantity": 100, "unit": "g"},
+      {"normalized_name": "ягоды замороженные", "quantity": 150, "unit": "g"},
+      {"normalized_name": "мёд", "quantity": 15, "unit": "g"}
+    ],
+    "steps": ["Вскипятить воду.", "Добавить хлопья, варить 5 мин.", "Подать с ягодами."]
+  },
+  {
+    "name": "Запечённые яблоки с мёдом",
+    "description": "Тёплый десерт-завтрак",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 30,
+    "calories": 220, "protein": 3, "fat": 5, "carbs": 45,
+    "diet": "vegetarian",
+    "tags": ["healthy", "budget"],
+    "appliances": ["oven"],
+    "ingredients": [
+      {"normalized_name": "яблоки", "quantity": 4, "unit": "pcs"},
+      {"normalized_name": "мёд", "quantity": 40, "unit": "g"},
+      {"normalized_name": "масло сливочное", "quantity": 15, "unit": "g"}
+    ],
+    "steps": ["Разрезать яблоки.", "Полить мёдом и маслом.", "Запекать 25 мин при 180°C."]
+  },
+  {
+    "name": "Овсяный пирог с ягодами",
+    "description": "Полезная выпечка к чаю",
+    "meal_type": "breakfast",
+    "servings": 4,
+    "cook_time_minutes": 50,
+    "calories": 280, "protein": 8, "fat": 8, "carbs": 46,
+    "diet": "vegetarian",
+    "tags": ["family", "healthy"],
+    "appliances": ["oven"],
+    "ingredients": [
+      {"normalized_name": "овсяные хлопья", "quantity": 200, "unit": "g"},
+      {"normalized_name": "яйца", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "молоко", "quantity": 200, "unit": "ml"},
+      {"normalized_name": "ягоды замороженные", "quantity": 200, "unit": "g"},
+      {"normalized_name": "сахар", "quantity": 60, "unit": "g"},
+      {"normalized_name": "масло сливочное", "quantity": 30, "unit": "g"}
+    ],
+    "steps": ["Смешать всё.", "Выложить в форму.", "Запекать 40 мин при 180°C."]
+  },
+  {
+    "name": "Омлет в кружке",
+    "description": "Микроволновый завтрак за 3 минуты",
+    "meal_type": "breakfast",
+    "servings": 1,
+    "cook_time_minutes": 5,
+    "calories": 220, "protein": 16, "fat": 15, "carbs": 4,
+    "diet": "vegetarian",
+    "tags": ["quick", "high_protein", "low_calorie"],
+    "appliances": ["microwave"],
+    "ingredients": [
+      {"normalized_name": "яйца", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "молоко", "quantity": 30, "unit": "ml"},
+      {"normalized_name": "сыр пармезан", "quantity": 20, "unit": "g"},
+      {"normalized_name": "соль", "quantity": 1, "unit": "g"}
+    ],
+    "steps": ["Взбить яйца с молоком в кружке.", "Греть 90 сек в микроволновке.", "Посыпать сыром."]
+  },
+  {
+    "name": "Овсянка на воде в микроволновке",
+    "description": "Веганский завтрак за 3 минуты",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 5,
+    "calories": 240, "protein": 6, "fat": 4, "carbs": 46,
+    "diet": "vegan",
+    "tags": ["quick", "healthy", "budget"],
+    "appliances": ["microwave"],
+    "ingredients": [
+      {"normalized_name": "овсяные хлопья", "quantity": 100, "unit": "g"},
+      {"normalized_name": "ягоды замороженные", "quantity": 100, "unit": "g"},
+      {"normalized_name": "мёд", "quantity": 20, "unit": "g"}
+    ],
+    "steps": ["Смешать хлопья с водой в миске.", "Греть 2 мин.", "Добавить ягоды."]
+  },
+  {
+    "name": "Ягодный смузи",
+    "description": "Освежающий веганский напиток",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 5,
+    "calories": 200, "protein": 4, "fat": 3, "carbs": 42,
+    "diet": "vegan",
+    "tags": ["quick", "low_calorie", "healthy"],
+    "appliances": ["blender"],
+    "ingredients": [
+      {"normalized_name": "ягоды замороженные", "quantity": 300, "unit": "g"},
+      {"normalized_name": "бананы", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "мёд", "quantity": 20, "unit": "g"}
+    ],
+    "steps": ["Сложить всё в блендер.", "Взбить до однородности."]
+  },
+  {
+    "name": "Зелёный смузи",
+    "description": "Детокс-напиток с шпинатом",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 5,
+    "calories": 180, "protein": 5, "fat": 2, "carbs": 38,
+    "diet": "vegan",
+    "tags": ["quick", "low_calorie", "healthy"],
+    "appliances": ["blender"],
+    "ingredients": [
+      {"normalized_name": "шпинат", "quantity": 100, "unit": "g"},
+      {"normalized_name": "яблоки", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "бананы", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"}
+    ],
+    "steps": ["Сложить всё в блендер.", "Добавить 200 мл воды.", "Взбить."]
+  },
+  {
+    "name": "Рисовая каша с яблоками",
+    "description": "Веганская каша в мультиварке",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 40,
+    "calories": 300, "protein": 6, "fat": 3, "carbs": 62,
+    "diet": "vegan",
+    "tags": ["budget", "healthy"],
+    "appliances": ["multicooker"],
+    "ingredients": [
+      {"normalized_name": "рис", "quantity": 150, "unit": "g"},
+      {"normalized_name": "яблоки", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "сахар", "quantity": 20, "unit": "g"},
+      {"normalized_name": "соль", "quantity": 2, "unit": "g"}
+    ],
+    "steps": ["Промыть рис.", "Нарезать яблоки.", "Готовить в мультиварке 30 мин на молочной каше."]
+  },
+  {
+    "name": "Молочная овсяная каша в мультиварке",
+    "description": "Каша без контроля",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 30,
+    "calories": 340, "protein": 12, "fat": 8, "carbs": 55,
+    "diet": "vegetarian",
+    "tags": ["family", "healthy"],
+    "appliances": ["multicooker"],
+    "ingredients": [
+      {"normalized_name": "овсяные хлопья", "quantity": 120, "unit": "g"},
+      {"normalized_name": "молоко", "quantity": 500, "unit": "ml"},
+      {"normalized_name": "сахар", "quantity": 25, "unit": "g"},
+      {"normalized_name": "масло сливочное", "quantity": 15, "unit": "g"},
+      {"normalized_name": "соль", "quantity": 2, "unit": "g"}
+    ],
+    "steps": ["Сложить всё в чашу.", "Режим «Молочная каша» 20 мин.", "Дать настояться."]
+  },
+  {
+    "name": "Сырники в аэрогриле",
+    "description": "Сырники без масла",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 20,
+    "calories": 420, "protein": 26, "fat": 16, "carbs": 42,
+    "diet": "vegetarian",
+    "tags": ["high_protein", "healthy"],
+    "appliances": ["air_fryer"],
+    "ingredients": [
+      {"normalized_name": "творог", "quantity": 400, "unit": "g"},
+      {"normalized_name": "яйца", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "мука пшеничная", "quantity": 60, "unit": "g"},
+      {"normalized_name": "сахар", "quantity": 30, "unit": "g"},
+      {"normalized_name": "сметана", "quantity": 100, "unit": "g"}
+    ],
+    "steps": ["Смешать творог, яйца, муку, сахар.", "Сформировать сырники.", "Готовить в аэрогриле 12 мин при 180°C."]
+  },
+  {
+    "name": "Тосты с сыром и помидорами",
+    "description": "Горячий завтрак за 8 минут",
+    "meal_type": "breakfast",
+    "servings": 2,
+    "cook_time_minutes": 10,
+    "calories": 320, "protein": 16, "fat": 18, "carbs": 28,
+    "diet": "vegetarian",
+    "tags": ["quick", "family"],
+    "appliances": ["air_fryer"],
+    "ingredients": [
+      {"normalized_name": "сыр моцарелла", "quantity": 150, "unit": "g"},
+      {"normalized_name": "помидоры", "quantity": 150, "unit": "g"},
+      {"normalized_name": "масло сливочное", "quantity": 15, "unit": "g"}
+    ],
+    "steps": ["Нарезать помидоры.", "Сложить с сыром.", "Запечь в аэрогриле 6 мин при 200°C."]
   },
   {
     "name": "Курица с рисом и овощами",
@@ -156,14 +379,9 @@
       {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"},
-      {"normalized_name": "соль", "quantity": 3, "unit": "g"},
-      {"normalized_name": "перец чёрный молотый", "quantity": 2, "unit": "g"}
+      {"normalized_name": "соль", "quantity": 3, "unit": "g"}
     ],
-    "steps": [
-      "Нарезать курицу, лук и морковь.",
-      "Обжарить лук и морковь на масле, добавить курицу и обжарить до золотистого цвета.",
-      "Добавить рис, залить водой, посолить и тушить 20 минут."
-    ]
+    "steps": ["Обжарить лук и морковь.", "Добавить курицу.", "Добавить рис и воду, тушить 20 мин."]
   },
   {
     "name": "Паста болоньезе",
@@ -185,16 +403,11 @@
       {"normalized_name": "сыр пармезан", "quantity": 40, "unit": "g"},
       {"normalized_name": "масло растительное", "quantity": 25, "unit": "ml"}
     ],
-    "steps": [
-      "Отварить спагетти до готовности.",
-      "Обжарить лук и морковь, добавить фарш.",
-      "Добавить помидоры и томатную пасту, тушить 15 минут.",
-      "Подать пасту с соусом, посыпав пармезаном."
-    ]
+    "steps": ["Сварить спагетти.", "Обжарить лук, морковь, фарш.", "Тушить с помидорами 15 мин.", "Подать с сыром."]
   },
   {
     "name": "Плов с курицей",
-    "description": "Рассыпчатый плов по-домашнему",
+    "description": "Рассыпчатый плов",
     "meal_type": "lunch",
     "servings": 4,
     "cook_time_minutes": 60,
@@ -212,15 +425,11 @@
       {"normalized_name": "соль", "quantity": 5, "unit": "g"},
       {"normalized_name": "паприка молотая", "quantity": 5, "unit": "g"}
     ],
-    "steps": [
-      "Обжарить лук и морковь на масле.",
-      "Добавить курицу и обжарить до румяной корочки.",
-      "Добавить рис, чеснок, специи, залить водой и тушить 25 минут под крышкой."
-    ]
+    "steps": ["Обжарить лук, морковь.", "Добавить курицу.", "Добавить рис, воду, специи, тушить 25 мин."]
   },
   {
     "name": "Греческий салат с курицей",
-    "description": "Свежий салат с курицей и сыром",
+    "description": "Свежий салат",
     "meal_type": "any",
     "servings": 2,
     "cook_time_minutes": 25,
@@ -235,14 +444,9 @@
       {"normalized_name": "перец болгарский", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "сыр моцарелла", "quantity": 100, "unit": "g"},
       {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"},
-      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"},
-      {"normalized_name": "соль", "quantity": 2, "unit": "g"}
+      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"}
     ],
-    "steps": [
-      "Обжарить курицу до готовности.",
-      "Нарезать овощи и сыр крупными кубиками.",
-      "Смешать всё, заправить маслом и соком лимона."
-    ]
+    "steps": ["Обжарить курицу.", "Нарезать овощи.", "Заправить маслом и лимоном."]
   },
   {
     "name": "Борщ с говядиной",
@@ -265,16 +469,11 @@
       {"normalized_name": "чеснок", "quantity": 3, "unit": "pcs"},
       {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"}
     ],
-    "steps": [
-      "Обжарить лук и морковь, добавить фарш и обжарить.",
-      "Добавить томатную пасту и помидоры, тушить 5 минут.",
-      "В кастрюлю налить воду, добавить картофель и капусту, варить 15 минут.",
-      "Добавить зажарку и варить ещё 20 минут, добавить чеснок в конце."
-    ]
+    "steps": ["Обжарить лук, морковь, фарш.", "Добавить томатную пасту, помидоры.", "Варить с картофелем и капустой 35 мин."]
   },
   {
     "name": "Ризотто с грибами",
-    "description": "Кремовое ризотто с шампиньонами",
+    "description": "Кремовое ризотто",
     "meal_type": "lunch",
     "servings": 2,
     "cook_time_minutes": 40,
@@ -289,19 +488,13 @@
       {"normalized_name": "чеснок", "quantity": 2, "unit": "pcs"},
       {"normalized_name": "сыр пармезан", "quantity": 60, "unit": "g"},
       {"normalized_name": "масло сливочное", "quantity": 30, "unit": "g"},
-      {"normalized_name": "масло растительное", "quantity": 15, "unit": "ml"},
-      {"normalized_name": "соль", "quantity": 2, "unit": "g"}
+      {"normalized_name": "масло растительное", "quantity": 15, "unit": "ml"}
     ],
-    "steps": [
-      "Обжарить лук, чеснок и грибы на растительном масле.",
-      "Добавить рис, обжарить 1 минуту.",
-      "Постепенно добавлять горячую воду, помешивая, до готовности риса.",
-      "В конце добавить масло и пармезан."
-    ]
+    "steps": ["Обжарить лук, чеснок, грибы.", "Добавить рис.", "Постепенно добавлять воду, помешивая."]
   },
   {
     "name": "Куриная грудка с гречкой",
-    "description": "Диетическое блюдо для спортсменов",
+    "description": "Диетическое блюдо",
     "meal_type": "any",
     "servings": 2,
     "cook_time_minutes": 35,
@@ -314,18 +507,13 @@
       {"normalized_name": "гречка", "quantity": 200, "unit": "g"},
       {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
-      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"},
-      {"normalized_name": "соль", "quantity": 2, "unit": "g"}
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
     ],
-    "steps": [
-      "Отварить гречку.",
-      "Обжарить лук и морковь, добавить нарезанную курицу и обжарить до готовности.",
-      "Подавать курицу с гречкой."
-    ]
+    "steps": ["Отварить гречку.", "Обжарить лук, морковь, курицу.", "Подать вместе."]
   },
   {
     "name": "Запечённый лосось с брокколи",
-    "description": "Лёгкое и полезное блюдо",
+    "description": "Лёгкое и полезное",
     "meal_type": "dinner",
     "servings": 2,
     "cook_time_minutes": 35,
@@ -337,20 +525,13 @@
       {"normalized_name": "лосось филе", "quantity": 400, "unit": "g"},
       {"normalized_name": "брокколи", "quantity": 300, "unit": "g"},
       {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"},
-      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"},
-      {"normalized_name": "соль", "quantity": 2, "unit": "g"},
-      {"normalized_name": "перец чёрный молотый", "quantity": 2, "unit": "g"}
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
     ],
-    "steps": [
-      "Разогреть духовку до 200°C.",
-      "Выложить лосось и брокколи на противень, сбрызнуть маслом.",
-      "Посолить, поперчить, полить соком лимона.",
-      "Запекать 20 минут."
-    ]
+    "steps": ["Разложить на противне.", "Сбрызнуть маслом и лимоном.", "Запекать 20 мин при 200°C."]
   },
   {
     "name": "Котлеты с пюре",
-    "description": "Домашние котлеты с картофельным пюре",
+    "description": "Домашние котлеты",
     "meal_type": "dinner",
     "servings": 4,
     "cook_time_minutes": 50,
@@ -366,19 +547,13 @@
       {"normalized_name": "картофель", "quantity": 800, "unit": "g"},
       {"normalized_name": "молоко", "quantity": 100, "unit": "ml"},
       {"normalized_name": "масло сливочное", "quantity": 40, "unit": "g"},
-      {"normalized_name": "масло растительное", "quantity": 40, "unit": "ml"},
-      {"normalized_name": "соль", "quantity": 4, "unit": "g"}
+      {"normalized_name": "масло растительное", "quantity": 40, "unit": "ml"}
     ],
-    "steps": [
-      "Смешать фарш, лук, яйцо, муку и соль.",
-      "Сформировать котлеты и обжарить на масле.",
-      "Отварить картофель, сделать пюре с молоком и маслом.",
-      "Подавать котлеты с пюре."
-    ]
+    "steps": ["Смешать фарш, лук, яйцо, муку.", "Обжарить котлеты.", "Сделать пюре.", "Подать вместе."]
   },
   {
     "name": "Рыбные котлеты с рисом",
-    "description": "Лёгкие котлеты из лосося",
+    "description": "Лёгкие котлеты",
     "meal_type": "dinner",
     "servings": 4,
     "cook_time_minutes": 50,
@@ -392,18 +567,13 @@
       {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "мука пшеничная", "quantity": 50, "unit": "g"},
       {"normalized_name": "рис", "quantity": 300, "unit": "g"},
-      {"normalized_name": "масло растительное", "quantity": 40, "unit": "ml"},
-      {"normalized_name": "соль", "quantity": 3, "unit": "g"}
+      {"normalized_name": "масло растительное", "quantity": 40, "unit": "ml"}
     ],
-    "steps": [
-      "Измельчить лосось и лук, смешать с яйцом, мукой и солью.",
-      "Сформировать котлеты и обжарить на масле.",
-      "Отварить рис и подать с котлетами."
-    ]
+    "steps": ["Измельчить лосось и лук.", "Смешать с яйцом и мукой.", "Обжарить.", "Подать с рисом."]
   },
   {
     "name": "Тушёная капуста с курицей",
-    "description": "Бюджетное и сытное блюдо",
+    "description": "Бюджетное блюдо",
     "meal_type": "dinner",
     "servings": 4,
     "cook_time_minutes": 60,
@@ -417,18 +587,13 @@
       {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "томатная паста", "quantity": 60, "unit": "g"},
-      {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"},
-      {"normalized_name": "соль", "quantity": 3, "unit": "g"}
+      {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"}
     ],
-    "steps": [
-      "Обжарить лук и морковь.",
-      "Добавить нарезанную курицу и обжарить до румяности.",
-      "Добавить капусту и томатную пасту, тушить 30 минут."
-    ]
+    "steps": ["Обжарить лук, морковь, курицу.", "Добавить капусту и томатную пасту.", "Тушить 30 мин."]
   },
   {
     "name": "Паста карбонара",
-    "description": "Классическая итальянская паста",
+    "description": "Классика итальянской кухни",
     "meal_type": "dinner",
     "servings": 2,
     "cook_time_minutes": 25,
@@ -441,19 +606,13 @@
       {"normalized_name": "яйца", "quantity": 3, "unit": "pcs"},
       {"normalized_name": "сыр пармезан", "quantity": 80, "unit": "g"},
       {"normalized_name": "чеснок", "quantity": 2, "unit": "pcs"},
-      {"normalized_name": "масло сливочное", "quantity": 20, "unit": "g"},
-      {"normalized_name": "соль", "quantity": 2, "unit": "g"}
+      {"normalized_name": "масло сливочное", "quantity": 20, "unit": "g"}
     ],
-    "steps": [
-      "Отварить спагетти.",
-      "Взбить яйца с тёртым пармезаном.",
-      "Обжарить чеснок на масле, удалить его.",
-      "Смешать горячую пасту с яичной смесью, прогреть на медленном огне 1 минуту."
-    ]
+    "steps": ["Сварить спагетти.", "Взбить яйца с сыром.", "Смешать с горячей пастой."]
   },
   {
     "name": "Куриный суп с лапшой",
-    "description": "Домашний суп с курицей",
+    "description": "Домашний суп",
     "meal_type": "lunch",
     "servings": 4,
     "cook_time_minutes": 60,
@@ -466,20 +625,13 @@
       {"normalized_name": "картофель", "quantity": 400, "unit": "g"},
       {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
-      {"normalized_name": "паста спагетти", "quantity": 100, "unit": "g"},
-      {"normalized_name": "соль", "quantity": 3, "unit": "g"},
-      {"normalized_name": "перец чёрный молотый", "quantity": 2, "unit": "g"}
+      {"normalized_name": "паста спагетти", "quantity": 100, "unit": "g"}
     ],
-    "steps": [
-      "Отварить курицу в воде 30 минут.",
-      "Добавить нарезанный картофель, морковь и лук, варить 15 минут.",
-      "Добавить лапшу и варить 5 минут.",
-      "Посолить, поперчить, дать настояться."
-    ]
+    "steps": ["Сварить курицу 30 мин.", "Добавить овощи, варить 15 мин.", "Добавить лапшу, варить 5 мин."]
   },
   {
     "name": "Стейк из индейки с салатом",
-    "description": "Лёгкое диетическое блюдо",
+    "description": "Лёгкий ужин",
     "meal_type": "dinner",
     "servings": 2,
     "cook_time_minutes": 30,
@@ -493,14 +645,9 @@
       {"normalized_name": "огурцы", "quantity": 150, "unit": "g"},
       {"normalized_name": "шпинат", "quantity": 50, "unit": "g"},
       {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"},
-      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"},
-      {"normalized_name": "соль", "quantity": 2, "unit": "g"}
+      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"}
     ],
-    "steps": [
-      "Обжарить стейки индейки до готовности.",
-      "Нарезать овощи и смешать со шпинатом.",
-      "Заправить маслом и соком лимона, подать с индейкой."
-    ]
+    "steps": ["Обжарить стейки.", "Нарезать овощи.", "Заправить маслом и лимоном."]
   },
   {
     "name": "Овощное рагу",
@@ -519,18 +666,13 @@
       {"normalized_name": "капуста белокочанная", "quantity": 300, "unit": "g"},
       {"normalized_name": "перец болгарский", "quantity": 2, "unit": "pcs"},
       {"normalized_name": "помидоры", "quantity": 200, "unit": "g"},
-      {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"},
-      {"normalized_name": "соль", "quantity": 3, "unit": "g"}
+      {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"}
     ],
-    "steps": [
-      "Нарезать все овощи.",
-      "Обжарить лук и морковь на масле.",
-      "Добавить остальные овощи, залить водой и тушить 30 минут."
-    ]
+    "steps": ["Нарезать овощи.", "Обжарить лук и морковь.", "Тушить остальное 30 мин."]
   },
   {
     "name": "Салат Цезарь с курицей",
-    "description": "Классический салат с курицей",
+    "description": "Классический салат",
     "meal_type": "any",
     "servings": 2,
     "cook_time_minutes": 25,
@@ -544,19 +686,13 @@
       {"normalized_name": "сыр пармезан", "quantity": 60, "unit": "g"},
       {"normalized_name": "яйца", "quantity": 2, "unit": "pcs"},
       {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"},
-      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"},
-      {"normalized_name": "соль", "quantity": 2, "unit": "g"}
+      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"}
     ],
-    "steps": [
-      "Обжарить курицу и нарезать.",
-      "Отварить яйца и нарезать.",
-      "Смешать курицу, помидоры, яйца, заправить маслом и лимоном.",
-      "Посыпать тёртым пармезаном."
-    ]
+    "steps": ["Обжарить курицу.", "Сварить яйца.", "Смешать всё, заправить."]
   },
   {
     "name": "Томатный суп с базиликом",
-    "description": "Ароматный суп из помидоров",
+    "description": "Ароматный суп",
     "meal_type": "lunch",
     "servings": 4,
     "cook_time_minutes": 40,
@@ -569,14 +705,9 @@
       {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "чеснок", "quantity": 3, "unit": "pcs"},
       {"normalized_name": "базилик свежий", "quantity": 20, "unit": "g"},
-      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"},
-      {"normalized_name": "соль", "quantity": 3, "unit": "g"}
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
     ],
-    "steps": [
-      "Обжарить лук и чеснок на масле.",
-      "Добавить нарезанные помидоры, тушить 20 минут.",
-      "Пюрировать суп блендером, добавить базилик."
-    ]
+    "steps": ["Обжарить лук, чеснок.", "Добавить помидоры, тушить 20 мин.", "Пробить блендером."]
   },
   {
     "name": "Рис с овощами",
@@ -595,13 +726,505 @@
       {"normalized_name": "перец болгарский", "quantity": 1, "unit": "pcs"},
       {"normalized_name": "шампиньоны", "quantity": 150, "unit": "g"},
       {"normalized_name": "масло растительное", "quantity": 25, "unit": "ml"},
-      {"normalized_name": "соевый соус", "quantity": 30, "unit": "ml"},
+      {"normalized_name": "соевый соус", "quantity": 30, "unit": "ml"}
+    ],
+    "steps": ["Сварить рис.", "Обжарить овощи.", "Смешать с соевым соусом."]
+  },
+  {
+    "name": "Щи из свежей капусты",
+    "description": "Наваристые щи",
+    "meal_type": "lunch",
+    "servings": 4,
+    "cook_time_minutes": 60,
+    "calories": 280, "protein": 18, "fat": 10, "carbs": 28,
+    "diet": "none",
+    "tags": ["family", "budget", "hearty"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "говяжий фарш", "quantity": 400, "unit": "g"},
+      {"normalized_name": "капуста белокочанная", "quantity": 400, "unit": "g"},
+      {"normalized_name": "картофель", "quantity": 400, "unit": "g"},
+      {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "помидоры", "quantity": 200, "unit": "g"},
+      {"normalized_name": "масло растительное", "quantity": 25, "unit": "ml"}
+    ],
+    "steps": ["Обжарить лук, морковь, фарш.", "Добавить картофель и капусту.", "Варить 30 мин."]
+  },
+  {
+    "name": "Грибной суп с картофелем",
+    "description": "Суп из шампиньонов",
+    "meal_type": "lunch",
+    "servings": 4,
+    "cook_time_minutes": 45,
+    "calories": 220, "protein": 8, "fat": 8, "carbs": 30,
+    "diet": "vegetarian",
+    "tags": ["budget", "healthy", "family"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "шампиньоны", "quantity": 400, "unit": "g"},
+      {"normalized_name": "картофель", "quantity": 500, "unit": "g"},
+      {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло сливочное", "quantity": 30, "unit": "g"},
+      {"normalized_name": "сметана", "quantity": 100, "unit": "g"}
+    ],
+    "steps": ["Обжарить грибы с луком.", "Сварить картофель с морковью.", "Добавить грибы, варить 10 мин."]
+  },
+  {
+    "name": "Крем-суп из брокколи",
+    "description": "Нежный суп-пюре",
+    "meal_type": "lunch",
+    "servings": 4,
+    "cook_time_minutes": 35,
+    "calories": 180, "protein": 8, "fat": 8, "carbs": 18,
+    "diet": "vegetarian",
+    "tags": ["healthy", "low_calorie"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "брокколи", "quantity": 500, "unit": "g"},
+      {"normalized_name": "картофель", "quantity": 300, "unit": "g"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло сливочное", "quantity": 20, "unit": "g"},
+      {"normalized_name": "сметана", "quantity": 100, "unit": "g"}
+    ],
+    "steps": ["Отварить овощи.", "Пробить блендером.", "Добавить сметану."]
+  },
+  {
+    "name": "Томатный крем-суп",
+    "description": "Веганский суп-пюре",
+    "meal_type": "lunch",
+    "servings": 4,
+    "cook_time_minutes": 40,
+    "calories": 160, "protein": 4, "fat": 6, "carbs": 22,
+    "diet": "vegan",
+    "tags": ["healthy", "low_calorie", "budget"],
+    "appliances": ["blender"],
+    "ingredients": [
+      {"normalized_name": "помидоры", "quantity": 800, "unit": "g"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "чеснок", "quantity": 3, "unit": "pcs"},
+      {"normalized_name": "базилик свежий", "quantity": 15, "unit": "g"},
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
+    ],
+    "steps": ["Обжарить лук, чеснок.", "Тушить с помидорами 20 мин.", "Пробить блендером."]
+  },
+  {
+    "name": "Запечённая курица с картофелем",
+    "description": "Сытное блюдо из духовки",
+    "meal_type": "lunch",
+    "servings": 4,
+    "cook_time_minutes": 70,
+    "calories": 520, "protein": 35, "fat": 22, "carbs": 45,
+    "diet": "none",
+    "tags": ["family", "hearty"],
+    "appliances": ["oven"],
+    "ingredients": [
+      {"normalized_name": "куриное бедро", "quantity": 700, "unit": "g"},
+      {"normalized_name": "картофель", "quantity": 700, "unit": "g"},
+      {"normalized_name": "чеснок", "quantity": 4, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"},
+      {"normalized_name": "паприка молотая", "quantity": 5, "unit": "g"},
+      {"normalized_name": "соль", "quantity": 4, "unit": "g"}
+    ],
+    "steps": ["Натереть курицу специями.", "Разложить с картофелем.", "Запекать 55 мин при 200°C."]
+  },
+  {
+    "name": "Рыба запечённая с овощами",
+    "description": "Лёгкое рыбное блюдо",
+    "meal_type": "lunch",
+    "servings": 2,
+    "cook_time_minutes": 40,
+    "calories": 380, "protein": 35, "fat": 18, "carbs": 15,
+    "diet": "pescatarian",
+    "tags": ["healthy", "high_protein", "low_calorie"],
+    "appliances": ["oven"],
+    "ingredients": [
+      {"normalized_name": "лосось филе", "quantity": 400, "unit": "g"},
+      {"normalized_name": "перец болгарский", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "помидоры", "quantity": 200, "unit": "g"},
+      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
+    ],
+    "steps": ["Разложить на противне.", "Сбрызнуть маслом.", "Запекать 25 мин при 200°C."]
+  },
+  {
+    "name": "Овощи гриль",
+    "description": "Печёные овощи",
+    "meal_type": "lunch",
+    "servings": 4,
+    "cook_time_minutes": 35,
+    "calories": 180, "protein": 5, "fat": 8, "carbs": 22,
+    "diet": "vegan",
+    "tags": ["healthy", "low_calorie", "budget"],
+    "appliances": ["oven"],
+    "ingredients": [
+      {"normalized_name": "перец болгарский", "quantity": 3, "unit": "pcs"},
+      {"normalized_name": "помидоры", "quantity": 300, "unit": "g"},
+      {"normalized_name": "шампиньоны", "quantity": 300, "unit": "g"},
+      {"normalized_name": "лук репчатый", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"}
+    ],
+    "steps": ["Нарезать овощи.", "Смешать с маслом.", "Запекать 25 мин при 200°C."]
+  },
+  {
+    "name": "Суп овощной с рисом",
+    "description": "Лёгкий суп в микроволновке",
+    "meal_type": "lunch",
+    "servings": 2,
+    "cook_time_minutes": 25,
+    "calories": 220, "protein": 6, "fat": 5, "carbs": 38,
+    "diet": "vegan",
+    "tags": ["quick", "budget", "low_calorie"],
+    "appliances": ["microwave"],
+    "ingredients": [
+      {"normalized_name": "рис", "quantity": 100, "unit": "g"},
+      {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "помидоры", "quantity": 200, "unit": "g"},
       {"normalized_name": "соль", "quantity": 2, "unit": "g"}
     ],
-    "steps": [
-      "Отварить рис.",
-      "Обжарить лук, морковь, перец и грибы.",
-      "Смешать рис с овощами, добавить соевый соус."
-    ]
+    "steps": ["Нарезать овощи.", "Сложить в миску с водой.", "Греть 15 мин под крышкой."]
+  },
+  {
+    "name": "Рис с овощами в микроволновке",
+    "description": "Быстрое веганское блюдо",
+    "meal_type": "lunch",
+    "servings": 2,
+    "cook_time_minutes": 20,
+    "calories": 320, "protein": 6, "fat": 8, "carbs": 55,
+    "diet": "vegan",
+    "tags": ["quick", "budget"],
+    "appliances": ["microwave"],
+    "ingredients": [
+      {"normalized_name": "рис", "quantity": 150, "unit": "g"},
+      {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "соевый соус", "quantity": 20, "unit": "ml"}
+    ],
+    "steps": ["Залить рис водой.", "Добавить овощи.", "Греть 12 мин под крышкой."]
+  },
+  {
+    "name": "Плов в мультиварке",
+    "description": "Плов без хлопот",
+    "meal_type": "lunch",
+    "servings": 4,
+    "cook_time_minutes": 60,
+    "calories": 580, "protein": 28, "fat": 18, "carbs": 78,
+    "diet": "none",
+    "tags": ["family", "hearty"],
+    "appliances": ["multicooker"],
+    "ingredients": [
+      {"normalized_name": "куриное бедро", "quantity": 600, "unit": "g"},
+      {"normalized_name": "рис", "quantity": 400, "unit": "g"},
+      {"normalized_name": "лук репчатый", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "морковь", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "чеснок", "quantity": 4, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 40, "unit": "ml"},
+      {"normalized_name": "паприка молотая", "quantity": 5, "unit": "g"}
+    ],
+    "steps": ["Обжарить лук, морковь в чаше.", "Добавить курицу.", "Добавить рис, воду, специи. Режим «Плов»."]
+  },
+  {
+    "name": "Гречка с курицей в мультиварке",
+    "description": "Простой ужин в одной чаше",
+    "meal_type": "lunch",
+    "servings": 4,
+    "cook_time_minutes": 50,
+    "calories": 480, "protein": 32, "fat": 12, "carbs": 58,
+    "diet": "none",
+    "tags": ["family", "healthy", "budget"],
+    "appliances": ["multicooker"],
+    "ingredients": [
+      {"normalized_name": "куриное филе", "quantity": 500, "unit": "g"},
+      {"normalized_name": "гречка", "quantity": 300, "unit": "g"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 25, "unit": "ml"}
+    ],
+    "steps": ["Обжарить лук, морковь, курицу.", "Добавить гречку и воду.", "Режим «Каша» 30 мин."]
+  },
+  {
+    "name": "Курица с картофелем в аэрогриле",
+    "description": "Хрустящее блюдо без масла",
+    "meal_type": "lunch",
+    "servings": 4,
+    "cook_time_minutes": 45,
+    "calories": 480, "protein": 32, "fat": 16, "carbs": 42,
+    "diet": "none",
+    "tags": ["family", "healthy"],
+    "appliances": ["air_fryer"],
+    "ingredients": [
+      {"normalized_name": "куриное бедро", "quantity": 600, "unit": "g"},
+      {"normalized_name": "картофель", "quantity": 600, "unit": "g"},
+      {"normalized_name": "паприка молотая", "quantity": 5, "unit": "g"},
+      {"normalized_name": "соль", "quantity": 4, "unit": "g"},
+      {"normalized_name": "масло растительное", "quantity": 15, "unit": "ml"}
+    ],
+    "steps": ["Натереть курицу специями.", "Сложить с картофелем.", "Готовить 30 мин при 190°C."]
+  },
+  {
+    "name": "Овощи с рисом в аэрогриле",
+    "description": "Веганское блюдо из аэрогриля",
+    "meal_type": "lunch",
+    "servings": 2,
+    "cook_time_minutes": 35,
+    "calories": 340, "protein": 8, "fat": 10, "carbs": 55,
+    "diet": "vegan",
+    "tags": ["healthy", "budget"],
+    "appliances": ["air_fryer"],
+    "ingredients": [
+      {"normalized_name": "рис", "quantity": 150, "unit": "g"},
+      {"normalized_name": "перец болгарский", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 15, "unit": "ml"}
+    ],
+    "steps": ["Отварить рис.", "Обжарить овощи в аэрогриле 15 мин.", "Смешать."]
+  },
+  {
+    "name": "Жареная картошка с грибами",
+    "description": "Сытное домашнее блюдо",
+    "meal_type": "dinner",
+    "servings": 2,
+    "cook_time_minutes": 30,
+    "calories": 420, "protein": 10, "fat": 18, "carbs": 55,
+    "diet": "vegetarian",
+    "tags": ["budget", "family"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "картофель", "quantity": 600, "unit": "g"},
+      {"normalized_name": "шампиньоны", "quantity": 200, "unit": "g"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 40, "unit": "ml"},
+      {"normalized_name": "соль", "quantity": 3, "unit": "g"}
+    ],
+    "steps": ["Нарезать картофель.", "Обжарить до золотистой корочки.", "Добавить грибы и лук, жарить 5 мин."]
+  },
+  {
+    "name": "Курица-гриль с овощами",
+    "description": "Простое блюдо на ужин",
+    "meal_type": "dinner",
+    "servings": 2,
+    "cook_time_minutes": 35,
+    "calories": 450, "protein": 38, "fat": 20, "carbs": 20,
+    "diet": "none",
+    "tags": ["healthy", "high_protein"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "куриное филе", "quantity": 400, "unit": "g"},
+      {"normalized_name": "перец болгарский", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "помидоры", "quantity": 200, "unit": "g"},
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"},
+      {"normalized_name": "паприка молотая", "quantity": 4, "unit": "g"}
+    ],
+    "steps": ["Натереть курицу паприкой.", "Обжарить на гриле.", "Отдельно обжарить овощи."]
+  },
+  {
+    "name": "Тефтели в томатном соусе",
+    "description": "Домашние тефтели",
+    "meal_type": "dinner",
+    "servings": 4,
+    "cook_time_minutes": 45,
+    "calories": 480, "protein": 26, "fat": 20, "carbs": 35,
+    "diet": "none",
+    "tags": ["family", "hearty"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "говяжий фарш", "quantity": 500, "unit": "g"},
+      {"normalized_name": "рис", "quantity": 100, "unit": "g"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "яйца", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "помидоры", "quantity": 400, "unit": "g"},
+      {"normalized_name": "томатная паста", "quantity": 60, "unit": "g"},
+      {"normalized_name": "масло растительное", "quantity": 25, "unit": "ml"}
+    ],
+    "steps": ["Смешать фарш, рис, лук, яйцо.", "Сформировать тефтели.", "Тушить в томатном соусе 25 мин."]
+  },
+  {
+    "name": "Гречка с грибами",
+    "description": "Простое вегетарианское блюдо",
+    "meal_type": "dinner",
+    "servings": 2,
+    "cook_time_minutes": 35,
+    "calories": 380, "protein": 12, "fat": 12, "carbs": 55,
+    "diet": "vegetarian",
+    "tags": ["healthy", "budget"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "гречка", "quantity": 250, "unit": "g"},
+      {"normalized_name": "шампиньоны", "quantity": 300, "unit": "g"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло сливочное", "quantity": 25, "unit": "g"}
+    ],
+    "steps": ["Отварить гречку.", "Обжарить грибы с луком.", "Смешать."]
+  },
+  {
+    "name": "Курица с брокколи запечённая",
+    "description": "Здоровый ужин",
+    "meal_type": "dinner",
+    "servings": 2,
+    "cook_time_minutes": 40,
+    "calories": 420, "protein": 38, "fat": 18, "carbs": 18,
+    "diet": "none",
+    "tags": ["healthy", "high_protein", "low_calorie"],
+    "appliances": ["oven"],
+    "ingredients": [
+      {"normalized_name": "куриное филе", "quantity": 400, "unit": "g"},
+      {"normalized_name": "брокколи", "quantity": 300, "unit": "g"},
+      {"normalized_name": "чеснок", "quantity": 2, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"},
+      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"}
+    ],
+    "steps": ["Разложить курицу с брокколи.", "Сбрызнуть маслом и лимоном.", "Запекать 25 мин при 200°C."]
+  },
+  {
+    "name": "Картофель по-деревенски",
+    "description": "Хрустящий картофель из духовки",
+    "meal_type": "dinner",
+    "servings": 4,
+    "cook_time_minutes": 45,
+    "calories": 340, "protein": 6, "fat": 12, "carbs": 55,
+    "diet": "vegan",
+    "tags": ["budget", "family"],
+    "appliances": ["oven"],
+    "ingredients": [
+      {"normalized_name": "картофель", "quantity": 800, "unit": "g"},
+      {"normalized_name": "паприка молотая", "quantity": 5, "unit": "g"},
+      {"normalized_name": "чеснок", "quantity": 3, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 30, "unit": "ml"},
+      {"normalized_name": "соль", "quantity": 4, "unit": "g"}
+    ],
+    "steps": ["Нарезать картофель дольками.", "Смешать с маслом и специями.", "Запекать 35 мин при 200°C."]
+  },
+  {
+    "name": "Рыба в фольге с овощами",
+    "description": "Сочная рыба в духовке",
+    "meal_type": "dinner",
+    "servings": 2,
+    "cook_time_minutes": 35,
+    "calories": 380, "protein": 35, "fat": 20, "carbs": 12,
+    "diet": "pescatarian",
+    "tags": ["healthy", "high_protein", "low_calorie"],
+    "appliances": ["oven"],
+    "ingredients": [
+      {"normalized_name": "лосось филе", "quantity": 400, "unit": "g"},
+      {"normalized_name": "помидоры", "quantity": 200, "unit": "g"},
+      {"normalized_name": "перец болгарский", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "лимон", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
+    ],
+    "steps": ["Сложить рыбу с овощами на фольгу.", "Сбрызнуть маслом.", "Запекать 25 мин при 200°C."]
+  },
+  {
+    "name": "Тушёная курица с овощами в мультиварке",
+    "description": "Мягкая курица с овощами",
+    "meal_type": "dinner",
+    "servings": 4,
+    "cook_time_minutes": 60,
+    "calories": 380, "protein": 32, "fat": 14, "carbs": 28,
+    "diet": "none",
+    "tags": ["family", "healthy"],
+    "appliances": ["multicooker"],
+    "ingredients": [
+      {"normalized_name": "куриное филе", "quantity": 500, "unit": "g"},
+      {"normalized_name": "картофель", "quantity": 400, "unit": "g"},
+      {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "томатная паста", "quantity": 60, "unit": "g"},
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
+    ],
+    "steps": ["Нарезать всё.", "Сложить в чашу.", "Режим «Тушение» 40 мин."]
+  },
+  {
+    "name": "Картофель в аэрогриле",
+    "description": "Хрустящий картофель без масла",
+    "meal_type": "dinner",
+    "servings": 2,
+    "cook_time_minutes": 30,
+    "calories": 280, "protein": 5, "fat": 8, "carbs": 48,
+    "diet": "vegan",
+    "tags": ["budget", "healthy"],
+    "appliances": ["air_fryer"],
+    "ingredients": [
+      {"normalized_name": "картофель", "quantity": 600, "unit": "g"},
+      {"normalized_name": "паприка молотая", "quantity": 4, "unit": "g"},
+      {"normalized_name": "соль", "quantity": 3, "unit": "g"},
+      {"normalized_name": "масло растительное", "quantity": 10, "unit": "ml"}
+    ],
+    "steps": ["Нарезать картофель.", "Смешать с маслом и специями.", "Готовить 20 мин при 200°C."]
+  },
+  {
+    "name": "Куриные ножки в аэрогриле",
+    "description": "Хрустящая курица",
+    "meal_type": "dinner",
+    "servings": 2,
+    "cook_time_minutes": 40,
+    "calories": 480, "protein": 35, "fat": 28, "carbs": 8,
+    "diet": "none",
+    "tags": ["high_protein", "family"],
+    "appliances": ["air_fryer"],
+    "ingredients": [
+      {"normalized_name": "куриное бедро", "quantity": 600, "unit": "g"},
+      {"normalized_name": "паприка молотая", "quantity": 5, "unit": "g"},
+      {"normalized_name": "чеснок", "quantity": 3, "unit": "pcs"},
+      {"normalized_name": "соль", "quantity": 3, "unit": "g"}
+    ],
+    "steps": ["Натереть курицу специями.", "Готовить 30 мин при 190°C.", "Перевернуть в середине."]
+  },
+  {
+    "name": "Овощи на пару в микроволновке",
+    "description": "Лёгкий веганский гарнир",
+    "meal_type": "dinner",
+    "servings": 2,
+    "cook_time_minutes": 15,
+    "calories": 140, "protein": 4, "fat": 6, "carbs": 18,
+    "diet": "vegan",
+    "tags": ["quick", "healthy", "low_calorie"],
+    "appliances": ["microwave"],
+    "ingredients": [
+      {"normalized_name": "брокколи", "quantity": 300, "unit": "g"},
+      {"normalized_name": "морковь", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "перец болгарский", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 15, "unit": "ml"}
+    ],
+    "steps": ["Нарезать овощи.", "Сложить в миску с водой.", "Греть 8 мин под крышкой."]
+  },
+  {
+    "name": "Салат из огурцов и помидоров",
+    "description": "Простой летний салат",
+    "meal_type": "any",
+    "servings": 2,
+    "cook_time_minutes": 10,
+    "calories": 120, "protein": 3, "fat": 8, "carbs": 10,
+    "diet": "vegan",
+    "tags": ["quick", "healthy", "low_calorie", "budget"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "помидоры", "quantity": 200, "unit": "g"},
+      {"normalized_name": "огурцы", "quantity": 200, "unit": "g"},
+      {"normalized_name": "лук репчатый", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
+    ],
+    "steps": ["Нарезать овощи.", "Заправить маслом.", "Посолить."]
+  },
+  {
+    "name": "Салат с курицей и яблоком",
+    "description": "Лёгкий салат с мясом",
+    "meal_type": "any",
+    "servings": 2,
+    "cook_time_minutes": 25,
+    "calories": 320, "protein": 28, "fat": 14, "carbs": 20,
+    "diet": "none",
+    "tags": ["high_protein", "healthy", "low_calorie"],
+    "appliances": ["stove"],
+    "ingredients": [
+      {"normalized_name": "куриное филе", "quantity": 300, "unit": "g"},
+      {"normalized_name": "яблоки", "quantity": 1, "unit": "pcs"},
+      {"normalized_name": "огурцы", "quantity": 150, "unit": "g"},
+      {"normalized_name": "шпинат", "quantity": 50, "unit": "g"},
+      {"normalized_name": "масло растительное", "quantity": 20, "unit": "ml"}
+    ],
+    "steps": ["Обжарить курицу.", "Нарезать яблоко и огурец.", "Смешать со шпинатом."]
   }
 ]

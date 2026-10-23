@@ -1,3 +1,4 @@
+
 # Edimo
 
 Планировщик питания с подбором рецептов, списком покупок и интеграцией со ВкусВилл.
@@ -59,3 +60,4 @@ npm audit --audit-level=moderate
 ## VkusVill MCP
 
 Живая MCP-интеграция отключена по умолчанию. Для её включения скопируйте `backend/.env.example` в `backend/.env` и задайте `ENABLE_LIVE_MCP=true`.
+
