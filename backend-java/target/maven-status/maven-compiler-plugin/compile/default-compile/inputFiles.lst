@@ -1,3 +1,4 @@
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\AppProperties.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\CorsConfig.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\JacksonConfig.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\controller\GroceryController.java
@@ -47,6 +48,12 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\HealthC
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mapper\GroceryItemMapper.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mapper\MealPlanMapper.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mapper\RecipeMapper.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\McpBadResponseException.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\McpClient.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\McpException.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\McpTimeoutException.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\McpUnavailableException.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\ProductCandidate.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\GroceryItemRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\IngredientRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\MCPProductCacheRepository.java

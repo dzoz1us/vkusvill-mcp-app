@@ -21,5 +21,9 @@ spring:
   flyway:
     enabled: false
 
+app:
+  enable-live-mcp: false
+  mcp-timeout-ms: 2000
+
 server:
   port: 0

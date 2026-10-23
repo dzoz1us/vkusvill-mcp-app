@@ -30,3 +30,10 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
+
+app:
+  frontend-origin: http://localhost:5173
+  mcp-url: https://mcp.vkusvill.ru/mcp
+  mcp-timeout-ms: 10000
+  enable-live-mcp: false
+  search-cache-ttl-seconds: 1800
