@@ -63,6 +63,11 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\reposit
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\MealPlanRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\ProductMappingRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\RecipeRepository.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\seed\IngredientSeedDto.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\seed\RecipeIngredientSeedDto.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\seed\RecipeSeedDto.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\seed\SeedRunner.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\seed\SeedService.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\CanonicalQuantity.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\dto\AggregatedIngredient.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\dto\RecipeIngredientInput.java

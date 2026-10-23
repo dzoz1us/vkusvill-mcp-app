@@ -12,6 +12,7 @@ com\vkusplan\mcp\McpClient.class
 com\vkusplan\dto\GroceryItemUpdate.class
 com\vkusplan\enums\Day.class
 com\vkusplan\enums\Preference.class
+com\vkusplan\seed\SeedService.class
 com\vkusplan\service\GroceryService$AggregationEntry.class
 com\vkusplan\domain\GroceryItem.class
 com\vkusplan\dto\RecipeListResponse.class
@@ -20,11 +21,13 @@ com\vkusplan\dto\GroceryListResponse$GroceryListResponseBuilder.class
 com\vkusplan\domain\MCPProductCache.class
 com\vkusplan\controller\GroceryController.class
 com\vkusplan\dto\GenerateRequest.class
+com\vkusplan\seed\RecipeSeedDto.class
 com\vkusplan\dto\OnboardingParams.class
 com\vkusplan\domain\GroceryItem$GroceryItemBuilder.class
 com\vkusplan\dto\NutritionInfo$NutritionInfoBuilder.class
 com\vkusplan\enums\Appliance.class
 com\vkusplan\dto\ErrorResponse$ErrorResponseBuilder.class
+com\vkusplan\seed\RecipeIngredientSeedDto.class
 com\vkusplan\mcp\Matcher$MatchResult.class
 com\vkusplan\dto\DayMealRead.class
 com\vkusplan\service\NoSuitableRecipesException.class
@@ -33,6 +36,7 @@ com\vkusplan\service\NoAlternativeRecipeException.class
 com\vkusplan\dto\GroceryItemRead.class
 com\vkusplan\domain\MealPlanMeal.class
 com\vkusplan\domain\MealPlan$MealPlanBuilder.class
+com\vkusplan\seed\SeedService$2.class
 com\vkusplan\service\dto\ScoredRecipe.class
 com\vkusplan\dto\OnboardingParams$OnboardingParamsBuilder.class
 com\vkusplan\config\AppProperties.class
@@ -51,6 +55,7 @@ com\vkusplan\service\dto\RecipeInput.class
 com\vkusplan\domain\RecipeAppliance.class
 com\vkusplan\enums\ErrorCode.class
 com\vkusplan\dto\DayMealRead$DayMealReadBuilder.class
+com\vkusplan\seed\IngredientSeedDto.class
 com\vkusplan\service\GroceryService.class
 com\vkusplan\repository\MealPlanRepository.class
 com\vkusplan\domain\Recipe$RecipeBuilder.class
@@ -62,6 +67,7 @@ com\vkusplan\dto\ReplaceMealResponse.class
 com\vkusplan\dto\RecipeListResponse$RecipeListResponseBuilder.class
 com\vkusplan\dto\RecipeShort.class
 com\vkusplan\repository\GroceryItemRepository.class
+com\vkusplan\seed\SeedService$1.class
 com\vkusplan\domain\ProductMapping$ProductMappingBuilder.class
 com\vkusplan\mcp\Matcher.class
 com\vkusplan\dto\CartLink.class
@@ -74,6 +80,7 @@ com\vkusplan\dto\IngredientRead$IngredientReadBuilder.class
 com\vkusplan\repository\MealPlanMealRepository.class
 com\vkusplan\dto\MealPlanRead.class
 com\vkusplan\dto\GroceryListResponse.class
+com\vkusplan\seed\SeedRunner.class
 com\vkusplan\dto\RecipeShort$RecipeShortBuilder.class
 com\vkusplan\domain\RecipeTag$RecipeTagBuilder.class
 com\vkusplan\mapper\MealPlanMapper$1.class
@@ -108,6 +115,7 @@ com\vkusplan\mapper\RecipeMapper$1.class
 com\vkusplan\service\PricingService.class
 com\vkusplan\domain\RecipeIngredient$RecipeIngredientBuilder.class
 com\vkusplan\service\QuantityService.class
+com\vkusplan\seed\SeedService$SeedSummary.class
 com\vkusplan\dto\RecipeDetail$RecipeDetailBuilder.class
 com\vkusplan\VkusplanApplication.class
 com\vkusplan\dto\RecipeDetail.class
