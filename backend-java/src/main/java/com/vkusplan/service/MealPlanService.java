@@ -1,9 +1,10 @@
 package com.vkusplan.service;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -11,22 +12,28 @@ import java.util.Random;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.vkusplan.domain.MealPlan;
+import com.vkusplan.domain.MealPlanMeal;
 import com.vkusplan.domain.Recipe;
 import com.vkusplan.domain.RecipeAppliance;
 import com.vkusplan.domain.RecipeTag;
 import com.vkusplan.dto.GenerateRequest;
 import com.vkusplan.enums.Appliance;
+import com.vkusplan.enums.Day;
 import com.vkusplan.enums.Diet;
+import com.vkusplan.enums.MealPlanStatus;
 import com.vkusplan.enums.MealType;
 import com.vkusplan.enums.Preference;
-import com.vkusplan.service.dto.ScoredRecipe;
+import com.vkusplan.repository.MealPlanMealRepository;
+import com.vkusplan.repository.MealPlanRepository;
+import com.vkusplan.repository.RecipeRepository;
 
 /**
- * Recipe filtering, scoring and slot assignment.
+ * Recipe filtering, scoring, slot assignment and plan persistence.
  *
- * This step contains only pure logic — no database, no persistence.
- * Persistence and MCP enrichment will be added later.
+ * Grocery items are built separately (see GroceryService).
  */
 @Service
 public class MealPlanService {
@@ -39,9 +46,6 @@ public class MealPlanService {
             MealType.DINNER
     );
 
-    /**
-     * Which recipe.diet values are allowed for a given user diet selection.
-     */
     private static final Map<Diet, Set<String>> DIET_COMPATIBILITY = Map.of(
             Diet.NONE, Set.of("none", "vegetarian", "vegan", "pescatarian"),
             Diet.VEGETARIAN, Set.of("vegetarian", "vegan"),
@@ -49,9 +53,24 @@ public class MealPlanService {
             Diet.PESCATARIAN, Set.of("pescatarian", "vegetarian", "vegan")
     );
 
-    /**
-     * Filter candidates by diet and available appliances.
-     */
+    private final RecipeRepository recipeRepository;
+    private final MealPlanRepository mealPlanRepository;
+    private final MealPlanMealRepository mealPlanMealRepository;
+
+    public MealPlanService(
+            RecipeRepository recipeRepository,
+            MealPlanRepository mealPlanRepository,
+            MealPlanMealRepository mealPlanMealRepository
+    ) {
+        this.recipeRepository = recipeRepository;
+        this.mealPlanRepository = mealPlanRepository;
+        this.mealPlanMealRepository = mealPlanMealRepository;
+    }
+
+    // ------------------------------------------------------------------
+    // Filtering & scoring (pure logic, no persistence)
+    // ------------------------------------------------------------------
+
     public List<Recipe> filterCandidates(List<Recipe> recipes, GenerateRequest request) {
         Set<String> allowedDiets = DIET_COMPATIBILITY.get(request.getDiet());
         Set<String> userAppliances = new HashSet<>();
@@ -75,9 +94,6 @@ public class MealPlanService {
         return result;
     }
 
-    /**
-     * Score by preference tags. +3 for each matching tag.
-     */
     public int scoreRecipe(Recipe recipe, List<Preference> preferences) {
         Set<String> tags = new HashSet<>();
         for (RecipeTag t : recipe.getTags()) {
@@ -92,23 +108,12 @@ public class MealPlanService {
         return score;
     }
 
-    /**
-     * Assign recipes to (day, meal_type) slots.
-     *
-     * For each meal type we build a pool: first meal-specific recipes,
-     * then universal ("any" or null). We cycle through each pool if we
-     * run out of recipes.
-     *
-     * Resulting list contains one recipe per slot, in order:
-     * day1/breakfast, day1/lunch, day1/dinner, day2/breakfast, ...
-     */
     public List<Recipe> selectRecipes(
             List<Recipe> candidates,
             GenerateRequest request
     ) {
-        Random rng = new Random(
-                request.getRandomSeed() == null ? 0L : request.getRandomSeed()
-        );
+        long seed = request.getRandomSeed() == null ? 0L : request.getRandomSeed();
+        Random rng = new Random(seed);
 
         Map<MealType, List<Recipe>> pools = new EnumMap<>(MealType.class);
         for (MealType mt : MEAL_TYPE_ORDER) {
@@ -126,7 +131,7 @@ public class MealPlanService {
                 List<Recipe> pool = pools.get(mt);
                 int i = idx.get(mt);
                 if (i >= pool.size()) {
-                    i = 0; // cycle
+                    i = 0;
                 }
                 selected.add(pool.get(i));
                 idx.put(mt, i + 1);
@@ -135,9 +140,6 @@ public class MealPlanService {
         return selected;
     }
 
-    /**
-     * Build candidate pool for a single meal type.
-     */
     private List<Recipe> buildPoolFor(
             MealType mealType,
             List<Recipe> candidates,
@@ -158,49 +160,111 @@ public class MealPlanService {
         List<Recipe> pool = new ArrayList<>(specific.size() + universal.size());
         pool.addAll(specific);
         pool.addAll(universal);
-
         if (pool.isEmpty()) {
-            // Fallback: if no recipes match this slot at all, allow any candidate
             pool.addAll(candidates);
         }
-
         if (pool.isEmpty()) {
             throw new NoSuitableRecipesException(
                     "No recipes available for slot " + mealType.getValue()
             );
         }
 
-        // Deterministic shuffle, then stable sort by score (desc).
-        List<ScoredRecipe> scored = new ArrayList<>(pool.size());
-        for (Recipe r : pool) {
-            scored.add(new ScoredRecipe(r, scoreRecipe(r, request.getPreferences())));
-        }
-        // Shuffle using a seed derived from rng, then stable-sort by score.
-        scored.sort((a, b) -> Integer.compare(b.score(), a.score()));
-
-        // After scoring sort, apply a deterministic shuffle within equal scores
-        // by using a secondary random key. To keep it simple: shuffle first
-        // using rng, then stable-sort by score.
-        // We already sorted by score — so shuffle must come before.
-        // Do the shuffle first:
-        return applyDeterministicShuffle(pool, request, rng);
-    }
-
-    /**
-     * Deterministic shuffle + stable sort by score.
-     */
-    private List<Recipe> applyDeterministicShuffle(
-            List<Recipe> pool,
-            GenerateRequest request,
-            Random rng
-    ) {
         List<Recipe> shuffled = new ArrayList<>(pool);
-        java.util.Collections.shuffle(shuffled, rng);
+        Collections.shuffle(shuffled, rng);
         shuffled.sort(
                 Comparator.comparingInt(
                         (Recipe r) -> -scoreRecipe(r, request.getPreferences())
                 )
         );
         return shuffled;
+    }
+
+    // ------------------------------------------------------------------
+    // Persistence
+    // ------------------------------------------------------------------
+
+    /**
+     * Generate a complete meal plan and persist it.
+     *
+     * Side effects:
+     *   - creates MealPlan
+     *   - creates MealPlanMeal for each (day, meal_type)
+     */
+    @Transactional
+    public MealPlan generatePlan(GenerateRequest request) {
+        List<Recipe> all = recipeRepository.findAll();
+        List<Recipe> candidates = filterCandidates(all, request);
+        if (candidates.isEmpty()) {
+            throw new NoSuitableRecipesException(
+                    "No recipes match the selected diet and appliances."
+            );
+        }
+
+        List<Recipe> selected = selectRecipes(candidates, request);
+
+        MealPlan plan = MealPlan.builder()
+                .peopleCount(request.getPeopleCount())
+                .budget(request.getBudget())
+                .daysJson(toJson(request.getDays()))
+                .preferencesJson(toJson(request.getPreferences()))
+                .appliancesJson(toJson(request.getAppliances()))
+                .diet(request.getDiet().getValue())
+                .cartEstimatedCost(0.0)
+                .unresolvedItemsCount(0)
+                .status(MealPlanStatus.READY.getValue())
+                .randomSeed(request.getRandomSeed())
+                .createdAt(Instant.now())
+                .build();
+
+        plan = mealPlanRepository.save(plan);
+
+        int idx = 0;
+        for (Day day : request.getDays()) {
+            for (MealType mt : MEAL_TYPE_ORDER) {
+                Recipe recipe = selected.get(idx++);
+                MealPlanMeal meal = MealPlanMeal.builder()
+                        .mealPlan(plan)
+                        .day(day.getValue())
+                        .mealType(mt.getValue())
+                        .recipe(recipe)
+                        .build();
+                mealPlanMealRepository.save(meal);
+                plan.getMeals().add(meal);
+            }
+        }
+
+        return mealPlanRepository.save(plan);
+    }
+
+    // ------------------------------------------------------------------
+    // Serialization helpers
+    // ------------------------------------------------------------------
+
+    /**
+     * Serialize a list of enums with {@code getValue()} into a JSON array.
+     * We don't pull Jackson here to keep this method free of context.
+     */
+    private String toJson(List<?> values) {
+        if (values == null || values.isEmpty()) {
+            return "[]";
+        }
+        StringBuilder sb = new StringBuilder("[");
+        boolean first = true;
+        for (Object v : values) {
+            if (!first) {
+                sb.append(",");
+            }
+            first = false;
+            sb.append("\"").append(extractValue(v)).append("\"");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    private String extractValue(Object v) {
+        if (v instanceof Day d) return d.getValue();
+        if (v instanceof Preference p) return p.getValue();
+        if (v instanceof Appliance a) return a.getValue();
+        return v.toString();
     }
 }
