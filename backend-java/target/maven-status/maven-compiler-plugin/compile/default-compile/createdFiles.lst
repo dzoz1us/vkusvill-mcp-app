@@ -3,6 +3,7 @@ com\vkusplan\dto\ManualGroceryItemCreate.class
 com\vkusplan\dto\ReplaceMealResponse$ReplaceMealResponseBuilder.class
 com\vkusplan\domain\MCPProductCache$MCPProductCacheBuilder.class
 com\vkusplan\domain\RecipeTag.class
+com\vkusplan\mapper\RecipeMapper.class
 com\vkusplan\dto\ErrorBody.class
 com\vkusplan\enums\Diet.class
 com\vkusplan\dto\GroceryItemUpdate.class
@@ -31,7 +32,9 @@ com\vkusplan\service\dto\ScoredRecipe.class
 com\vkusplan\dto\OnboardingParams$OnboardingParamsBuilder.class
 com\vkusplan\enums\MealType.class
 com\vkusplan\enums\Unit.class
+com\vkusplan\controller\RecipeController.class
 com\vkusplan\service\CanonicalQuantity.class
+com\vkusplan\exception\GlobalExceptionHandler.class
 com\vkusplan\enums\MealPlanStatus.class
 com\vkusplan\repository\ProductMappingRepository.class
 com\vkusplan\dto\ErrorBody$ErrorBodyBuilder.class
@@ -68,6 +71,7 @@ com\vkusplan\service\UnknownUnitException.class
 com\vkusplan\dto\CartResponse.class
 com\vkusplan\dto\MealPlanRead$MealPlanReadBuilder.class
 com\vkusplan\config\JacksonConfig.class
+com\vkusplan\config\CorsConfig.class
 com\vkusplan\dto\RefreshPricesResponse$RefreshPricesResponseBuilder.class
 com\vkusplan\domain\RecipeAppliance$RecipeApplianceBuilder.class
 com\vkusplan\dto\CartResponse$CartResponseBuilder.class
@@ -83,6 +87,7 @@ com\vkusplan\service\dto\AggregatedIngredient.class
 com\vkusplan\dto\IngredientRead.class
 com\vkusplan\domain\Ingredient.class
 com\vkusplan\domain\Ingredient$IngredientBuilder.class
+com\vkusplan\mapper\RecipeMapper$1.class
 com\vkusplan\service\PricingService.class
 com\vkusplan\domain\RecipeIngredient$RecipeIngredientBuilder.class
 com\vkusplan\service\QuantityService.class

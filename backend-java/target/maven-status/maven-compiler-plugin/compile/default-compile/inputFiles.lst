@@ -1,4 +1,6 @@
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\CorsConfig.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\JacksonConfig.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\controller\RecipeController.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\GroceryItem.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\Ingredient.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\MCPProductCache.java
@@ -38,7 +40,9 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\M
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\MealType.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Preference.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\enums\Unit.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\exception\GlobalExceptionHandler.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\HealthController.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mapper\RecipeMapper.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\GroceryItemRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\IngredientRepository.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\repository\MCPProductCacheRepository.java
