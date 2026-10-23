@@ -13,6 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +34,10 @@ public class MealPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @ManyToOne(fetch = jakarta.persistence.FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "people_count", nullable = false)
     private Integer peopleCount;

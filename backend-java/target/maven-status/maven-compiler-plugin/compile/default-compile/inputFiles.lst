@@ -1,6 +1,7 @@
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\AppProperties.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\CorsConfig.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\JacksonConfig.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\SecurityConfig.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\controller\GroceryController.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\controller\MealPlanController.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\controller\RecipeController.java
@@ -15,6 +16,8 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeAppliance.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeIngredient.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\RecipeTag.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\Role.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\User.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\CartLink.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\CartResponse.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\dto\DayMealRead.java

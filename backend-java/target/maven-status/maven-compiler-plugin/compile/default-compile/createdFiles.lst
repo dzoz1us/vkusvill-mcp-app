@@ -22,6 +22,8 @@ com\vkusplan\domain\MCPProductCache.class
 com\vkusplan\controller\GroceryController.class
 com\vkusplan\dto\GenerateRequest.class
 com\vkusplan\seed\RecipeSeedDto.class
+com\vkusplan\domain\Role.class
+com\vkusplan\domain\User.class
 com\vkusplan\dto\OnboardingParams.class
 com\vkusplan\domain\GroceryItem$GroceryItemBuilder.class
 com\vkusplan\dto\NutritionInfo$NutritionInfoBuilder.class
@@ -49,6 +51,7 @@ com\vkusplan\service\CanonicalQuantity.class
 com\vkusplan\exception\GlobalExceptionHandler.class
 com\vkusplan\enums\MealPlanStatus.class
 com\vkusplan\mcp\ProductCandidate$ProductCandidateBuilder.class
+com\vkusplan\domain\User$UserBuilder.class
 com\vkusplan\repository\ProductMappingRepository.class
 com\vkusplan\dto\ErrorBody$ErrorBodyBuilder.class
 com\vkusplan\service\dto\RecipeInput.class
@@ -75,6 +78,7 @@ com\vkusplan\enums\MatchStatus.class
 com\vkusplan\mcp\McpException.class
 com\vkusplan\dto\ManualGroceryItemCreate$ManualGroceryItemCreateBuilder.class
 com\vkusplan\controller\VkusVillController.class
+com\vkusplan\config\SecurityConfig.class
 com\vkusplan\repository\RecipeRepository.class
 com\vkusplan\dto\IngredientRead$IngredientReadBuilder.class
 com\vkusplan\repository\MealPlanMealRepository.class
