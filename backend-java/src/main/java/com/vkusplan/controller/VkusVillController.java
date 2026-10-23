@@ -1,12 +1,14 @@
 package com.vkusplan.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vkusplan.domain.GroceryItem;
 import com.vkusplan.domain.MealPlan;
+import com.vkusplan.domain.User;
 import com.vkusplan.dto.CartLink;
 import com.vkusplan.dto.CartResponse;
 import com.vkusplan.dto.RefreshPricesResponse;
@@ -22,11 +25,15 @@ import com.vkusplan.enums.MatchStatus;
 import com.vkusplan.mcp.McpClient;
 import com.vkusplan.repository.GroceryItemRepository;
 import com.vkusplan.repository.MealPlanRepository;
+import com.vkusplan.repository.UserRepository;
 import com.vkusplan.service.MealNotFoundException;
 import com.vkusplan.service.VkusVillService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/meal-plans")
+@RequiredArgsConstructor
 public class VkusVillController {
 
     private static final Logger log = LoggerFactory.getLogger(VkusVillController.class);
@@ -37,27 +44,16 @@ public class VkusVillController {
     private final VkusVillService vkusVillService;
     private final MealPlanRepository planRepo;
     private final GroceryItemRepository groceryRepo;
+    private final UserRepository userRepository;
     private final McpClient mcpClient;
-
-    public VkusVillController(
-            VkusVillService vkusVillService,
-            MealPlanRepository planRepo,
-            GroceryItemRepository groceryRepo,
-            McpClient mcpClient
-    ) {
-        this.vkusVillService = vkusVillService;
-        this.planRepo = planRepo;
-        this.groceryRepo = groceryRepo;
-        this.mcpClient = mcpClient;
-    }
 
     @PostMapping("/{id}/refresh-prices")
     @Transactional
-    public RefreshPricesResponse refreshPrices(@PathVariable Integer id) {
-        MealPlan plan = planRepo.findById(id)
-                .orElseThrow(() -> new MealNotFoundException(
-                        "Meal plan " + id + " not found"
-                ));
+    public RefreshPricesResponse refreshPrices(
+            @PathVariable Integer id,
+            Authentication authentication
+    ) {
+        MealPlan plan = findAuthorizedPlan(id, authentication);
 
         double oldCost = plan.getCartEstimatedCost() != null
                 ? plan.getCartEstimatedCost() : 0.0;
@@ -77,11 +73,11 @@ public class VkusVillController {
 
     @PostMapping("/{id}/vkusvill-cart")
     @Transactional
-    public CartResponse createCart(@PathVariable Integer id) {
-        MealPlan plan = planRepo.findById(id)
-                .orElseThrow(() -> new MealNotFoundException(
-                        "Meal plan " + id + " not found"
-                ));
+    public CartResponse createCart(
+            @PathVariable Integer id,
+            Authentication authentication
+    ) {
+        MealPlan plan = findAuthorizedPlan(id, authentication);
 
         List<GroceryItem> all = groceryRepo.findByMealPlanId(plan.getId());
 
@@ -119,7 +115,7 @@ public class VkusVillController {
             double q = Math.min(Math.max(1.0, i.getPackageCount()), MAX_Q_PER_ITEM);
 
             Map<String, Object> entry = new LinkedHashMap<>();
-            entry.put("id", xmlId);
+            entry.put("id", xmlId); // MCP now expects "id", not "xml_id"
             entry.put("q", q);
             payload.add(entry);
         }
@@ -152,5 +148,33 @@ public class VkusVillController {
                 .priceChanged(false)
                 .unresolvedItems((int) unresolved)
                 .build();
+    }
+
+    // ------------------------------------------------------------------
+    // Helpers
+    // ------------------------------------------------------------------
+
+    private User resolveCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            return null;
+        }
+        return userRepository.findByEmail(authentication.getName()).orElse(null);
+    }
+
+    private MealPlan findAuthorizedPlan(Integer id, Authentication authentication) {
+        MealPlan plan = planRepo.findById(id)
+                .orElseThrow(() -> new MealNotFoundException("Meal plan " + id + " not found"));
+
+        // Guest plan — no user_id — accessible by anyone with the id
+        if (plan.getUser() == null) {
+            return plan;
+        }
+
+        User currentUser = resolveCurrentUser(authentication);
+        if (currentUser == null || !plan.getUser().getId().equals(currentUser.getId())) {
+            throw new MealNotFoundException("Meal plan " + id + " not found");
+        }
+        return plan;
     }
 }

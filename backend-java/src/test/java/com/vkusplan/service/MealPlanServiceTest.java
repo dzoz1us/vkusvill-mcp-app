@@ -40,23 +40,12 @@ import com.vkusplan.repository.RecipeRepository;
 @Transactional
 class MealPlanServiceTest {
 
-    @Autowired
-    MealPlanService service;
-
-    @Autowired
-    RecipeRepository recipeRepository;
-
-    @Autowired
-    IngredientRepository ingredientRepository;
-
-    @Autowired
-    MealPlanRepository mealPlanRepository;
-
-    @Autowired
-    MealPlanMealRepository mealPlanMealRepository;
-
-    @Autowired
-    GroceryItemRepository groceryItemRepository;
+    @Autowired MealPlanService service;
+    @Autowired RecipeRepository recipeRepository;
+    @Autowired IngredientRepository ingredientRepository;
+    @Autowired MealPlanRepository mealPlanRepository;
+    @Autowired MealPlanMealRepository mealPlanMealRepository;
+    @Autowired GroceryItemRepository groceryItemRepository;
 
     private Ingredient chicken;
     private Ingredient tomato;
@@ -86,27 +75,22 @@ class MealPlanServiceTest {
                         .build()
         );
 
-        // Vegan breakfast on stove — единственный (нет альтернатив breakfast)
         createRecipe("Овсянка", "vegan", "breakfast",
                 List.of("stove"), List.of("quick"), tomato, 200);
 
-        // Vegan lunch on stove — два рецепта (Салат — альтернатива)
         createRecipe("Томатный суп", "vegan", "lunch",
                 List.of("stove"), List.of("healthy"), tomato, 500);
         createRecipe("Салат", "vegan", "lunch",
                 List.of("stove"), List.of("low_calorie"), tomato, 400);
 
-        // Vegan dinner on stove — два рецепта (Плов — альтернатива)
         createRecipe("Рис с овощами", "vegan", "dinner",
                 List.of("stove"), List.of("budget"), tomato, 300);
         createRecipe("Плов", "vegan", "dinner",
                 List.of("stove"), List.of("hearty"), tomato, 250);
 
-        // Meat breakfast on oven — must be excluded for vegan
         createRecipe("Запеканка", "none", "breakfast",
                 List.of("oven"), List.of("family"), chicken, 400);
 
-        // Vegan any on microwave — only recipe for microwave
         createRecipe("Смузи", "vegan", "any",
                 List.of("microwave"), List.of("quick"), tomato, 100);
     }
@@ -125,23 +109,17 @@ class MealPlanServiceTest {
                 .build();
 
         for (String a : appliances) {
-            r.getAppliances().add(
-                    RecipeAppliance.builder().recipe(r).appliance(a).build()
-            );
+            r.getAppliances().add(RecipeAppliance.builder().recipe(r).appliance(a).build());
         }
         for (String t : tags) {
-            r.getTags().add(
-                    RecipeTag.builder().recipe(r).tag(t).build()
-            );
+            r.getTags().add(RecipeTag.builder().recipe(r).tag(t).build());
         }
-        r.getIngredients().add(
-                RecipeIngredient.builder()
-                        .recipe(r)
-                        .ingredient(ing)
-                        .quantity(qty)
-                        .unit("g")
-                        .build()
-        );
+        r.getIngredients().add(RecipeIngredient.builder()
+                .recipe(r)
+                .ingredient(ing)
+                .quantity(qty)
+                .unit("g")
+                .build());
 
         return recipeRepository.save(r);
     }
@@ -165,7 +143,7 @@ class MealPlanServiceTest {
     @Test
     void generatePlanCreatesMealsAndGroceryItems() {
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan = service.generatePlan(req);
+        MealPlan plan = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         assertEquals(2, plan.getPeopleCount());
 
@@ -180,7 +158,7 @@ class MealPlanServiceTest {
     @Test
     void dietFilterExcludesNonVegan() {
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan = service.generatePlan(req);
+        MealPlan plan = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         List<MealPlanMeal> meals = mealPlanMealRepository.findByMealPlanId(plan.getId());
         Set<String> recipeNames = meals.stream()
@@ -190,15 +168,13 @@ class MealPlanServiceTest {
         assertTrue(recipeNames.contains("Овсянка"));
         assertTrue(recipeNames.contains("Томатный суп"));
         assertTrue(recipeNames.contains("Рис с овощами"));
-        // Запеканка contains chicken, vegan diet must exclude it
         assertTrue(!recipeNames.contains("Запеканка"));
     }
 
     @Test
     void applianceFilterExcludesMissingTech() {
-        // Only stove available — microwave and oven recipes must be excluded
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan = service.generatePlan(req);
+        MealPlan plan = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         List<MealPlanMeal> meals = mealPlanMealRepository.findByMealPlanId(plan.getId());
         for (MealPlanMeal m : meals) {
@@ -212,10 +188,10 @@ class MealPlanServiceTest {
     @Test
     void sameSeedProducesSamePlan() {
         GenerateRequest req1 = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan1 = service.generatePlan(req1);
+        MealPlan plan1 = service.generatePlan(req1, null); // <--- ДОБАВЛЕН null
 
         GenerateRequest req2 = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan2 = service.generatePlan(req2);
+        MealPlan plan2 = service.generatePlan(req2, null); // <--- ДОБАВЛЕН null
 
         List<Integer> ids1 = mealPlanMealRepository.findByMealPlanId(plan1.getId())
                 .stream().map(m -> m.getRecipe().getId()).toList();
@@ -227,15 +203,14 @@ class MealPlanServiceTest {
 
     @Test
     void noCandidatesThrows() {
-        // Only air_fryer: no recipes use it
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.AIR_FRYER), 42L);
-        assertThrows(NoSuitableRecipesException.class, () -> service.generatePlan(req));
+        assertThrows(NoSuitableRecipesException.class, () -> service.generatePlan(req, null)); // <--- ДОБАВЛЕН null
     }
 
     @Test
     void buildGroceryItemsIsIdempotent() {
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan = service.generatePlan(req);
+        MealPlan plan = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         int firstCount = groceryItemRepository.findByMealPlanId(plan.getId()).size();
         service.buildGroceryItems(plan);
@@ -251,7 +226,7 @@ class MealPlanServiceTest {
     @Test
     void replaceMealChangesRecipeAndRebuildsGrocery() {
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan = service.generatePlan(req);
+        MealPlan plan = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         MealPlanMeal lunch = mealPlanMealRepository
                 .findByMealPlanId(plan.getId()).stream()
@@ -270,8 +245,7 @@ class MealPlanServiceTest {
 
         service.replaceMeal(plan.getId(), lunch.getId(), null);
 
-        MealPlanMeal newLunch = mealPlanMealRepository.findById(lunch.getId())
-                .orElseThrow();
+        MealPlanMeal newLunch = mealPlanMealRepository.findById(lunch.getId()).orElseThrow();
         assertNotEquals(oldRecipeId, newLunch.getRecipe().getId());
 
         GroceryItem tomatoAfter = groceryItemRepository
@@ -286,7 +260,7 @@ class MealPlanServiceTest {
     @Test
     void replaceMealWithExplicitRecipeId() {
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan = service.generatePlan(req);
+        MealPlan plan = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         MealPlanMeal lunch = mealPlanMealRepository
                 .findByMealPlanId(plan.getId()).stream()
@@ -294,21 +268,18 @@ class MealPlanServiceTest {
                 .findFirst()
                 .orElseThrow();
 
-        // Плов is vegan dinner — never the current lunch, always a valid alternative
         Integer pilafId = recipeRepository.findByName("Плов").orElseThrow().getId();
 
         service.replaceMeal(plan.getId(), lunch.getId(), pilafId);
 
-        MealPlanMeal newLunch = mealPlanMealRepository.findById(lunch.getId())
-                .orElseThrow();
+        MealPlanMeal newLunch = mealPlanMealRepository.findById(lunch.getId()).orElseThrow();
         assertEquals(pilafId, newLunch.getRecipe().getId());
     }
 
     @Test
     void replaceMealNoAlternatives() {
-        // vegan + microwave: only Смузи matches, so no alternative for any slot
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.MICROWAVE), 42L);
-        MealPlan plan = service.generatePlan(req);
+        MealPlan plan = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         MealPlanMeal anyMeal = mealPlanMealRepository
                 .findByMealPlanId(plan.getId()).stream()
@@ -324,7 +295,7 @@ class MealPlanServiceTest {
     @Test
     void replaceMealNotFound() {
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan = service.generatePlan(req);
+        MealPlan plan = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         assertThrows(
                 MealNotFoundException.class,
@@ -335,8 +306,8 @@ class MealPlanServiceTest {
     @Test
     void replaceMealForeignMealThrows() {
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan1 = service.generatePlan(req);
-        MealPlan plan2 = service.generatePlan(req);
+        MealPlan plan1 = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
+        MealPlan plan2 = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         MealPlanMeal plan1Lunch = mealPlanMealRepository
                 .findByMealPlanId(plan1.getId()).stream()
@@ -344,7 +315,6 @@ class MealPlanServiceTest {
                 .findFirst()
                 .orElseThrow();
 
-        // plan1Lunch belongs to plan1, but we pass plan2's id
         assertThrows(
                 MealNotFoundException.class,
                 () -> service.replaceMeal(plan2.getId(), plan1Lunch.getId(), null)
@@ -354,7 +324,7 @@ class MealPlanServiceTest {
     @Test
     void replaceMealRejectsInvalidExplicitRecipe() {
         GenerateRequest req = request(Diet.VEGAN, List.of(Appliance.STOVE), 42L);
-        MealPlan plan = service.generatePlan(req);
+        MealPlan plan = service.generatePlan(req, null); // <--- ДОБАВЛЕН null
 
         MealPlanMeal lunch = mealPlanMealRepository
                 .findByMealPlanId(plan.getId()).stream()
@@ -362,7 +332,6 @@ class MealPlanServiceTest {
                 .findFirst()
                 .orElseThrow();
 
-        // Запеканка is "none" diet, cannot be alternative for vegan
         Integer casseroleId = recipeRepository.findByName("Запеканка")
                 .orElseThrow().getId();
 

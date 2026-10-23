@@ -3,6 +3,7 @@ package com.vkusplan.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vkusplan.domain.GroceryItem;
 import com.vkusplan.domain.MealPlan;
+import com.vkusplan.domain.User;
 import com.vkusplan.dto.GroceryItemRead;
 import com.vkusplan.dto.GroceryItemUpdate;
 import com.vkusplan.dto.GroceryListResponse;
@@ -21,35 +23,29 @@ import com.vkusplan.enums.MatchStatus;
 import com.vkusplan.mapper.GroceryItemMapper;
 import com.vkusplan.repository.GroceryItemRepository;
 import com.vkusplan.repository.MealPlanRepository;
+import com.vkusplan.repository.UserRepository;
 import com.vkusplan.service.GroceryItemNotFoundException;
 import com.vkusplan.service.MealNotFoundException;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 public class GroceryController {
 
     private final GroceryItemRepository groceryItemRepository;
     private final MealPlanRepository mealPlanRepository;
+    private final UserRepository userRepository;
     private final GroceryItemMapper groceryItemMapper;
-
-    public GroceryController(
-            GroceryItemRepository groceryItemRepository,
-            MealPlanRepository mealPlanRepository,
-            GroceryItemMapper groceryItemMapper
-    ) {
-        this.groceryItemRepository = groceryItemRepository;
-        this.mealPlanRepository = mealPlanRepository;
-        this.groceryItemMapper = groceryItemMapper;
-    }
 
     @GetMapping("/api/meal-plans/{planId}/grocery-list")
     @Transactional(readOnly = true)
-    public GroceryListResponse getGroceryList(@PathVariable Integer planId) {
-        MealPlan plan = mealPlanRepository.findById(planId)
-                .orElseThrow(() -> new MealNotFoundException(
-                        "Meal plan " + planId + " not found"
-                ));
+    public GroceryListResponse getGroceryList(
+            @PathVariable Integer planId,
+            Authentication authentication
+    ) {
+        MealPlan plan = findAuthorizedPlan(planId, authentication);
 
         List<GroceryItem> items = groceryItemRepository.findByMealPlanId(plan.getId());
 
@@ -80,12 +76,16 @@ public class GroceryController {
     @Transactional
     public GroceryItemRead updateGroceryItem(
             @PathVariable Integer itemId,
-            @RequestBody GroceryItemUpdate update
+            @RequestBody GroceryItemUpdate update,
+            Authentication authentication
     ) {
         GroceryItem item = groceryItemRepository.findById(itemId)
                 .orElseThrow(() -> new GroceryItemNotFoundException(
                         "Grocery item " + itemId + " not found"
                 ));
+
+        // Validate ownership via parent plan
+        findAuthorizedPlan(item.getMealPlan().getId(), authentication);
 
         if (update.getIsBought() != null) {
             item.setIsBought(update.getIsBought());
@@ -98,12 +98,10 @@ public class GroceryController {
     @Transactional
     public GroceryItemRead addManualItem(
             @PathVariable Integer planId,
-            @Valid @RequestBody ManualGroceryItemCreate request
+            @Valid @RequestBody ManualGroceryItemCreate request,
+            Authentication authentication
     ) {
-        MealPlan plan = mealPlanRepository.findById(planId)
-                .orElseThrow(() -> new MealNotFoundException(
-                        "Meal plan " + planId + " not found"
-                ));
+        MealPlan plan = findAuthorizedPlan(planId, authentication);
 
         GroceryItem item = GroceryItem.builder()
                 .mealPlan(plan)
@@ -119,5 +117,32 @@ public class GroceryController {
                 .build();
 
         return groceryItemMapper.toRead(groceryItemRepository.save(item));
+    }
+
+    // ------------------------------------------------------------------
+    // Helpers
+    // ------------------------------------------------------------------
+
+    private User resolveCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
+            return null;
+        }
+        return userRepository.findByEmail(authentication.getName()).orElse(null);
+    }
+
+    private MealPlan findAuthorizedPlan(Integer id, Authentication authentication) {
+        MealPlan plan = mealPlanRepository.findById(id)
+                .orElseThrow(() -> new MealNotFoundException("Meal plan " + id + " not found"));
+
+        if (plan.getUser() == null) {
+            return plan;
+        }
+
+        User currentUser = resolveCurrentUser(authentication);
+        if (currentUser == null || !plan.getUser().getId().equals(currentUser.getId())) {
+            throw new MealNotFoundException("Meal plan " + id + " not found");
+        }
+        return plan;
     }
 }

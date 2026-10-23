@@ -37,3 +37,6 @@ app:
   mcp-timeout-ms: 10000
   enable-live-mcp: true
   search-cache-ttl-seconds: 1800
+  jwt:
+    secret: "dnZrdXNwbGFuLXN1cGVyLXNlY3JldC1rZXktd2hpY2gtaXMtbG9uZy1lbm91Z2gtZm9yLWhzMjU2"
+    expiration: 86400000

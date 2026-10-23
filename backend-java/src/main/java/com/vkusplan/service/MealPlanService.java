@@ -38,6 +38,7 @@ import com.vkusplan.repository.RecipeRepository;
 import com.vkusplan.service.dto.AggregatedIngredient;
 import com.vkusplan.service.dto.RecipeIngredientInput;
 import com.vkusplan.service.dto.RecipeInput;
+import com.vkusplan.domain.User;
 
 /**
  * Recipe filtering, scoring, slot assignment, plan persistence and
@@ -201,7 +202,7 @@ public class MealPlanService {
     // ------------------------------------------------------------------
 
     @Transactional
-    public MealPlan generatePlan(GenerateRequest request) {
+    public MealPlan generatePlan(GenerateRequest request, User user) {
         List<Recipe> all = recipeRepository.findAll();
         List<Recipe> candidates = filterCandidates(all, request);
         if (candidates.isEmpty()) {
@@ -213,6 +214,7 @@ public class MealPlanService {
         List<Recipe> selected = selectRecipes(candidates, request);
 
         MealPlan plan = MealPlan.builder()
+                .user(user)
                 .peopleCount(request.getPeopleCount())
                 .budget(request.getBudget())
                 .daysJson(toJson(request.getDays()))

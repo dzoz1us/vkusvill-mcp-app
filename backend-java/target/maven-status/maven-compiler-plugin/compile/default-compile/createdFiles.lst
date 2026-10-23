@@ -6,9 +6,11 @@ com\vkusplan\domain\MCPProductCache$MCPProductCacheBuilder.class
 com\vkusplan\mcp\McpTimeoutException.class
 com\vkusplan\domain\RecipeTag.class
 com\vkusplan\mapper\RecipeMapper.class
+com\vkusplan\dto\AuthRequest.class
 com\vkusplan\dto\ErrorBody.class
 com\vkusplan\enums\Diet.class
 com\vkusplan\mcp\McpClient.class
+com\vkusplan\repository\UserRepository.class
 com\vkusplan\dto\GroceryItemUpdate.class
 com\vkusplan\enums\Day.class
 com\vkusplan\enums\Preference.class
@@ -17,6 +19,7 @@ com\vkusplan\service\GroceryService$AggregationEntry.class
 com\vkusplan\domain\GroceryItem.class
 com\vkusplan\dto\RecipeListResponse.class
 com\vkusplan\repository\IngredientRepository.class
+com\vkusplan\dto\AuthResponse.class
 com\vkusplan\dto\GroceryListResponse$GroceryListResponseBuilder.class
 com\vkusplan\domain\MCPProductCache.class
 com\vkusplan\controller\GroceryController.class
@@ -25,6 +28,7 @@ com\vkusplan\seed\RecipeSeedDto.class
 com\vkusplan\domain\Role.class
 com\vkusplan\domain\User.class
 com\vkusplan\dto\OnboardingParams.class
+com\vkusplan\dto\AuthResponse$AuthResponseBuilder.class
 com\vkusplan\domain\GroceryItem$GroceryItemBuilder.class
 com\vkusplan\dto\NutritionInfo$NutritionInfoBuilder.class
 com\vkusplan\enums\Appliance.class
@@ -68,6 +72,7 @@ com\vkusplan\dto\GroceryItemRead$GroceryItemReadBuilder.class
 com\vkusplan\HealthController.class
 com\vkusplan\dto\ReplaceMealResponse.class
 com\vkusplan\dto\RecipeListResponse$RecipeListResponseBuilder.class
+com\vkusplan\config\UserDetailsServiceImpl.class
 com\vkusplan\dto\RecipeShort.class
 com\vkusplan\repository\GroceryItemRepository.class
 com\vkusplan\seed\SeedService$1.class
@@ -75,10 +80,12 @@ com\vkusplan\domain\ProductMapping$ProductMappingBuilder.class
 com\vkusplan\mcp\Matcher.class
 com\vkusplan\dto\CartLink.class
 com\vkusplan\enums\MatchStatus.class
+com\vkusplan\dto\RegisterRequest.class
 com\vkusplan\mcp\McpException.class
 com\vkusplan\dto\ManualGroceryItemCreate$ManualGroceryItemCreateBuilder.class
 com\vkusplan\controller\VkusVillController.class
 com\vkusplan\config\SecurityConfig.class
+com\vkusplan\controller\AuthController.class
 com\vkusplan\repository\RecipeRepository.class
 com\vkusplan\dto\IngredientRead$IngredientReadBuilder.class
 com\vkusplan\repository\MealPlanMealRepository.class
@@ -102,11 +109,13 @@ com\vkusplan\config\CorsConfig.class
 com\vkusplan\dto\RefreshPricesResponse$RefreshPricesResponseBuilder.class
 com\vkusplan\mcp\McpBadResponseException.class
 com\vkusplan\domain\RecipeAppliance$RecipeApplianceBuilder.class
+com\vkusplan\config\JwtAuthenticationFilter.class
 com\vkusplan\dto\CartResponse$CartResponseBuilder.class
 com\vkusplan\domain\MealPlan.class
 com\vkusplan\dto\ReplaceMealRequest$ReplaceMealRequestBuilder.class
 com\vkusplan\dto\ReplaceMealRequest.class
 com\vkusplan\dto\GroceryItemUpdate$GroceryItemUpdateBuilder.class
+com\vkusplan\config\JwtService.class
 com\vkusplan\dto\CartLink$CartLinkBuilder.class
 com\vkusplan\service\dto\RecipeIngredientInput.class
 com\vkusplan\service\MealPlanService.class
