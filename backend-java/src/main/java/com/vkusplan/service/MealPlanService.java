@@ -228,6 +228,7 @@ public class MealPlanService {
 
         plan = mealPlanRepository.save(plan);
 
+        List<MealPlanMeal> savedMeals = new ArrayList<>();
         int idx = 0;
         for (Day day : request.getDays()) {
             for (MealType mt : MEAL_TYPE_ORDER) {
@@ -238,11 +239,11 @@ public class MealPlanService {
                         .mealType(mt.getValue())
                         .recipe(recipe)
                         .build();
-                mealPlanMealRepository.save(meal);
+                savedMeals.add(mealPlanMealRepository.save(meal));
             }
         }
+        plan.setMeals(savedMeals);
 
-        // Build grocery items from all meals.
         List<GroceryItem> items = buildGroceryItems(plan);
         plan.setUnresolvedItemsCount(items.size());
         plan.setCartEstimatedCost(0.0);
@@ -250,9 +251,6 @@ public class MealPlanService {
         return mealPlanRepository.save(plan);
     }
 
-    /**
-     * (Re)build GroceryItems for a plan. Idempotent: wipes old items first.
-     */
     @Transactional
     public List<GroceryItem> buildGroceryItems(MealPlan plan) {
         groceryItemRepository.deleteByMealPlanId(plan.getId());
@@ -307,19 +305,10 @@ public class MealPlanService {
         return new RecipeInput(recipe.getId(), recipe.getServings(), ings);
     }
 
-
-        // ------------------------------------------------------------------
+    // ------------------------------------------------------------------
     // replace_meal
     // ------------------------------------------------------------------
 
-    /**
-     * Replace the recipe in a given meal slot, then rebuild grocery items
-     * and counters. Transactional: either everything is saved or nothing.
-     *
-     * @param planId     plan to mutate
-     * @param mealId     MealPlanMeal row id, must belong to the plan
-     * @param newRecipeId explicit replacement, or null to pick by scoring
-     */
     @Transactional
     public MealPlan replaceMeal(
             Integer planId,
@@ -344,7 +333,6 @@ public class MealPlanService {
 
         Integer oldRecipeId = meal.getRecipe().getId();
 
-        // Filter candidates using plan's stored params
         GenerateRequest request = requestFromPlan(plan);
         List<Recipe> all = recipeRepository.findAll();
         List<Recipe> candidates = filterCandidates(all, request);
@@ -367,7 +355,6 @@ public class MealPlanService {
                             "Recipe " + newRecipeId + " is not a valid alternative."
                     ));
         } else {
-            // deterministic: same meal_type first, then by score
             String targetMealType = meal.getMealType();
             chosen = alternatives.stream()
                     .filter(r -> targetMealType.equals(r.getMealType())
@@ -389,9 +376,6 @@ public class MealPlanService {
         return mealPlanRepository.save(plan);
     }
 
-    /**
-     * Reconstruct a GenerateRequest from stored plan parameters.
-     */
     private GenerateRequest requestFromPlan(MealPlan plan) {
         return GenerateRequest.builder()
                 .peopleCount(plan.getPeopleCount())
@@ -428,9 +412,6 @@ public class MealPlanService {
         return result;
     }
 
-    /**
-     * Minimal parser for JSON string arrays like ["mon","tue"].
-     */
     private List<String> parseJsonStringArray(String json) {
         if (json == null || json.isBlank() || "[]".equals(json.trim())) {
             return List.of();
@@ -451,9 +432,6 @@ public class MealPlanService {
         }
         return result;
     }
-    // ------------------------------------------------------------------
-    // Serialization helpers
-    // ------------------------------------------------------------------
 
     private String toJson(List<?> values) {
         if (values == null || values.isEmpty()) {

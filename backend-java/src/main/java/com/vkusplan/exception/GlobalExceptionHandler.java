@@ -2,6 +2,7 @@ package com.vkusplan.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -34,6 +35,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnknownUnitException.class)
     public ResponseEntity<ErrorResponse> handleUnknownUnit(UnknownUnitException e) {
         return build(ErrorCode.VALIDATION_ERROR, e.getMessage(), HttpStatus.BAD_REQUEST, false);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException e) {
+        String message = e.getBindingResult().getFieldErrors().stream()
+                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+                .reduce((a, b) -> a + "; " + b)
+                .orElse("Validation failed");
+        return build(ErrorCode.VALIDATION_ERROR, message, HttpStatus.UNPROCESSABLE_ENTITY, false);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

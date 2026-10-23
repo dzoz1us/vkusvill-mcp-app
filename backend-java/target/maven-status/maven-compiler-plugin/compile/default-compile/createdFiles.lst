@@ -32,6 +32,7 @@ com\vkusplan\service\dto\ScoredRecipe.class
 com\vkusplan\dto\OnboardingParams$OnboardingParamsBuilder.class
 com\vkusplan\enums\MealType.class
 com\vkusplan\enums\Unit.class
+com\vkusplan\controller\MealPlanController.class
 com\vkusplan\controller\RecipeController.class
 com\vkusplan\service\CanonicalQuantity.class
 com\vkusplan\exception\GlobalExceptionHandler.class
@@ -64,6 +65,7 @@ com\vkusplan\dto\MealPlanRead.class
 com\vkusplan\dto\GroceryListResponse.class
 com\vkusplan\dto\RecipeShort$RecipeShortBuilder.class
 com\vkusplan\domain\RecipeTag$RecipeTagBuilder.class
+com\vkusplan\mapper\MealPlanMapper$1.class
 com\vkusplan\domain\RecipeIngredient.class
 com\vkusplan\domain\Recipe.class
 com\vkusplan\repository\MCPProductCacheRepository.class
@@ -96,3 +98,4 @@ com\vkusplan\VkusplanApplication.class
 com\vkusplan\dto\RecipeDetail.class
 com\vkusplan\domain\MealPlanMeal$MealPlanMealBuilder.class
 com\vkusplan\dto\ErrorResponse.class
+com\vkusplan\mapper\MealPlanMapper.class

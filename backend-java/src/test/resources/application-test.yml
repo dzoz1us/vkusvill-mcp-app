@@ -13,6 +13,11 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
     show-sql: false
 
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      write-dates-as-timestamps: false
+
   flyway:
     enabled: false
 
