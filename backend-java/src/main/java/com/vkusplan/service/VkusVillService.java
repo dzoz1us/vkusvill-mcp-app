@@ -3,6 +3,8 @@ package com.vkusplan.service;
 import java.time.Instant;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +21,10 @@ import com.vkusplan.mcp.ProductCandidate;
 import com.vkusplan.repository.GroceryItemRepository;
 import com.vkusplan.repository.ProductMappingRepository;
 
-/**
- * Sits between the low-level McpClient and the grocery layer.
- * Enriches GroceryItem rows with real product data and prices.
- */
 @Service
 public class VkusVillService {
+
+    private static final Logger log = LoggerFactory.getLogger(VkusVillService.class);
 
     private final McpClient mcpClient;
     private final GroceryItemRepository groceryRepo;
@@ -46,21 +46,17 @@ public class VkusVillService {
         this.props = props;
     }
 
-    /**
-     * For every grocery item of the plan, try to match a product and
-     * compute package count + total price. Updates plan counters.
-     *
-     * Returns number of items successfully priced.
-     */
     @Transactional
     public int enrichPlanPrices(MealPlan plan) {
         List<GroceryItem> items = groceryRepo.findByMealPlanId(plan.getId());
+        log.info("Enriching plan {} with {} items, enableLiveMcp={}",
+                plan.getId(), items.size(), props.isEnableLiveMcp());
+
         double total = 0.0;
         int priced = 0;
 
         for (GroceryItem item : items) {
             if (item.getIngredient() == null) {
-                // manual item: keep its price as-is
                 if (item.getTotalPrice() != null) total += item.getTotalPrice();
                 continue;
             }
@@ -94,42 +90,49 @@ public class VkusVillService {
                 total += tp;
                 priced++;
             } else {
+                // Can't compute price -> downgrade to requires_review.
                 item.setPricePerPackage(null);
                 item.setTotalPrice(null);
+                item.setPackageCount(null);
+                item.setMatchStatus("requires_review");
             }
 
             groceryRepo.save(item);
         }
 
-        plan.setCartEstimatedCost(round2(total));
+        plan.setCartEstimatedCost(Math.round(total * 100.0) / 100.0);
         long unresolved = items.stream()
                 .filter(i -> !MatchStatus.MATCHED.getValue().equals(i.getMatchStatus()))
                 .count();
         plan.setUnresolvedItemsCount((int) unresolved);
 
+        log.info("Enriched plan {}: {} priced, {} unresolved, total={}",
+                plan.getId(), priced, unresolved, plan.getCartEstimatedCost());
         return priced;
     }
 
-    /**
-     * Search + score for a single ingredient. Returns a status and (possibly)
-     * a best candidate. Does not persist anything.
-     */
     public MatchOutcome matchIngredient(Ingredient ingredient) {
         if (!props.isEnableLiveMcp()) {
             return new MatchOutcome("not_found", null);
         }
 
         String query = Matcher.normalizeIngredientQuery(ingredient.getName());
+        log.info("MCP search: '{}' -> '{}'", ingredient.getName(), query);
 
         List<ProductCandidate> candidates;
         try {
             candidates = mcpClient.productsSearch(query);
         } catch (McpException e) {
-            // degrade gracefully: keep item as not_found
+            log.warn("MCP failed for '{}': {} ({})", query, e.getMessage(), e.getClass().getSimpleName());
             return new MatchOutcome("not_found", null);
         }
 
         Matcher.MatchResult result = Matcher.pickBestCandidate(ingredient.getName(), candidates);
+        log.info("Match '{}': status={}, score={}, candidate={}",
+                ingredient.getName(),
+                result.status,
+                String.format("%.2f", result.score),
+                result.candidate != null ? result.candidate.getName() : "none");
 
         if (result.candidate != null && "matched".equals(result.status)) {
             upsertMapping(ingredient, result.candidate, result.score, result.status);
@@ -160,12 +163,7 @@ public class VkusVillService {
         pm.setMatchScore(score);
         pm.setMatchStatus(status);
         pm.setLastCheckedAt(Instant.now());
-
         mappingRepo.save(pm);
-    }
-
-    private static double round2(double v) {
-        return Math.round(v * 100.0) / 100.0;
     }
 
     public static class MatchOutcome {

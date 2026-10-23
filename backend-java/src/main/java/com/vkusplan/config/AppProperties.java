@@ -11,7 +11,6 @@ import lombok.Data;
 public class AppProperties {
 
     private String frontendOrigin = "http://localhost:5173";
-
     private String mcpUrl = "https://mcp.vkusvill.ru/mcp";
     private int mcpTimeoutMs = 10_000;
     private boolean enableLiveMcp = false;

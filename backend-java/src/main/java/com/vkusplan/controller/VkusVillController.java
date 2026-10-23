@@ -1,10 +1,12 @@
 package com.vkusplan.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,8 @@ import com.vkusplan.service.VkusVillService;
 @RestController
 @RequestMapping("/api/meal-plans")
 public class VkusVillController {
+
+    private static final Logger log = LoggerFactory.getLogger(VkusVillController.class);
 
     private static final int CART_CHUNK = 20;
     private static final double MAX_Q_PER_ITEM = 40.0;
@@ -79,15 +83,6 @@ public class VkusVillController {
                         "Meal plan " + id + " not found"
                 ));
 
-        // Best-effort enrichment: if MCP fails, cart still builds with
-        // whatever data we already have.
-        try {
-            vkusVillService.enrichPlanPrices(plan);
-            planRepo.save(plan);
-        } catch (Exception ignore) {
-            // degraded mode: proceed with existing state
-        }
-
         List<GroceryItem> all = groceryRepo.findByMealPlanId(plan.getId());
 
         List<GroceryItem> cartItems = all.stream()
@@ -100,7 +95,11 @@ public class VkusVillController {
                 .filter(i -> !MatchStatus.MATCHED.getValue().equals(i.getMatchStatus()))
                 .count();
 
+        log.info("Building cart for plan {}: {} matched items, {} unresolved",
+                id, cartItems.size(), unresolved);
+
         if (cartItems.isEmpty()) {
+            log.warn("No matched items to put in cart for plan {}", id);
             return CartResponse.builder()
                     .carts(List.of())
                     .priceChanged(false)
@@ -114,12 +113,13 @@ public class VkusVillController {
             try {
                 xmlId = Integer.parseInt(i.getProductXmlId());
             } catch (NumberFormatException e) {
+                log.warn("Skipping item with invalid xml_id: {}", i.getProductXmlId());
                 continue;
             }
             double q = Math.min(Math.max(1.0, i.getPackageCount()), MAX_Q_PER_ITEM);
 
-            Map<String, Object> entry = new HashMap<>();
-            entry.put("xml_id", xmlId);
+            Map<String, Object> entry = new LinkedHashMap<>();
+            entry.put("id", xmlId);
             entry.put("q", q);
             payload.add(entry);
         }
@@ -129,6 +129,7 @@ public class VkusVillController {
             List<Map<String, Object>> chunk = payload.subList(
                     start, Math.min(start + CART_CHUNK, payload.size())
             );
+            log.info("Calling cart_link_create with {} products", chunk.size());
             try {
                 String url = mcpClient.cartLinkCreate(chunk);
                 if (url != null && !url.isBlank()) {
@@ -136,11 +137,15 @@ public class VkusVillController {
                             .cartUrl(url)
                             .itemsCount(chunk.size())
                             .build());
+                } else {
+                    log.warn("cart_link_create returned null or empty URL");
                 }
-            } catch (Exception ignore) {
-                // skip this chunk if MCP call fails
+            } catch (Exception e) {
+                log.error("MCP cart_link_create failed: {}", e.getMessage(), e);
             }
         }
+
+        log.info("Cart built: {} links returned", carts.size());
 
         return CartResponse.builder()
                 .carts(carts)

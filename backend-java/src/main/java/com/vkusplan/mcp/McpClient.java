@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -20,14 +22,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vkusplan.config.AppProperties;
 
-/**
- * Low-level client for the VkusVill MCP server.
- *
- * Isolated on purpose: no business logic, no ORM. The service layer
- * translates ProductCandidate into GroceryItem rows.
- */
 @Component
 public class McpClient {
+
+    private static final Logger log = LoggerFactory.getLogger(McpClient.class);
 
     private final AppProperties props;
     private final ObjectMapper objectMapper;
@@ -45,21 +43,19 @@ public class McpClient {
         this.restClient = RestClient.builder()
                 .baseUrl(props.getMcpUrl())
                 .requestFactory(factory)
+                .defaultHeader("User-Agent", "VkusPlan-Backend/0.1")
                 .build();
-    }
 
-    // ------------------------------------------------------------------
-    // Public API
-    // ------------------------------------------------------------------
+        log.info("McpClient initialized: url={}, enableLiveMcp={}, timeout={}ms",
+                props.getMcpUrl(), props.isEnableLiveMcp(), props.getMcpTimeoutMs());
+    }
 
     public List<ProductCandidate> productsSearch(String query) {
         Map<String, Object> args = new LinkedHashMap<>();
         args.put("q", query);
         args.put("page", 1);
         args.put("mode", "custom");
-        args.put("fields", List.of(
-                "id", "xml_id", "name", "price", "weight", "unit", "url"
-        ));
+        args.put("fields", List.of("id", "name", "price", "weight", "unit", "url"));
         args.put("vvonly", 1);
 
         Object result = callTool("vkusvill_products_search", args);
@@ -67,20 +63,39 @@ public class McpClient {
     }
 
     public String cartLinkCreate(List<Map<String, Object>> products) {
+        try {
+            log.info("MCP cartLinkCreate raw JSON: {}", objectMapper.writeValueAsString(products));
+        } catch (JsonProcessingException e) {
+            log.warn("Failed to serialize payload", e);
+        }
         Map<String, Object> args = Map.of("products", products);
         Object result = callTool("vkusvill_cart_link_create", args);
-        if (result == null) return null;
+
+        if (result == null) {
+            log.warn("cartLinkCreate: MCP returned null result");
+            return null;
+        }
 
         JsonNode node = objectMapper.valueToTree(result);
+        log.info("cartLinkCreate response: {}", node);
+
+        if (node.has("ok") && !node.get("ok").asBoolean()) {
+            log.error("cartLinkCreate: MCP rejected request: {}", node);
+            return null;
+        }
+
+        if (node.has("link")) return node.get("link").asText();
+        if (node.has("url")) return node.get("url").asText();
+
         JsonNode data = node.path("data");
         if (data.has("link")) return data.get("link").asText();
         if (data.has("url")) return data.get("url").asText();
+        if (data.has("cart_url")) return data.get("cart_url").asText();
+        if (data.has("share_basket_url")) return data.get("share_basket_url").asText();
+
+        log.warn("cartLinkCreate: no URL found in response: {}", node);
         return null;
     }
-
-    // ------------------------------------------------------------------
-    // Internals
-    // ------------------------------------------------------------------
 
     private Object callTool(String toolName, Map<String, Object> arguments) {
         int id = requestId.incrementAndGet();
@@ -89,10 +104,7 @@ public class McpClient {
         body.put("jsonrpc", "2.0");
         body.put("id", id);
         body.put("method", "tools/call");
-        body.put("params", Map.of(
-                "name", toolName,
-                "arguments", arguments
-        ));
+        body.put("params", Map.of("name", toolName, "arguments", arguments));
 
         String raw;
         try {
@@ -103,10 +115,13 @@ public class McpClient {
                     .retrieve()
                     .body(String.class);
         } catch (HttpClientErrorException.TooManyRequests e) {
-            throw new McpUnavailableException("MCP rate limit (429)", e);
+            log.error("MCP rate limit (429): {}", e.getMessage());
+            throw new McpUnavailableException("MCP rate limit", e);
         } catch (HttpServerErrorException e) {
+            log.error("MCP 5xx: {} {}", e.getStatusCode(), e.getResponseBodyAsString());
             throw new McpUnavailableException("MCP returned " + e.getStatusCode(), e);
         } catch (ResourceAccessException e) {
+            log.error("MCP network error: {}", e.getMessage(), e);
             if (e.getCause() instanceof SocketTimeoutException) {
                 throw new McpTimeoutException("MCP request timed out", e);
             }
@@ -120,6 +135,7 @@ public class McpClient {
         try {
             JsonNode root = objectMapper.readTree(raw);
             if (root.has("error")) {
+                log.error("MCP JSON-RPC error for {}: {}", toolName, root.get("error"));
                 throw new McpBadResponseException("MCP error: " + root.get("error"));
             }
 
@@ -128,6 +144,9 @@ public class McpClient {
             if (content.isArray() && content.size() > 0) {
                 String text = content.get(0).path("text").asText("");
                 if (!text.isBlank()) {
+                    if ("vkusvill_cart_link_create".equals(toolName)) {
+                        log.info("MCP raw text for {}: {}", toolName, text);
+                    }
                     return objectMapper.readValue(text, Object.class);
                 }
             }
@@ -142,7 +161,9 @@ public class McpClient {
 
         JsonNode root = objectMapper.valueToTree(raw);
         JsonNode items = root.path("data").path("items");
-        if (!items.isArray()) return List.of();
+        if (!items.isArray()) {
+            return List.of();
+        }
 
         List<ProductCandidate> result = new ArrayList<>();
         for (JsonNode item : items) {
@@ -155,13 +176,13 @@ public class McpClient {
     }
 
     private ProductCandidate parseProduct(JsonNode item) {
-        String xmlId = item.has("xml_id") ? item.get("xml_id").asText() : null;
+        Integer productId = item.has("id") ? item.get("id").asInt() : null;
         String name = item.has("name") ? item.get("name").asText() : null;
-        if (xmlId == null || name == null) {
+        if (productId == null || name == null) {
             return null;
         }
 
-        Integer productId = item.has("id") ? item.get("id").asInt() : null;
+        String xmlId = String.valueOf(productId);
 
         Double price = null;
         JsonNode priceNode = item.path("price");
