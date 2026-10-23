@@ -1,0 +1,17 @@
+# Normalize line endings
+* text=auto
+
+# Explicitly mark binary files
+*.jar binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.zip binary
+*.db binary
+
+# Shell scripts must keep LF
+*.sh text eol=lf
+
+# Windows scripts keep CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf

@@ -14,26 +14,34 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.vkusplan.domain.GroceryItem;
+import com.vkusplan.domain.Ingredient;
 import com.vkusplan.domain.MealPlan;
 import com.vkusplan.domain.MealPlanMeal;
 import com.vkusplan.domain.Recipe;
 import com.vkusplan.domain.RecipeAppliance;
+import com.vkusplan.domain.RecipeIngredient;
 import com.vkusplan.domain.RecipeTag;
 import com.vkusplan.dto.GenerateRequest;
 import com.vkusplan.enums.Appliance;
 import com.vkusplan.enums.Day;
 import com.vkusplan.enums.Diet;
+import com.vkusplan.enums.MatchStatus;
 import com.vkusplan.enums.MealPlanStatus;
 import com.vkusplan.enums.MealType;
 import com.vkusplan.enums.Preference;
+import com.vkusplan.repository.GroceryItemRepository;
+import com.vkusplan.repository.IngredientRepository;
 import com.vkusplan.repository.MealPlanMealRepository;
 import com.vkusplan.repository.MealPlanRepository;
 import com.vkusplan.repository.RecipeRepository;
+import com.vkusplan.service.dto.AggregatedIngredient;
+import com.vkusplan.service.dto.RecipeIngredientInput;
+import com.vkusplan.service.dto.RecipeInput;
 
 /**
- * Recipe filtering, scoring, slot assignment and plan persistence.
- *
- * Grocery items are built separately (see GroceryService).
+ * Recipe filtering, scoring, slot assignment, plan persistence and
+ * grocery item creation.
  */
 @Service
 public class MealPlanService {
@@ -56,19 +64,28 @@ public class MealPlanService {
     private final RecipeRepository recipeRepository;
     private final MealPlanRepository mealPlanRepository;
     private final MealPlanMealRepository mealPlanMealRepository;
+    private final GroceryItemRepository groceryItemRepository;
+    private final IngredientRepository ingredientRepository;
+    private final GroceryService groceryService;
 
     public MealPlanService(
             RecipeRepository recipeRepository,
             MealPlanRepository mealPlanRepository,
-            MealPlanMealRepository mealPlanMealRepository
+            MealPlanMealRepository mealPlanMealRepository,
+            GroceryItemRepository groceryItemRepository,
+            IngredientRepository ingredientRepository,
+            GroceryService groceryService
     ) {
         this.recipeRepository = recipeRepository;
         this.mealPlanRepository = mealPlanRepository;
         this.mealPlanMealRepository = mealPlanMealRepository;
+        this.groceryItemRepository = groceryItemRepository;
+        this.ingredientRepository = ingredientRepository;
+        this.groceryService = groceryService;
     }
 
     // ------------------------------------------------------------------
-    // Filtering & scoring (pure logic, no persistence)
+    // Filtering & scoring
     // ------------------------------------------------------------------
 
     public List<Recipe> filterCandidates(List<Recipe> recipes, GenerateRequest request) {
@@ -183,13 +200,6 @@ public class MealPlanService {
     // Persistence
     // ------------------------------------------------------------------
 
-    /**
-     * Generate a complete meal plan and persist it.
-     *
-     * Side effects:
-     *   - creates MealPlan
-     *   - creates MealPlanMeal for each (day, meal_type)
-     */
     @Transactional
     public MealPlan generatePlan(GenerateRequest request) {
         List<Recipe> all = recipeRepository.findAll();
@@ -229,21 +239,78 @@ public class MealPlanService {
                         .recipe(recipe)
                         .build();
                 mealPlanMealRepository.save(meal);
-                plan.getMeals().add(meal);
             }
         }
 
+        // Build grocery items from all meals.
+        List<GroceryItem> items = buildGroceryItems(plan);
+        plan.setUnresolvedItemsCount(items.size());
+        plan.setCartEstimatedCost(0.0);
+
         return mealPlanRepository.save(plan);
+    }
+
+    /**
+     * (Re)build GroceryItems for a plan. Idempotent: wipes old items first.
+     */
+    @Transactional
+    public List<GroceryItem> buildGroceryItems(MealPlan plan) {
+        groceryItemRepository.deleteByMealPlanId(plan.getId());
+
+        List<MealPlanMeal> meals = mealPlanMealRepository.findByMealPlanId(plan.getId());
+        if (meals.isEmpty()) {
+            return List.of();
+        }
+
+        List<RecipeInput> recipeInputs = new ArrayList<>(meals.size());
+        for (MealPlanMeal meal : meals) {
+            recipeInputs.add(toRecipeInput(meal.getRecipe()));
+        }
+
+        List<AggregatedIngredient> aggregated = groceryService.aggregateIngredients(
+                recipeInputs, plan.getPeopleCount()
+        );
+
+        List<GroceryItem> created = new ArrayList<>(aggregated.size());
+        for (AggregatedIngredient agg : aggregated) {
+            Ingredient ingredient = ingredientRepository
+                    .findById(agg.ingredientId())
+                    .orElse(null);
+
+            GroceryItem item = GroceryItem.builder()
+                    .mealPlan(plan)
+                    .ingredient(ingredient)
+                    .productName(agg.name())
+                    .neededQuantity(agg.neededQuantity())
+                    .neededUnit(agg.unit().getValue())
+                    .matchStatus(MatchStatus.NOT_FOUND.getValue())
+                    .isBought(false)
+                    .isManual(false)
+                    .build();
+
+            created.add(groceryItemRepository.save(item));
+        }
+        return created;
+    }
+
+    private RecipeInput toRecipeInput(Recipe recipe) {
+        List<RecipeIngredientInput> ings = new ArrayList<>(recipe.getIngredients().size());
+        for (RecipeIngredient ri : recipe.getIngredients()) {
+            Ingredient ing = ri.getIngredient();
+            ings.add(new RecipeIngredientInput(
+                    ing != null ? ing.getId() : null,
+                    ing != null ? ing.getName() : "",
+                    ri.getQuantity(),
+                    ri.getUnit()
+            ));
+        }
+        return new RecipeInput(recipe.getId(), recipe.getServings(), ings);
     }
 
     // ------------------------------------------------------------------
     // Serialization helpers
     // ------------------------------------------------------------------
 
-    /**
-     * Serialize a list of enums with {@code getValue()} into a JSON array.
-     * We don't pull Jackson here to keep this method free of context.
-     */
     private String toJson(List<?> values) {
         if (values == null || values.isEmpty()) {
             return "[]";
