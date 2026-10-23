@@ -23,6 +23,7 @@ com\vkusplan\dto\ErrorResponse$ErrorResponseBuilder.class
 com\vkusplan\dto\DayMealRead.class
 com\vkusplan\service\NoSuitableRecipesException.class
 com\vkusplan\dto\RefreshPricesResponse.class
+com\vkusplan\service\NoAlternativeRecipeException.class
 com\vkusplan\dto\GroceryItemRead.class
 com\vkusplan\domain\MealPlanMeal.class
 com\vkusplan\domain\MealPlan$MealPlanBuilder.class
@@ -42,6 +43,7 @@ com\vkusplan\service\GroceryService.class
 com\vkusplan\repository\MealPlanRepository.class
 com\vkusplan\domain\Recipe$RecipeBuilder.class
 com\vkusplan\dto\NutritionInfo.class
+com\vkusplan\service\MealNotFoundException.class
 com\vkusplan\dto\GroceryItemRead$GroceryItemReadBuilder.class
 com\vkusplan\HealthController.class
 com\vkusplan\dto\ReplaceMealResponse.class

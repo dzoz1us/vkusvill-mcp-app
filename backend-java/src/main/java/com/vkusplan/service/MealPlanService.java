@@ -307,6 +307,150 @@ public class MealPlanService {
         return new RecipeInput(recipe.getId(), recipe.getServings(), ings);
     }
 
+
+        // ------------------------------------------------------------------
+    // replace_meal
+    // ------------------------------------------------------------------
+
+    /**
+     * Replace the recipe in a given meal slot, then rebuild grocery items
+     * and counters. Transactional: either everything is saved or nothing.
+     *
+     * @param planId     plan to mutate
+     * @param mealId     MealPlanMeal row id, must belong to the plan
+     * @param newRecipeId explicit replacement, or null to pick by scoring
+     */
+    @Transactional
+    public MealPlan replaceMeal(
+            Integer planId,
+            Integer mealId,
+            Integer newRecipeId
+    ) {
+        MealPlan plan = mealPlanRepository.findById(planId)
+                .orElseThrow(() -> new MealNotFoundException(
+                        "Meal plan " + planId + " not found"
+                ));
+
+        MealPlanMeal meal = mealPlanMealRepository.findById(mealId)
+                .orElseThrow(() -> new MealNotFoundException(
+                        "Meal " + mealId + " not found"
+                ));
+
+        if (!meal.getMealPlan().getId().equals(plan.getId())) {
+            throw new MealNotFoundException(
+                    "Meal " + mealId + " does not belong to plan " + planId
+            );
+        }
+
+        Integer oldRecipeId = meal.getRecipe().getId();
+
+        // Filter candidates using plan's stored params
+        GenerateRequest request = requestFromPlan(plan);
+        List<Recipe> all = recipeRepository.findAll();
+        List<Recipe> candidates = filterCandidates(all, request);
+        List<Recipe> alternatives = candidates.stream()
+                .filter(r -> !r.getId().equals(oldRecipeId))
+                .toList();
+
+        if (alternatives.isEmpty()) {
+            throw new NoAlternativeRecipeException(
+                    "No alternative recipe matches the plan's diet and appliances."
+            );
+        }
+
+        Recipe chosen;
+        if (newRecipeId != null) {
+            chosen = alternatives.stream()
+                    .filter(r -> r.getId().equals(newRecipeId))
+                    .findFirst()
+                    .orElseThrow(() -> new NoAlternativeRecipeException(
+                            "Recipe " + newRecipeId + " is not a valid alternative."
+                    ));
+        } else {
+            // deterministic: same meal_type first, then by score
+            String targetMealType = meal.getMealType();
+            chosen = alternatives.stream()
+                    .filter(r -> targetMealType.equals(r.getMealType())
+                            || "any".equals(r.getMealType())
+                            || r.getMealType() == null)
+                    .max(Comparator.comparingInt(
+                            r -> scoreRecipe(r, request.getPreferences())
+                    ))
+                    .orElse(alternatives.get(0));
+        }
+
+        meal.setRecipe(chosen);
+        mealPlanMealRepository.save(meal);
+
+        List<GroceryItem> items = buildGroceryItems(plan);
+        plan.setUnresolvedItemsCount(items.size());
+        plan.setCartEstimatedCost(0.0);
+
+        return mealPlanRepository.save(plan);
+    }
+
+    /**
+     * Reconstruct a GenerateRequest from stored plan parameters.
+     */
+    private GenerateRequest requestFromPlan(MealPlan plan) {
+        return GenerateRequest.builder()
+                .peopleCount(plan.getPeopleCount())
+                .days(parseDays(plan.getDaysJson()))
+                .budget(plan.getBudget())
+                .preferences(parsePreferences(plan.getPreferencesJson()))
+                .diet(Diet.fromValue(plan.getDiet()))
+                .appliances(parseAppliances(plan.getAppliancesJson()))
+                .randomSeed(plan.getRandomSeed())
+                .build();
+    }
+
+    private List<Day> parseDays(String json) {
+        List<Day> result = new ArrayList<>();
+        for (String s : parseJsonStringArray(json)) {
+            result.add(Day.fromValue(s));
+        }
+        return result;
+    }
+
+    private List<Preference> parsePreferences(String json) {
+        List<Preference> result = new ArrayList<>();
+        for (String s : parseJsonStringArray(json)) {
+            result.add(Preference.fromValue(s));
+        }
+        return result;
+    }
+
+    private List<Appliance> parseAppliances(String json) {
+        List<Appliance> result = new ArrayList<>();
+        for (String s : parseJsonStringArray(json)) {
+            result.add(Appliance.fromValue(s));
+        }
+        return result;
+    }
+
+    /**
+     * Minimal parser for JSON string arrays like ["mon","tue"].
+     */
+    private List<String> parseJsonStringArray(String json) {
+        if (json == null || json.isBlank() || "[]".equals(json.trim())) {
+            return List.of();
+        }
+        String body = json.trim();
+        if (body.startsWith("[")) body = body.substring(1);
+        if (body.endsWith("]")) body = body.substring(0, body.length() - 1);
+
+        List<String> result = new ArrayList<>();
+        for (String part : body.split(",")) {
+            String s = part.trim();
+            if (s.startsWith("\"") && s.endsWith("\"")) {
+                s = s.substring(1, s.length() - 1);
+            }
+            if (!s.isBlank()) {
+                result.add(s);
+            }
+        }
+        return result;
+    }
     // ------------------------------------------------------------------
     // Serialization helpers
     // ------------------------------------------------------------------
