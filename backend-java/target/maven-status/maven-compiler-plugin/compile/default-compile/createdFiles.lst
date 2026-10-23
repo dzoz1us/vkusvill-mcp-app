@@ -1,6 +1,7 @@
 com\vkusplan\domain\ProductMapping.class
 com\vkusplan\dto\ManualGroceryItemCreate.class
 com\vkusplan\dto\ReplaceMealResponse$ReplaceMealResponseBuilder.class
+com\vkusplan\service\VkusVillService$MatchOutcome.class
 com\vkusplan\domain\MCPProductCache$MCPProductCacheBuilder.class
 com\vkusplan\mcp\McpTimeoutException.class
 com\vkusplan\domain\RecipeTag.class
@@ -24,6 +25,7 @@ com\vkusplan\domain\GroceryItem$GroceryItemBuilder.class
 com\vkusplan\dto\NutritionInfo$NutritionInfoBuilder.class
 com\vkusplan\enums\Appliance.class
 com\vkusplan\dto\ErrorResponse$ErrorResponseBuilder.class
+com\vkusplan\mcp\Matcher$MatchResult.class
 com\vkusplan\dto\DayMealRead.class
 com\vkusplan\service\NoSuitableRecipesException.class
 com\vkusplan\dto\RefreshPricesResponse.class
@@ -61,10 +63,12 @@ com\vkusplan\dto\RecipeListResponse$RecipeListResponseBuilder.class
 com\vkusplan\dto\RecipeShort.class
 com\vkusplan\repository\GroceryItemRepository.class
 com\vkusplan\domain\ProductMapping$ProductMappingBuilder.class
+com\vkusplan\mcp\Matcher.class
 com\vkusplan\dto\CartLink.class
 com\vkusplan\enums\MatchStatus.class
 com\vkusplan\mcp\McpException.class
 com\vkusplan\dto\ManualGroceryItemCreate$ManualGroceryItemCreateBuilder.class
+com\vkusplan\controller\VkusVillController.class
 com\vkusplan\repository\RecipeRepository.class
 com\vkusplan\dto\IngredientRead$IngredientReadBuilder.class
 com\vkusplan\repository\MealPlanMealRepository.class
@@ -110,3 +114,4 @@ com\vkusplan\dto\RecipeDetail.class
 com\vkusplan\domain\MealPlanMeal$MealPlanMealBuilder.class
 com\vkusplan\dto\ErrorResponse.class
 com\vkusplan\mapper\MealPlanMapper.class
+com\vkusplan\service\VkusVillService.class

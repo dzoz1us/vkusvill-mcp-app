@@ -4,6 +4,7 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\config\
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\controller\GroceryController.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\controller\MealPlanController.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\controller\RecipeController.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\controller\VkusVillController.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\GroceryItem.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\Ingredient.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\domain\MCPProductCache.java
@@ -48,6 +49,7 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\HealthC
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mapper\GroceryItemMapper.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mapper\MealPlanMapper.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mapper\RecipeMapper.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\Matcher.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\McpBadResponseException.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\McpClient.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\mcp\McpException.java
@@ -75,4 +77,5 @@ C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\PricingService.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\QuantityService.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\UnknownUnitException.java
+C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\service\VkusVillService.java
 C:\Users\Игорь\vkusvill-mcp\backend-java\src\main\java\com\vkusplan\VkusplanApplication.java
