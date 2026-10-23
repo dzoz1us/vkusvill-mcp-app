@@ -15,6 +15,7 @@ com\vkusplan\dto\RecipeListResponse.class
 com\vkusplan\repository\IngredientRepository.class
 com\vkusplan\dto\GroceryListResponse$GroceryListResponseBuilder.class
 com\vkusplan\domain\MCPProductCache.class
+com\vkusplan\controller\GroceryController.class
 com\vkusplan\dto\GenerateRequest.class
 com\vkusplan\dto\OnboardingParams.class
 com\vkusplan\domain\GroceryItem$GroceryItemBuilder.class
@@ -68,10 +69,12 @@ com\vkusplan\domain\RecipeTag$RecipeTagBuilder.class
 com\vkusplan\mapper\MealPlanMapper$1.class
 com\vkusplan\domain\RecipeIngredient.class
 com\vkusplan\domain\Recipe.class
+com\vkusplan\mapper\GroceryItemMapper.class
 com\vkusplan\repository\MCPProductCacheRepository.class
 com\vkusplan\service\UnknownUnitException.class
 com\vkusplan\dto\CartResponse.class
 com\vkusplan\dto\MealPlanRead$MealPlanReadBuilder.class
+com\vkusplan\service\GroceryItemNotFoundException.class
 com\vkusplan\config\JacksonConfig.class
 com\vkusplan\config\CorsConfig.class
 com\vkusplan\dto\RefreshPricesResponse$RefreshPricesResponseBuilder.class

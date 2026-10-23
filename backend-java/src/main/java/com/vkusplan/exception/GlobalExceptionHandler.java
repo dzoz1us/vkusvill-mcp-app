@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.vkusplan.dto.ErrorBody;
 import com.vkusplan.dto.ErrorResponse;
 import com.vkusplan.enums.ErrorCode;
+import com.vkusplan.service.GroceryItemNotFoundException;
 import com.vkusplan.service.MealNotFoundException;
 import com.vkusplan.service.NoAlternativeRecipeException;
 import com.vkusplan.service.NoSuitableRecipesException;
@@ -29,6 +30,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MealNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleMealNotFound(MealNotFoundException e) {
+        return build(ErrorCode.NOT_FOUND, e.getMessage(), HttpStatus.NOT_FOUND, false);
+    }
+
+    @ExceptionHandler(GroceryItemNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleGroceryNotFound(GroceryItemNotFoundException e) {
         return build(ErrorCode.NOT_FOUND, e.getMessage(), HttpStatus.NOT_FOUND, false);
     }
 
