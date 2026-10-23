@@ -20,9 +20,9 @@ import type {
   MealPlan,
   Recipe,
   ReplaceMealResponse,
-} from '../types';
+} from "../types";
 
-const API_URL = (import.meta.env.VITE_API_URL as string | undefined) ?? '';
+const API_URL = (import.meta.env.VITE_API_URL as string | undefined) ?? "";
 
 /**
  * Error thrown for any non-2xx response from the backend.
@@ -33,9 +33,14 @@ export class ApiError extends Error {
   readonly code: string | undefined;
   readonly retryable: boolean;
 
-  constructor(status: number, code: string | undefined, message: string, retryable: boolean) {
+  constructor(
+    status: number,
+    code: string | undefined,
+    message: string,
+    retryable: boolean,
+  ) {
     super(message);
-    this.name = 'ApiError';
+    this.name = "ApiError";
     this.status = status;
     this.code = code;
     this.retryable = retryable;
@@ -45,7 +50,7 @@ export class ApiError extends Error {
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const url = `${API_URL}${path}`;
   const res = await fetch(url, {
-    headers: { 'Content-Type': 'application/json', ...(init.headers ?? {}) },
+    headers: { "Content-Type": "application/json", ...(init.headers ?? {}) },
     ...init,
   });
 
@@ -74,8 +79,8 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
 export const api = {
   generateMealPlan(req: GenerateRequest): Promise<MealPlan> {
-    return request<MealPlan>('/api/meal-plans/generate', {
-      method: 'POST',
+    return request<MealPlan>("/api/meal-plans/generate", {
+      method: "POST",
       body: JSON.stringify(req),
     });
   },
@@ -93,7 +98,7 @@ export const api = {
     return request<ReplaceMealResponse>(
       `/api/meal-plans/${encodeURIComponent(planId)}/replace-meal`,
       {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({ meal_id: dayMealId }),
       },
     );
@@ -109,7 +114,7 @@ export const api = {
     return request<GroceryItem>(
       `/api/grocery-items/${encodeURIComponent(itemId)}`,
       {
-        method: 'PATCH',
+        method: "PATCH",
         body: JSON.stringify({ is_bought: isBought }),
       },
     );
@@ -118,14 +123,16 @@ export const api = {
   createVkusvillCart(planId: string): Promise<CartResponse> {
     return request<CartResponse>(
       `/api/meal-plans/${encodeURIComponent(planId)}/vkusvill-cart`,
-      { method: 'POST' },
+      { method: "POST" },
     );
   },
 
-  refreshPrices(planId: string): Promise<{ cost_changed: boolean; new_cost: number }> {
+  refreshPrices(
+    planId: string,
+  ): Promise<{ cost_changed: boolean; new_cost: number }> {
     return request<{ cost_changed: boolean; new_cost: number }>(
       `/api/meal-plans/${encodeURIComponent(planId)}/refresh-prices`,
-      { method: 'POST' },
+      { method: "POST" },
     );
   },
 };

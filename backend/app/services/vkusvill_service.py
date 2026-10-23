@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import json
 import html
+import json
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy.orm import Session
 
@@ -59,11 +59,20 @@ def _candidate_from_dict(raw: object) -> ProductCandidate | None:
     if not isinstance(raw, dict):
         return None
 
-    product_id = raw.get("id")
-    xml_id = raw.get("xml_id") or product_id
+    product_id_raw = raw.get("id")
+    xml_id = raw.get("xml_id") or product_id_raw
     name = raw.get("name")
     if not xml_id or not name:
         return None
+
+    product_id: int | None = None
+    if product_id_raw is not None:
+        try:
+            product_id = int(product_id_raw)
+        except (TypeError, ValueError):
+            # Product details is optional for matching, so an invalid id
+            # should not discard an otherwise usable search result.
+            product_id = None
 
     # price may be a dict {current, currency, ...} or a plain number
     price_raw = raw.get("price")
@@ -72,11 +81,15 @@ def _candidate_from_dict(raw: object) -> ProductCandidate | None:
         current = price_raw.get("current")
         if current is not None:
             try:
-                price = float(current)
+                parsed_price = float(current)
+                if parsed_price >= 0:
+                    price = parsed_price
             except (TypeError, ValueError):
                 price = None
     elif isinstance(price_raw, (int, float)):
-        price = float(price_raw)
+        parsed_price = float(price_raw)
+        if parsed_price >= 0:
+            price = parsed_price
 
     # weight -> canonical quantity/unit
     package_quantity: float | None = None
@@ -90,22 +103,26 @@ def _candidate_from_dict(raw: object) -> ProductCandidate | None:
             if key in _WEIGHT_TO_CANONICAL:
                 canon_unit, multiplier = _WEIGHT_TO_CANONICAL[key]
                 try:
-                    package_quantity = float(w_val) * multiplier
-                    package_unit = canon_unit
+                    parsed_quantity = float(w_val) * multiplier
+                    if parsed_quantity > 0:
+                        package_quantity = parsed_quantity
+                        package_unit = canon_unit
                 except (TypeError, ValueError):
                     pass
     elif isinstance(weight_raw, (int, float)):
         # assume kilograms
-        package_quantity = float(weight_raw) * 1000.0
-        package_unit = "g"
+        parsed_quantity = float(weight_raw) * 1000.0
+        if parsed_quantity > 0:
+            package_quantity = parsed_quantity
+            package_unit = "g"
 
     # fallback: if sold by "шт" and no weight info, treat as 1 pcs
-    if package_quantity is None and raw.get("unit") == "шт":
+    if package_quantity is None and str(raw.get("unit", "")).strip().lower() == "шт":
         package_quantity = 1.0
         package_unit = "pcs"
 
     return ProductCandidate(
-        product_id=int(product_id) if product_id is not None else None,
+        product_id=product_id,
         xml_id=str(xml_id),
         name=html.unescape(str(name)),
         price=price,
@@ -149,8 +166,9 @@ def _extract_products(raw: object) -> list[ProductCandidate]:
 # Cache
 # ---------------------------------------------------------------------------
 
+
 def _cache_get(db: Session, query: str) -> list[ProductCandidate] | None:
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     row = (
         db.query(MCPProductCache)
         .filter(MCPProductCache.query == query)
@@ -161,7 +179,7 @@ def _cache_get(db: Session, query: str) -> list[ProductCandidate] | None:
         return None
     expires = row.expires_at
     if expires.tzinfo is None:
-        expires = expires.replace(tzinfo=timezone.utc)
+        expires = expires.replace(tzinfo=UTC)
     if expires < now:
         return None
     try:
@@ -178,7 +196,7 @@ def _cache_put(
 ) -> None:
     settings = get_settings()
     ttl = timedelta(seconds=settings.product_search_cache_ttl_seconds)
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     row = MCPProductCache(
         query=query,
         response_json=json.dumps([c.model_dump() for c in candidates]),
@@ -192,6 +210,7 @@ def _cache_put(
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+
 
 async def search_products(
     db: Session,
@@ -231,11 +250,7 @@ async def match_ingredient(
     best, status, score = pick_best_candidate(ingredient.name, candidates)
 
     if best is not None and status == "matched":
-        existing = (
-            db.query(ProductMapping)
-            .filter_by(ingredient_id=ingredient.id)
-            .one_or_none()
-        )
+        existing = db.query(ProductMapping).filter_by(ingredient_id=ingredient.id).one_or_none()
         if existing is None:
             existing = ProductMapping(ingredient_id=ingredient.id)
             db.add(existing)
@@ -247,15 +262,18 @@ async def match_ingredient(
         existing.last_price = best.price
         existing.match_score = score
         existing.match_status = status
-        existing.last_checked_at = datetime.now(timezone.utc)
+        existing.last_checked_at = datetime.now(UTC)
         db.flush()
 
         logger.info(
-        "MATCH ingredient=%r query=%r status=%s score=%.2f candidate=%r",
-        ingredient.name, query, status, score,
-        best.name if best else None,
-    )
-        
+            "MATCH ingredient=%r query=%r status=%s score=%.2f candidate=%r",
+            ingredient.name,
+            query,
+            status,
+            score,
+            best.name if best else None,
+        )
+
     return MatchResult(
         ingredient_id=ingredient.id,
         ingredient_name=ingredient.name,

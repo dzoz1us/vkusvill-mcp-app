@@ -101,10 +101,11 @@ def test_breakfast_slot_uses_breakfast_recipes(seeded):
     for meal in plan.meals:
         if meal.meal_type == "breakfast":
             recipe = seeded.get(Recipe, meal.recipe_id)
-            assert recipe.meal_type in (None, "any", "breakfast"), (
-                f"breakfast slot got recipe {recipe.name!r} "
-                f"with meal_type={recipe.meal_type!r}"
-            )
+            assert recipe.meal_type in (
+                None,
+                "any",
+                "breakfast",
+            ), f"breakfast slot got recipe {recipe.name!r} with meal_type={recipe.meal_type!r}"
 
 
 def test_dinner_slot_uses_dinner_recipes(seeded):

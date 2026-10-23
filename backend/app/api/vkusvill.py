@@ -1,5 +1,7 @@
 """VkusVill-specific endpoints: refresh prices and create cart links."""
 
+import logging
+
 from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
@@ -18,6 +20,7 @@ from app.schemas.errors import ErrorBody, ErrorResponse
 from app.services.grocery_service import enrich_plan_prices
 
 router = APIRouter(prefix="/api/meal-plans", tags=["vkusvill"])
+logger = logging.getLogger(__name__)
 
 # VkusVill share_basket limits per single link.
 CART_CHUNK_SIZE = 20
@@ -26,9 +29,7 @@ MAX_Q_PER_ITEM = 40
 
 
 def _error(code: ErrorCode, message: str, status_code: int, retryable: bool = False):
-    body = ErrorResponse(
-        error=ErrorBody(code=code, message=message, retryable=retryable)
-    )
+    body = ErrorResponse(error=ErrorBody(code=code, message=message, retryable=retryable))
     return JSONResponse(status_code=status_code, content=body.model_dump(mode="json"))
 
 
@@ -112,27 +113,23 @@ async def create_vkusvill_cart(plan_id: int, db: Session = Depends(get_db)):
             retryable=True,
         )
 
-    items = (
-        db.query(GroceryItem)
-        .filter_by(meal_plan_id=plan.id)
-        .filter(GroceryItem.match_status == "matched")
-        .filter(GroceryItem.product_xml_id.isnot(None))
-        .filter(GroceryItem.package_count.isnot(None))
-        .all()
-    )
+    all_items = db.query(GroceryItem).filter_by(meal_plan_id=plan.id).all()
 
-    unresolved = (
-        db.query(GroceryItem)
-        .filter_by(meal_plan_id=plan.id)
-        .filter(GroceryItem.match_status != "matched")
-        .count()
-    )
+    items = [
+        item
+        for item in all_items
+        if (
+            item.match_status == "matched"
+            and item.product_xml_id is not None
+            and item.package_count is not None
+        )
+    ]
 
     if not items:
         return CartResponse(
             carts=[],
             price_changed=False,
-            unresolved_items=unresolved,
+            unresolved_items=len(all_items),
         )
 
     # build payload for MCP: [{xml_id: int, q: float}]
@@ -149,20 +146,18 @@ async def create_vkusvill_cart(plan_id: int, db: Session = Depends(get_db)):
             q = MAX_Q_PER_ITEM
         payload.append({"xml_id": xml_id, "q": q})
 
+    # Count every grocery item that cannot be represented in the cart
+    # payload, including manual items and malformed product IDs.
+    unresolved = len(all_items) - len(payload)
+
     # chunk by 20 (share_basket limit)
-    chunks = [
-        payload[i : i + CART_CHUNK_SIZE]
-        for i in range(0, len(payload), CART_CHUNK_SIZE)
-    ]
+    chunks = [payload[i : i + CART_CHUNK_SIZE] for i in range(0, len(payload), CART_CHUNK_SIZE)]
 
     client = VkusVillMCPClient()
     carts: list[CartLink] = []
     try:
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.warning("VKUSVILL CART payload chunks: %s", chunks)
+        logger.debug("Creating %d VkusVill cart chunk(s)", len(chunks))
         for chunk in chunks:
-            logger.warning("VKUSVILL CART chunk to MCP: %s", chunk)
             raw = await client.cart_link_create(chunk)
             url = _extract_cart_url(raw)
             if not url:

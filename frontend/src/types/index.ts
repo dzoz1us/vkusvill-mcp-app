@@ -1,31 +1,26 @@
 // Core types synchronized with backend Pydantic models.
 
-export type DietType = 'none' | 'vegetarian' | 'vegan' | 'pescatarian';
+export type DietType = "none" | "vegetarian" | "vegan" | "pescatarian";
 
 export type PreferenceTag =
-  | 'quick'
-  | 'low_calorie'
-  | 'family'
-  | 'healthy'
-  | 'high_protein'
-  | 'budget'
-  | 'hearty';
+  | "quick"
+  | "low_calorie"
+  | "family"
+  | "healthy"
+  | "high_protein"
+  | "budget"
+  | "hearty";
 
 export type ApplianceType =
-  | 'stove'
-  | 'oven'
-  | 'microwave'
-  | 'multicooker'
-  | 'air_fryer'
-  | 'blender';
+  "stove" | "oven" | "microwave" | "multicooker" | "air_fryer" | "blender";
 
-export type DayOfWeek = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+export type DayOfWeek = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
 
-export type MealType = 'breakfast' | 'lunch' | 'dinner';
+export type MealType = "breakfast" | "lunch" | "dinner";
 
-export type NetworkState = 'idle' | 'loading' | 'success' | 'empty' | 'error';
+export type NetworkState = "idle" | "loading" | "success" | "empty" | "error";
 
-export type MatchStatus = 'matched' | 'requires_review' | 'not_found';
+export type MatchStatus = "matched" | "requires_review" | "not_found";
 
 export interface OnboardingParams {
   people_count: number;
@@ -83,7 +78,7 @@ export interface MealPlan {
   cart_estimated_cost: number;
   budget: number;
   unresolved_items_count: number;
-  status: 'generating' | 'ready' | 'error';
+  status: "generating" | "ready" | "error";
 }
 
 export interface GroceryItem {
@@ -94,7 +89,7 @@ export interface GroceryItem {
   package_quantity: number | null;
   package_unit: string | null;
   package_count: number | null;
-  total_price: number | null;  
+  total_price: number | null;
   price_per_package: number | null;
   match_status: MatchStatus;
   is_bought: boolean;

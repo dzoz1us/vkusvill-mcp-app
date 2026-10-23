@@ -10,11 +10,12 @@
  *   (and make sure the backend is running on VITE_API_URL or /api proxy)
  */
 
-import { api as httpApi } from './client.http';
-import { api as mockApi } from './client.mock';
+import { api as httpApi } from "./client.http";
+import { api as mockApi } from "./client.mock";
 
-const useMock = String(import.meta.env.VITE_USE_MOCK ?? 'true').toLowerCase() === 'true';
+const useMock =
+  String(import.meta.env.VITE_USE_MOCK ?? "true").toLowerCase() === "true";
 
 export const api = useMock ? mockApi : httpApi;
 
-export { ApiError } from './client.http';
+export { ApiError } from "./client.http";

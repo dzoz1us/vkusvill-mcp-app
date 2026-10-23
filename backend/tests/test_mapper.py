@@ -10,16 +10,10 @@ from app.integrations.vkusvill.schemas import ProductCandidate
 
 class TestNormalize:
     def test_strips_skin_modifier(self):
-        assert (
-            normalize_ingredient_query("филе куриной грудки без кожи")
-            == "филе куриной грудки"
-        )
+        assert normalize_ingredient_query("филе куриной грудки без кожи") == "филе куриной грудки"
 
     def test_strips_fresh(self):
-        assert (
-            normalize_ingredient_query("помидоры черри свежие")
-            == "помидоры черри"
-        )
+        assert normalize_ingredient_query("помидоры черри свежие") == "помидоры черри"
 
     def test_keeps_core_when_short(self):
         assert normalize_ingredient_query("молоко") == "молоко"
@@ -46,9 +40,7 @@ class TestScore:
 
     def test_packaging_bonus(self):
         c1 = ProductCandidate(xml_id="4", name="молоко", price=100)
-        c2 = ProductCandidate(
-            xml_id="5", name="молоко", price=100, package_quantity=1.0
-        )
+        c2 = ProductCandidate(xml_id="5", name="молоко", price=100, package_quantity=1.0)
         assert score_candidate(c2, "молоко") > score_candidate(c1, "молоко")
 
 

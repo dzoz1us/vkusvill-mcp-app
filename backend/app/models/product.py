@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, UniqueConstraint, func
+from sqlalchemy import DateTime, Float, ForeignKey, String, Text, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
@@ -10,9 +10,7 @@ from app.database.base import Base
 
 class ProductMapping(Base):
     __tablename__ = "product_mappings"
-    __table_args__ = (
-        UniqueConstraint("ingredient_id", name="uq_mapping_ingredient"),
-    )
+    __table_args__ = (UniqueConstraint("ingredient_id", name="uq_mapping_ingredient"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     ingredient_id: Mapped[int] = mapped_column(

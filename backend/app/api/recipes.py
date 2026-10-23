@@ -18,9 +18,7 @@ router = APIRouter(prefix="/api/recipes", tags=["recipes"])
 
 
 def _error(code: ErrorCode, message: str, status_code: int) -> JSONResponse:
-    body = ErrorResponse(
-        error=ErrorBody(code=code, message=message, retryable=False)
-    )
+    body = ErrorResponse(error=ErrorBody(code=code, message=message, retryable=False))
     return JSONResponse(status_code=status_code, content=body.model_dump(mode="json"))
 
 

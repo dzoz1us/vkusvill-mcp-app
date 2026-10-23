@@ -15,7 +15,6 @@ from dataclasses import dataclass
 
 from app.schemas.enums import Unit
 
-
 # Aliases that may appear in recipe data and MCP responses.
 # Keys are lowercase; values are canonical Unit.
 _UNIT_ALIASES: dict[str, Unit] = {

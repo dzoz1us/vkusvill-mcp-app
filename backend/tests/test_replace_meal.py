@@ -2,7 +2,7 @@
 
 import pytest
 
-from app.models import GroceryItem, MealPlan, MealPlanMeal
+from app.models import GroceryItem, MealPlanMeal, Recipe
 from app.schemas import GenerateRequest
 from app.seed_runner import seed_ingredients, seed_recipes
 from app.services.meal_plan_service import (
@@ -39,28 +39,18 @@ async def test_replace_meal_changes_recipe_and_rebuilds_grocery(seeded):
     plan = generate_plan(seeded, _req(days=["mon"]))
     meal = plan.meals[0]
     old_recipe_id = meal.recipe_id
-    old_items = (
-        seeded.query(GroceryItem).filter_by(meal_plan_id=plan.id).all()
-    )
 
-    updated_plan, new_recipe = await replace_meal(
-        seeded, plan, meal_id=meal.id
-    )
+    _, new_recipe = await replace_meal(seeded, plan, meal_id=meal.id)
 
     assert new_recipe.id != old_recipe_id
+    assert new_recipe.meal_type in (None, "any", meal.meal_type)
 
     # plan still has all meals
-    meals = (
-        seeded.query(MealPlanMeal)
-        .filter_by(meal_plan_id=plan.id)
-        .all()
-    )
+    meals = seeded.query(MealPlanMeal).filter_by(meal_plan_id=plan.id).all()
     assert len(meals) == 3
 
     # grocery items rebuilt for the new set of meals
-    new_items = (
-        seeded.query(GroceryItem).filter_by(meal_plan_id=plan.id).all()
-    )
+    new_items = seeded.query(GroceryItem).filter_by(meal_plan_id=plan.id).all()
     assert len(new_items) > 0
     # every item must belong to this plan
     assert all(i.meal_plan_id == plan.id for i in new_items)
@@ -73,19 +63,32 @@ async def test_replace_meal_changes_recipe_and_rebuilds_grocery(seeded):
 async def test_replace_meal_with_explicit_recipe(seeded):
     plan = generate_plan(seeded, _req(days=["mon"]))
     meal = plan.meals[0]
-    from app.models import Recipe
-
     other = (
         seeded.query(Recipe)
         .filter(Recipe.id != meal.recipe_id)
+        .filter(Recipe.meal_type.in_((meal.meal_type, "any")))
         .first()
     )
     assert other is not None
 
-    _, chosen = await replace_meal(
-        seeded, plan, meal_id=meal.id, new_recipe_id=other.id
-    )
+    _, chosen = await replace_meal(seeded, plan, meal_id=meal.id, new_recipe_id=other.id)
     assert chosen.id == other.id
+
+
+@pytest.mark.asyncio
+async def test_replace_meal_rejects_recipe_for_another_slot(seeded):
+    plan = generate_plan(seeded, _req(days=["mon"]))
+    breakfast = next(meal for meal in plan.meals if meal.meal_type == "breakfast")
+    dinner = seeded.query(Recipe).filter(Recipe.meal_type == "dinner").first()
+    assert dinner is not None
+
+    with pytest.raises(NoAlternativeRecipeError):
+        await replace_meal(
+            seeded,
+            plan,
+            meal_id=breakfast.id,
+            new_recipe_id=dinner.id,
+        )
 
 
 @pytest.mark.asyncio
@@ -105,13 +108,7 @@ async def test_replace_meal_no_alternative(seeded):
     meal = plan.meals[0]
 
     # Force all other recipes to a non-compatible diet temporarily
-    from app.models import Recipe
-
-    others = (
-        seeded.query(Recipe)
-        .filter(Recipe.id != meal.recipe_id)
-        .all()
-    )
+    others = seeded.query(Recipe).filter(Recipe.id != meal.recipe_id).all()
     for r in others:
         r.diet = "none"
     seeded.flush()

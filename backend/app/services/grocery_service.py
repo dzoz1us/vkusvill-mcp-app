@@ -13,18 +13,19 @@ from __future__ import annotations
 from collections import OrderedDict
 from dataclasses import dataclass
 
-from app.schemas.enums import Unit
-from app.services.quantity_service import scale_quantity
-
 from sqlalchemy.orm import Session
-from app.models import GroceryItem, MealPlan, MealPlanMeal
-from app.services.quantity_service import to_canonical
 
 from app.integrations.vkusvill.mcp_client import VkusVillMCPClient  # noqa: E402
-from app.models import Ingredient  # noqa: E402
+from app.models import (
+    GroceryItem,
+    Ingredient,  # noqa: E402
+    MealPlan,
+    MealPlanMeal,
+)
+from app.schemas.enums import Unit
 from app.services.pricing_service import packages_for, total_price  # noqa: E402
+from app.services.quantity_service import scale_quantity, to_canonical
 from app.services.vkusvill_service import match_ingredient  # noqa: E402
-
 
 
 @dataclass(frozen=True)
@@ -112,6 +113,7 @@ def aggregate_ingredients(
         for ingredient_id, data in totals.items()
     ]
 
+
 def _recipe_input_from_orm(recipe) -> RecipeInput:
     """Convert an ORM Recipe into the plain RecipeInput used by aggregation."""
     ingredients = tuple(
@@ -141,9 +143,7 @@ def build_grocery_items(db: Session, plan: MealPlan) -> list[GroceryItem]:
     db.flush()
 
     # collect recipes of the plan
-    meals = (
-        db.query(MealPlanMeal).filter_by(meal_plan_id=plan.id).all()
-    )
+    meals = db.query(MealPlanMeal).filter_by(meal_plan_id=plan.id).all()
     if not meals:
         return []
 
@@ -156,11 +156,7 @@ def build_grocery_items(db: Session, plan: MealPlan) -> list[GroceryItem]:
         ri_tuple = tuple(
             RecipeIngredientInput(
                 ingredient_id=ri.ingredient_id,
-                name=(
-                    db.get(Ingredient, ri.ingredient_id).name
-                    if ri.ingredient_id
-                    else ""
-                ),
+                name=(db.get(Ingredient, ri.ingredient_id).name if ri.ingredient_id else ""),
                 quantity=ri.quantity,
                 unit=ri.unit,
             )
@@ -211,11 +207,7 @@ async def enrich_plan_prices(
 
     Returns count of items updated (i.e. where we found a product).
     """
-    items = (
-        db.query(GroceryItem)
-        .filter_by(meal_plan_id=plan.id)
-        .all()
-    )
+    items = db.query(GroceryItem).filter_by(meal_plan_id=plan.id).all()
     if not items:
         return 0
 
@@ -255,17 +247,17 @@ async def enrich_plan_prices(
         item.package_count = packages
 
         if packages is not None and result.candidate.price is not None:
-                item.price_per_package = result.candidate.price
-                item.total_price = total_price(packages, result.candidate.price)
-                total += item.total_price
-                updated += 1
+            item.price_per_package = result.candidate.price
+            item.total_price = total_price(packages, result.candidate.price)
+            total += item.total_price
+            updated += 1
         else:
-                # matched by search but not usable: incompatible units or no price.
-                # Downgrade so UI never promises a product that won't reach the cart.
-                item.match_status = "requires_review"
-                item.package_count = None
-                item.price_per_package = None
-                item.total_price = None
+            # matched by search but not usable: incompatible units or no price.
+            # Downgrade so UI never promises a product that won't reach the cart.
+            item.match_status = "requires_review"
+            item.package_count = None
+            item.price_per_package = None
+            item.total_price = None
 
     plan.cart_estimated_cost = round(total, 2)
     plan.unresolved_items_count = (

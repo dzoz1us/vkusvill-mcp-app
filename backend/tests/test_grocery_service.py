@@ -11,9 +11,7 @@ from app.services.grocery_service import (
 
 
 def _ing(ingredient_id: int, name: str, qty: float, unit: str = "g") -> RecipeIngredientInput:
-    return RecipeIngredientInput(
-        ingredient_id=ingredient_id, name=name, quantity=qty, unit=unit
-    )
+    return RecipeIngredientInput(ingredient_id=ingredient_id, name=name, quantity=qty, unit=unit)
 
 
 def test_aggregate_two_recipes_shared_ingredients():
@@ -44,12 +42,8 @@ def test_aggregate_two_recipes_shared_ingredients():
 
 def test_aggregate_scales_before_summing():
     """Both recipes for 2 servings, user has 4 people -> all doubled."""
-    recipe_a = RecipeInput(
-        recipe_id=1, base_servings=2, ingredients=(_ing(1, "Помидор", 200),)
-    )
-    recipe_b = RecipeInput(
-        recipe_id=2, base_servings=2, ingredients=(_ing(1, "Помидор", 300),)
-    )
+    recipe_a = RecipeInput(recipe_id=1, base_servings=2, ingredients=(_ing(1, "Помидор", 200),))
+    recipe_b = RecipeInput(recipe_id=2, base_servings=2, ingredients=(_ing(1, "Помидор", 300),))
 
     result = aggregate_ingredients([recipe_a, recipe_b], people_count=4)
     assert result[0].needed_quantity == 1000  # (200 + 300) * 2
@@ -90,15 +84,9 @@ def test_order_is_stable():
 
 def test_no_duplicates_per_ingredient():
     """Same ingredient across 3 recipes -> single aggregated row."""
-    recipe_a = RecipeInput(
-        recipe_id=1, base_servings=2, ingredients=(_ing(1, "X", 100),)
-    )
-    recipe_b = RecipeInput(
-        recipe_id=2, base_servings=2, ingredients=(_ing(1, "X", 100),)
-    )
-    recipe_c = RecipeInput(
-        recipe_id=3, base_servings=2, ingredients=(_ing(1, "X", 100),)
-    )
+    recipe_a = RecipeInput(recipe_id=1, base_servings=2, ingredients=(_ing(1, "X", 100),))
+    recipe_b = RecipeInput(recipe_id=2, base_servings=2, ingredients=(_ing(1, "X", 100),))
+    recipe_c = RecipeInput(recipe_id=3, base_servings=2, ingredients=(_ing(1, "X", 100),))
 
     result = aggregate_ingredients([recipe_a, recipe_b, recipe_c], people_count=2)
     assert len(result) == 1

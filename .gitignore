@@ -1,6 +1,10 @@
 node_modules/
 dist/
 .env
+.env.*
+.vscode/
+.idea/
+*.iml
 .env.local
 .DS_Store
 __pycache__/
@@ -10,9 +14,6 @@ venv/
 *.py[cod]
 *.db
 *.sqlite3
-!.env.example
 .env.*
-# IDE
-.vscode/
-.idea/
-*.iml
+!.env.example
+

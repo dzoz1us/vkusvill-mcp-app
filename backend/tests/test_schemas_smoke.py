@@ -1,6 +1,6 @@
 """Smoke tests for schemas: contracts must validate the reference payload."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
@@ -62,7 +62,7 @@ def test_meal_plan_response_shape():
     """Matches frontend/src/types/index.ts MealPlan."""
     payload = {
         "id": "21",
-        "created_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(UTC),
         "params": {
             "people_count": 2,
             "days": ["mon", "tue"],
@@ -114,7 +114,7 @@ def test_coerce_int_id_to_str():
     """ORM id is int; API must expose it as string for the frontend."""
     payload = {
         "id": 42,  # int on purpose
-        "created_at": datetime.now(timezone.utc),
+        "created_at": datetime.now(UTC),
         "params": {
             "people_count": 1,
             "days": ["mon"],

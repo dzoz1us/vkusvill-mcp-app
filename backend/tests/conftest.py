@@ -8,14 +8,13 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.database.base import Base
-
 # Register all models on Base.metadata
 from app import models  # noqa: F401
+from app.database.base import Base
 
 
 @pytest.fixture()
-def db_session(tmp_path) -> Session: # type: ignore
+def db_session(tmp_path) -> Session:  # type: ignore
     db_file = tmp_path / "test.db"
     engine = create_engine(f"sqlite:///{db_file}", future=True)
 

@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.models import GroceryItem, MealPlan
+from app.models import GroceryItem
 from app.schemas import GenerateRequest
 from app.seed_runner import seed_ingredients, seed_recipes
 from app.services.meal_plan_service import generate_plan
@@ -72,7 +72,10 @@ def test_get_grocery_list_endpoint(seeded, monkeypatch):
     assert r.status_code == 200
     body = r.json()
     assert body["total_cost"] == 0
-    assert body["not_found_count"] == body["matched_count"] + body["review_count"] + body["not_found_count"]
+    assert (
+        body["not_found_count"]
+        == body["matched_count"] + body["review_count"] + body["not_found_count"]
+    )
     assert len(body["items"]) == plan.unresolved_items_count
 
     app.dependency_overrides.clear()

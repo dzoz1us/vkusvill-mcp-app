@@ -19,13 +19,10 @@ from dataclasses import dataclass
 
 from sqlalchemy.orm import Session
 
+from app.integrations.vkusvill.mcp_client import MCPError, VkusVillMCPClient
 from app.models import MealPlan, MealPlanMeal, Recipe
 from app.schemas import GenerateRequest
-from app.schemas.enums import Day, Diet, MealType, Preference
-
-from app.integrations.vkusvill.mcp_client import MCPError, VkusVillMCPClient  
-from app.models import MealPlanMeal  
-from app.schemas.enums import Appliance  
+from app.schemas.enums import Appliance, Day, Diet, MealType, Preference
 
 MEALS_PER_DAY = 3
 MEAL_TYPE_ORDER: list[MealType] = [
@@ -84,24 +81,20 @@ def _select_recipes(
     rng = random.Random(request.random_seed)
 
     def pool_for(meal_type: MealType) -> list[Recipe]:
-        specific = [
-            r for r in candidates
-            if r.meal_type == meal_type.value
-        ]
-        universal = [
-            r for r in candidates
-            if r.meal_type in (None, "any")
-        ]
-        # Prefer specific first; only fall back to universal if we run out.
+        specific = [r for r in candidates if r.meal_type == meal_type.value]
+        universal = [r for r in candidates if r.meal_type in (None, "any")]
+        # Prefer recipes designed for this slot, then universal recipes.
         pool = specific + universal
         if not pool:
-            pool = list(candidates)
+            raise NoSuitableRecipesError(
+                f"No recipes match the {meal_type.value} slot and selected filters."
+            )
         rng.shuffle(pool)
         pool.sort(key=lambda r: -_score(r, request.preferences))
         return pool
 
     pools = {mt: pool_for(mt) for mt in MEAL_TYPE_ORDER}
-    idx = {mt: 0 for mt in MEAL_TYPE_ORDER}
+    idx = dict.fromkeys(MEAL_TYPE_ORDER, 0)
 
     selected: list[Recipe] = []
     for _day in request.days:
@@ -117,9 +110,7 @@ def _select_recipes(
 def generate_plan(db: Session, request: GenerateRequest) -> MealPlan:
     candidates = _filter_candidates(db, request)
     if not candidates:
-        raise NoSuitableRecipesError(
-            "No recipes match the selected diet and appliances."
-        )
+        raise NoSuitableRecipesError("No recipes match the selected diet and appliances.")
 
     selected = _select_recipes(candidates, request)
 
@@ -158,15 +149,12 @@ def generate_plan(db: Session, request: GenerateRequest) -> MealPlan:
     from app.services.grocery_service import build_grocery_items
 
     items = build_grocery_items(db, plan)
-    plan.unresolved_items_count = sum(
-        1 for it in items if it.match_status == "not_found"
-    )
+    plan.unresolved_items_count = sum(1 for it in items if it.match_status != "matched")
     plan.cart_estimated_cost = 0.0  # real cost arrives with MCP
 
     db.commit()
     db.refresh(plan)
     return plan
-
 
 
 class MealNotFoundError(Exception):
@@ -205,15 +193,17 @@ async def replace_meal(
     """
     meal = db.get(MealPlanMeal, meal_id)
     if meal is None or meal.meal_plan_id != plan.id:
-        raise MealNotFoundError(
-            f"Meal {meal_id} not found in plan {plan.id}"
-        )
+        raise MealNotFoundError(f"Meal {meal_id} not found in plan {plan.id}")
 
     old_recipe_id = meal.recipe_id
     request = _request_from_plan(plan)
 
     candidates = _filter_candidates(db, request)
-    candidates = [r for r in candidates if r.id != old_recipe_id]
+    candidates = [
+        r
+        for r in candidates
+        if r.id != old_recipe_id and r.meal_type in (meal.meal_type, None, "any")
+    ]
     if not candidates:
         raise NoAlternativeRecipeError(
             "No alternative recipe matches the plan's diet and appliances."
@@ -241,9 +231,7 @@ async def replace_meal(
         from app.services.grocery_service import build_grocery_items
 
         items = build_grocery_items(db, plan)
-        plan.unresolved_items_count = sum(
-            1 for it in items if it.match_status != "matched"
-        )
+        plan.unresolved_items_count = sum(1 for it in items if it.match_status != "matched")
         plan.cart_estimated_cost = 0.0
         db.commit()
         db.refresh(plan)

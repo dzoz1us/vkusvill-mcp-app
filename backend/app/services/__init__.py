@@ -2,18 +2,18 @@
 
 Business logic lives here, not in FastAPI routes or React components.
 """
-from app.services.meal_plan_service import (
-    MEALS_PER_DAY,
-    MEAL_TYPE_ORDER,
-    NoSuitableRecipesError,
-    generate_plan,
-)
 
 from app.services.grocery_service import (
     AggregatedIngredient,
     RecipeIngredientInput,
     RecipeInput,
     aggregate_ingredients,
+)
+from app.services.meal_plan_service import (
+    MEAL_TYPE_ORDER,
+    MEALS_PER_DAY,
+    NoSuitableRecipesError,
+    generate_plan,
 )
 from app.services.quantity_service import (
     CanonicalQuantity,

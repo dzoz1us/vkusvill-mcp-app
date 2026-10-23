@@ -39,9 +39,7 @@ def seed_ingredients(db: Session) -> dict[str, Ingredient]:
 
     for item in data:
         norm = item["normalized_name"]
-        existing = (
-            db.query(Ingredient).filter_by(normalized_name=norm).one_or_none()
-        )
+        existing = db.query(Ingredient).filter_by(normalized_name=norm).one_or_none()
         if existing is None:
             existing = Ingredient(
                 name=item["name"],
@@ -115,16 +113,27 @@ def seed_recipes(db: Session, ingredients: dict[str, Ingredient]) -> int:
     return db.query(Recipe).count()
 
 
+def seed_if_empty(db: Session) -> bool:
+    """Seed a fresh database without overwriting an existing recipe catalog.
+
+    Returns ``True`` when seed data was inserted and ``False`` when the
+    database already contained recipes.
+    """
+    if db.query(Recipe.id).first() is not None:
+        return False
+
+    ingredients = seed_ingredients(db)
+    seed_recipes(db, ingredients)
+    return True
+
+
 def run() -> None:
     """Full seed routine. Safe to call repeatedly."""
     db = SessionLocal()
     try:
         ingredients = seed_ingredients(db)
         recipes_count = seed_recipes(db, ingredients)
-        print(
-            f"Seeded {len(ingredients)} ingredients, "
-            f"{recipes_count} recipes total."
-        )
+        print(f"Seeded {len(ingredients)} ingredients, {recipes_count} recipes total.")
     finally:
         db.close()
 

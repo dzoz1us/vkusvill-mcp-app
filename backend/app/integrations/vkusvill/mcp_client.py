@@ -72,9 +72,7 @@ class VkusVillMCPClient:
 
         try:
             logger.info("MCP -> %s id=%d params=%s", method, self._request_id, params)
-            async with httpx.AsyncClient(
-                timeout=timeout, transport=self._transport
-            ) as client:
+            async with httpx.AsyncClient(timeout=timeout, transport=self._transport) as client:
                 response = await client.post(
                     self.url,
                     json=payload,
@@ -89,20 +87,14 @@ class VkusVillMCPClient:
             raise MCPUnavailableError(f"MCP transport error: {e}") from e
 
         if response.status_code >= 500:
-            raise MCPUnavailableError(
-                f"MCP returned {response.status_code}: {response.text[:200]}"
-            )
+            raise MCPUnavailableError(f"MCP returned {response.status_code}: {response.text[:200]}")
         if response.status_code >= 400:
-            raise MCPBadResponseError(
-                f"MCP returned {response.status_code}: {response.text[:200]}"
-            )
+            raise MCPBadResponseError(f"MCP returned {response.status_code}: {response.text[:200]}")
 
         try:
             data = response.json()
         except json.JSONDecodeError as e:
-            raise MCPBadResponseError(
-                f"MCP response is not JSON: {response.text[:200]}"
-            ) from e
+            raise MCPBadResponseError(f"MCP response is not JSON: {response.text[:200]}") from e
 
         if "error" in data:
             logger.error("MCP <- error: %s", data["error"])

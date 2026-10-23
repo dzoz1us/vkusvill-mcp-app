@@ -15,7 +15,6 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
-
 from app.models.recipe import Recipe
 
 
@@ -90,7 +89,4 @@ class MealPlanMeal(Base):
     meal_plan: Mapped["MealPlan"] = relationship(back_populates="meals")
 
     def __repr__(self) -> str:
-        return (
-            f"<MealPlanMeal plan={self.meal_plan_id} "
-            f"{self.day}/{self.meal_type}>"
-        )
+        return f"<MealPlanMeal plan={self.meal_plan_id} {self.day}/{self.meal_type}>"

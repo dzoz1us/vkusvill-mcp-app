@@ -1,7 +1,7 @@
 """Tests for the idempotent seeder."""
 
 from app.models import Ingredient, Recipe, RecipeIngredient
-from app.seed_runner import seed_ingredients, seed_recipes
+from app.seed_runner import seed_if_empty, seed_ingredients, seed_recipes
 
 
 def test_seed_creates_expected_recipes(db_session):
@@ -29,22 +29,22 @@ def test_seed_idempotent(db_session):
     assert first_ing_count == second_ing_count
 
 
+def test_seed_if_empty_preserves_existing_catalog(db_session):
+    assert seed_if_empty(db_session) is True
+    recipe_count = db_session.query(Recipe).count()
+
+    assert seed_if_empty(db_session) is False
+    assert db_session.query(Recipe).count() == recipe_count
+
+
 def test_shared_ingredients_across_recipes(db_session):
     """Some ingredients must appear in multiple recipes so aggregation
     is testable end to end."""
     ingredients = seed_ingredients(db_session)
     seed_recipes(db_session, ingredients)
 
-    chicken = (
-        db_session.query(Ingredient)
-        .filter_by(normalized_name="куриное филе")
-        .one()
-    )
-    usage = (
-        db_session.query(RecipeIngredient)
-        .filter_by(ingredient_id=chicken.id)
-        .count()
-    )
+    chicken = db_session.query(Ingredient).filter_by(normalized_name="куриное филе").one()
+    usage = db_session.query(RecipeIngredient).filter_by(ingredient_id=chicken.id).count()
     assert usage >= 3, "chicken must appear in at least 3 recipes"
 
 
@@ -52,11 +52,7 @@ def test_recipe_fields_populated(db_session):
     ingredients = seed_ingredients(db_session)
     seed_recipes(db_session, ingredients)
 
-    recipe = (
-        db_session.query(Recipe)
-        .filter_by(name="Овсянка с ягодами и мёдом")
-        .one()
-    )
+    recipe = db_session.query(Recipe).filter_by(name="Овсянка с ягодами и мёдом").one()
     assert recipe.cook_time_minutes == 10
     assert recipe.servings == 2
     assert recipe.diet == "vegetarian"

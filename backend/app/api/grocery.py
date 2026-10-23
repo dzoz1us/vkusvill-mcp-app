@@ -19,9 +19,7 @@ router = APIRouter(tags=["grocery"])
 
 
 def _error(code: ErrorCode, message: str, status_code: int) -> JSONResponse:
-    body = ErrorResponse(
-        error=ErrorBody(code=code, message=message, retryable=False)
-    )
+    body = ErrorResponse(error=ErrorBody(code=code, message=message, retryable=False))
     return JSONResponse(status_code=status_code, content=body.model_dump(mode="json"))
 
 
@@ -39,12 +37,7 @@ def get_grocery_list(plan_id: int, db: Session = Depends(get_db)):
             status.HTTP_404_NOT_FOUND,
         )
 
-    items = (
-        db.query(GroceryItem)
-        .filter_by(meal_plan_id=plan_id)
-        .order_by(GroceryItem.id)
-        .all()
-    )
+    items = db.query(GroceryItem).filter_by(meal_plan_id=plan_id).order_by(GroceryItem.id).all()
 
     matched = sum(1 for i in items if i.match_status == "matched")
     review = sum(1 for i in items if i.match_status == "requires_review")

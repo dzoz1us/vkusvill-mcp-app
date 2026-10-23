@@ -33,6 +33,7 @@ def total_price(packages: int, price_per_package: float) -> float:
         raise ValueError("price_per_package must be non-negative")
     return round(packages * price_per_package, 2)
 
+
 # ---------------------------------------------------------------------------
 # Unit compatibility for the package calculation.
 #
@@ -44,9 +45,9 @@ def total_price(packages: int, price_per_package: float) -> float:
 
 _COMPATIBLE_UNITS = {
     frozenset({"g", "ml"}),
-    frozenset({"g", "g"}),
-    frozenset({"ml", "ml"}),
-    frozenset({"pcs", "pcs"}),
+    frozenset({"g"}),
+    frozenset({"ml"}),
+    frozenset({"pcs"}),
 }
 
 

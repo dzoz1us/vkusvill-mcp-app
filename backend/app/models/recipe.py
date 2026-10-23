@@ -4,7 +4,6 @@ from sqlalchemy import Float, ForeignKey, Integer, String, Text, UniqueConstrain
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.base import Base
-
 from app.models.ingredient import Ingredient  # noqa: F401
 
 
@@ -67,9 +66,7 @@ class Recipe(Base):
 
 class RecipeIngredient(Base):
     __tablename__ = "recipe_ingredients"
-    __table_args__ = (
-        UniqueConstraint("recipe_id", "ingredient_id", name="uq_recipe_ingredient"),
-    )
+    __table_args__ = (UniqueConstraint("recipe_id", "ingredient_id", name="uq_recipe_ingredient"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     recipe_id: Mapped[int] = mapped_column(
@@ -103,9 +100,7 @@ class RecipeAppliance(Base):
     """Renamed from RecipeEquipment to match frontend `appliances`."""
 
     __tablename__ = "recipe_appliances"
-    __table_args__ = (
-        UniqueConstraint("recipe_id", "appliance", name="uq_recipe_appliance"),
-    )
+    __table_args__ = (UniqueConstraint("recipe_id", "appliance", name="uq_recipe_appliance"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     recipe_id: Mapped[int] = mapped_column(

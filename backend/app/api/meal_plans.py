@@ -8,9 +8,15 @@ from app.database.base import get_db
 from app.models import MealPlan
 from app.schemas import GenerateRequest, MealPlanRead, ReplaceMealRequest, ReplaceMealResponse
 from app.schemas.enums import ErrorCode
-from app.schemas.recipe import RecipeShort
 from app.schemas.errors import ErrorBody, ErrorResponse
-from app.services.meal_plan_service import NoSuitableRecipesError, generate_plan, MealNotFoundError, NoAlternativeRecipeError, replace_meal
+from app.schemas.recipe import RecipeShort
+from app.services.meal_plan_service import (
+    MealNotFoundError,
+    NoAlternativeRecipeError,
+    NoSuitableRecipesError,
+    generate_plan,
+    replace_meal,
+)
 
 router = APIRouter(prefix="/api/meal-plans", tags=["meal-plans"])
 
@@ -21,9 +27,7 @@ def _error(
     status_code: int,
     retryable: bool = False,
 ) -> JSONResponse:
-    body = ErrorResponse(
-        error=ErrorBody(code=code, message=message, retryable=retryable)
-    )
+    body = ErrorResponse(error=ErrorBody(code=code, message=message, retryable=retryable))
     return JSONResponse(status_code=status_code, content=body.model_dump(mode="json"))
 
 
@@ -60,8 +64,6 @@ def get_plan(plan_id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
         )
     return plan
-
-
 
 
 @router.post(

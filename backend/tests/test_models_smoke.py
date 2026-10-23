@@ -20,9 +20,7 @@ def test_create_and_read_recipe(db_session):
         cook_time_minutes=30,
         diet="none",
     )
-    recipe.ingredients.append(
-        RecipeIngredient(ingredient_id=ing.id, quantity=300, unit="g")
-    )
+    recipe.ingredients.append(RecipeIngredient(ingredient_id=ing.id, quantity=300, unit="g"))
     recipe.tags.append(RecipeTag(tag="quick"))
     db_session.add(recipe)
     db_session.commit()
@@ -38,14 +36,10 @@ def test_create_and_read_recipe(db_session):
 def test_ingredient_normalized_name_is_unique(db_session):
     from sqlalchemy.exc import IntegrityError
 
-    db_session.add(
-        Ingredient(name="A", normalized_name="dup", default_unit="g", category=None)
-    )
+    db_session.add(Ingredient(name="A", normalized_name="dup", default_unit="g", category=None))
     db_session.commit()
 
-    db_session.add(
-        Ingredient(name="B", normalized_name="dup", default_unit="g", category=None)
-    )
+    db_session.add(Ingredient(name="B", normalized_name="dup", default_unit="g", category=None))
     try:
         db_session.commit()
         raised = False

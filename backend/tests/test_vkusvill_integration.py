@@ -4,7 +4,7 @@ import httpx
 import pytest
 
 from app.integrations.vkusvill.mcp_client import VkusVillMCPClient
-from app.models import GroceryItem, Ingredient
+from app.models import GroceryItem
 from app.schemas import GenerateRequest
 from app.seed_runner import seed_ingredients, seed_recipes
 from app.services.grocery_service import enrich_plan_prices
@@ -79,11 +79,7 @@ async def test_enrich_plan_prices_with_mock_mcp(seeded, monkeypatch):
 
     await enrich_plan_prices(seeded, plan, client=client)
 
-    items = (
-        seeded.query(GroceryItem)
-        .filter_by(meal_plan_id=plan.id)
-        .all()
-    )
+    items = seeded.query(GroceryItem).filter_by(meal_plan_id=plan.id).all()
     matched = [i for i in items if i.match_status == "matched"]
     assert len(matched) >= 1
 

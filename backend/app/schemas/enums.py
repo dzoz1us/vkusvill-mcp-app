@@ -7,10 +7,10 @@ Do not rename existing members without coordinating with the frontend —
 this would be a breaking change for the mobile client.
 """
 
-from enum import Enum
+from enum import StrEnum
 
 
-class Day(str, Enum):
+class Day(StrEnum):
     MON = "mon"
     TUE = "tue"
     WED = "wed"
@@ -20,20 +20,20 @@ class Day(str, Enum):
     SUN = "sun"
 
 
-class MealType(str, Enum):
+class MealType(StrEnum):
     BREAKFAST = "breakfast"
     LUNCH = "lunch"
     DINNER = "dinner"
 
 
-class Diet(str, Enum):
+class Diet(StrEnum):
     NONE = "none"
     VEGETARIAN = "vegetarian"
     VEGAN = "vegan"
     PESCATARIAN = "pescatarian"
 
 
-class Appliance(str, Enum):
+class Appliance(StrEnum):
     """Kitchen appliances a recipe may require."""
 
     STOVE = "stove"
@@ -44,7 +44,7 @@ class Appliance(str, Enum):
     BLENDER = "blender"
 
 
-class Preference(str, Enum):
+class Preference(StrEnum):
     QUICK = "quick"
     LOW_CALORIE = "low_calorie"
     FAMILY = "family"
@@ -54,7 +54,7 @@ class Preference(str, Enum):
     HEARTY = "hearty"
 
 
-class Unit(str, Enum):
+class Unit(StrEnum):
     """Canonical units used by the calculation core.
 
     mass   -> g
@@ -67,19 +67,19 @@ class Unit(str, Enum):
     PCS = "pcs"
 
 
-class MatchStatus(str, Enum):
+class MatchStatus(StrEnum):
     MATCHED = "matched"
     REQUIRES_REVIEW = "requires_review"
     NOT_FOUND = "not_found"
 
 
-class MealPlanStatus(str, Enum):
+class MealPlanStatus(StrEnum):
     GENERATING = "generating"
     READY = "ready"
     ERROR = "error"
 
 
-class ErrorCode(str, Enum):
+class ErrorCode(StrEnum):
     VALIDATION_ERROR = "VALIDATION_ERROR"
     NOT_FOUND = "NOT_FOUND"
     INTERNAL_ERROR = "INTERNAL_ERROR"
