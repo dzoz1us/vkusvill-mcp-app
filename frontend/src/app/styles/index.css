@@ -71,21 +71,34 @@ body {
 
   /* ---------- Кнопки ---------- */
   .btn {
-    @apply inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border-2 px-7 text-center text-[18px] leading-tight font-bold transition-[transform,background-color,border-color,box-shadow] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
+    @apply inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border-2 px-7 text-center text-[18px] leading-tight font-bold transition-[transform,background-color,border-color,box-shadow,color] duration-200 select-none active:translate-y-0 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40;
   }
   .btn-primary {
-    @apply bg-accent-strong border-accent-strong hover:bg-accent-strong-dark hover:border-accent-strong-dark text-white shadow-[0_12px_26px_-12px_rgba(74,126,14,0.85)];
+    @apply border-accent-strong relative overflow-hidden bg-gradient-to-b from-[#6aae1a] to-[#4f8a0e] text-white shadow-[0_14px_28px_-12px_rgba(74,126,14,0.9)] hover:-translate-y-0.5 hover:shadow-[0_18px_32px_-12px_rgba(74,126,14,0.95)];
+  }
+  /* Блик пробегает по основной кнопке при наведении */
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.38) 50%, transparent 65%);
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+    pointer-events: none;
+  }
+  .btn-primary:hover::after {
+    transform: translateX(120%);
   }
   .btn-outline {
-    @apply border-line text-ink hover:border-ink bg-white;
+    @apply border-line text-ink hover:border-accent-strong hover:text-accent-strong bg-white shadow-[0_6px_16px_-10px_rgba(22,26,16,0.35)] hover:-translate-y-0.5;
   }
   .btn-danger {
-    @apply bg-danger-soft text-danger border-danger-soft hover:border-danger;
+    @apply bg-danger-soft text-danger border-danger-soft hover:border-danger hover:-translate-y-0.5;
   }
 
   /* Круглые кнопки-значки */
   .icon-btn {
-    @apply border-line text-ink hover:border-ink inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border bg-white transition-[border-color,transform] duration-150 select-none active:scale-95 disabled:opacity-40;
+    @apply border-line text-ink hover:border-accent-strong hover:text-accent-strong inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border bg-white shadow-[0_6px_14px_-10px_rgba(22,26,16,0.4)] transition-[border-color,transform,color] duration-150 select-none hover:-translate-y-0.5 active:scale-95 disabled:opacity-40;
   }
   .icon-btn svg {
     @apply h-[22px] w-[22px];
