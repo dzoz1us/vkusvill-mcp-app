@@ -1,7 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
+import borscht from "@/shared/assets/dishes/borscht.webp";
+import pasta from "@/shared/assets/dishes/pasta.webp";
+import salmon from "@/shared/assets/dishes/salmon.webp";
 import { APP_NAME } from "@/shared/lib";
-import { DishArt, Produce } from "@/shared/ui";
+import { Produce } from "@/shared/ui";
 import type { ProduceName } from "@/shared/ui";
 import { useUserStore } from "@/entities/user";
 
@@ -15,22 +18,16 @@ const STEPS: { produce: ProduceName; title: string; text: string }[] = [
 
 /* Овощи и фрукты вокруг блюд: позиция, размер, поворот, темп покачивания */
 const PRODUCE: { name: ProduceName; className: string; rotate: number; sway: number; delay: number }[] = [
-  { name: "tomato", className: "left-[-2%] top-[6%] w-[17%]", rotate: -14, sway: 5.2, delay: 0.5 },
-  { name: "broccoli", className: "left-[12%] top-[-4%] w-[17%]", rotate: 8, sway: 6.4, delay: 0.62 },
-  { name: "lemon", className: "right-[2%] top-[-2%] w-[16%]", rotate: 16, sway: 5.8, delay: 0.74 },
-  { name: "carrot", className: "right-[-3%] top-[32%] w-[16%]", rotate: -10, sway: 4.8, delay: 0.86 },
-  { name: "avocado", className: "left-[-4%] top-[50%] w-[16%]", rotate: 12, sway: 6.8, delay: 0.98 },
-  { name: "strawberry", className: "right-[6%] bottom-[16%] w-[14%]", rotate: 8, sway: 5.4, delay: 1.1 },
-  { name: "pepper", className: "left-[8%] bottom-[2%] w-[15%]", rotate: -8, sway: 6.1, delay: 1.22 },
-  { name: "eggplant", className: "right-[22%] bottom-[-4%] w-[14%]", rotate: 18, sway: 5.0, delay: 1.34 },
-  { name: "apple", className: "left-[34%] bottom-[-6%] w-[13%]", rotate: -6, sway: 6.6, delay: 1.46 },
-  { name: "mushroom", className: "right-[36%] top-[-6%] w-[13%]", rotate: 6, sway: 5.6, delay: 1.58 },
+  { name: "tomato", className: "left-[-3%] top-[4%] w-[15%]", rotate: -14, sway: 5.2, delay: 0.8 },
+  { name: "lemon", className: "right-[0%] top-[-2%] w-[15%]", rotate: 16, sway: 5.8, delay: 0.95 },
+  { name: "avocado", className: "left-[-2%] bottom-[6%] w-[15%]", rotate: 12, sway: 6.8, delay: 1.1 },
+  { name: "strawberry", className: "right-[-1%] bottom-[10%] w-[14%]", rotate: 8, sway: 5.4, delay: 1.25 },
 ];
 
 const CARDS = [
-  { name: "Борщ с говядиной", rotate: -7, x: "6%", y: "10%", w: "50%", delay: 0.2 },
-  { name: "Паста болоньезе", rotate: 6, x: "44%", y: "6%", w: "48%", delay: 0.34 },
-  { name: "Запечённый лосось с брокколи", rotate: -2, x: "22%", y: "46%", w: "54%", delay: 0.48 },
+  { src: borscht, alt: "Борщ", rotate: -6, x: "6%", y: "8%", w: "50%", delay: 0.2 },
+  { src: pasta, alt: "Паста болоньезе", rotate: 5, x: "46%", y: "4%", w: "46%", delay: 0.34 },
+  { src: salmon, alt: "Лосось с овощами", rotate: -2, x: "24%", y: "46%", w: "52%", delay: 0.48 },
 ];
 
 export default function HomePage() {
@@ -52,18 +49,12 @@ export default function HomePage() {
       <header className="relative mx-auto flex w-full max-w-6xl items-center justify-between px-5 pt-[calc(1.25rem+env(safe-area-inset-top))]">
         <span className="font-display text-accent-ink text-2xl font-bold tracking-tight">{APP_NAME}</span>
         <nav className="flex items-center gap-2">
-          <Link to="/catalog" className="nav-link">
+          <Link to="/catalog" className="btn btn-outline btn-sm">
             Рецепты
           </Link>
-          {user ? (
-            <Link to="/plans" className="btn btn-primary btn-sm">
-              Мои планы
-            </Link>
-          ) : (
-            <Link to="/login" className="btn btn-outline btn-sm">
-              Войти
-            </Link>
-          )}
+          <Link to={user ? "/plans" : "/login"} className="btn btn-outline btn-sm">
+            {user ? "Мои планы" : "Войти"}
+          </Link>
         </nav>
       </header>
 
@@ -108,17 +99,14 @@ export default function HomePage() {
         <div className="relative order-1 mx-auto aspect-square w-full max-w-[400px] md:order-2 md:max-w-[520px]">
           {CARDS.map((c) => (
             <motion.div
-              key={c.name}
+              key={c.alt}
               initial={{ opacity: 0, y: 70, rotate: c.rotate * 2.4, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, rotate: c.rotate, scale: 1 }}
               transition={{ delay: c.delay, type: "spring", stiffness: 80, damping: 13 }}
               style={{ left: c.x, top: c.y, width: c.w }}
               className="absolute"
             >
-              <DishArt
-                recipeName={c.name}
-                className="aspect-square w-full rounded-[36px] border-[6px] border-white shadow-[0_24px_48px_-20px_rgba(22,26,16,0.45)]"
-              />
+              <img src={c.src} alt={c.alt} width={720} height={720} className="aspect-square w-full rounded-[36px] border-[6px] border-white shadow-[0_24px_48px_-20px_rgba(22,26,16,0.45)] object-cover" />
             </motion.div>
           ))}
 

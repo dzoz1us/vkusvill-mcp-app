@@ -71,7 +71,7 @@ body {
 
   /* ---------- Кнопки ---------- */
   .btn {
-    @apply inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full border-2 px-8 text-center text-[19px] leading-tight font-bold transition-[transform,background-color,border-color,box-shadow] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
+    @apply inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border-2 px-7 text-center text-[18px] leading-tight font-bold transition-[transform,background-color,border-color,box-shadow] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
   }
   .btn-primary {
     @apply bg-accent-strong border-accent-strong hover:bg-accent-strong-dark hover:border-accent-strong-dark text-white shadow-[0_12px_26px_-12px_rgba(74,126,14,0.85)];
@@ -187,7 +187,7 @@ body {
     @apply text-accent-strong hover:text-accent-strong-dark font-bold underline-offset-4 hover:underline;
   }
   .btn-sm {
-    @apply min-h-[44px] px-5 text-base;
+    @apply min-h-[48px] px-6 text-[17px];
   }
 
   /* ---------- Навигация ---------- */
