@@ -10,27 +10,24 @@
 
 Через минуту-две откройте **http://localhost:8080**. База, рецепты (64) и товары заполняются сами при первом запуске.
 
-Администратор по умолчанию: `admin@vkusplan.ru` / `admin12345` (смените пароль в профиле).
+Администратор по умолчанию: `admin@menyushka.ru` / `admin12345` (смените пароль в профиле).
 
 Остановить: `docker compose down` (данные сохраняются), удалить вместе с данными: `docker compose down -v`.
 
-## Запуск без Docker (для разработки)
+## Запуск без Docker
 
-Нужны JDK 21, Maven 3.9+, Node.js 20+ и PostgreSQL 17.
+Нужны **JDK 21** (через `JAVA_HOME` или в PATH), **Maven 3.9+**, **Node.js 20+** и **PostgreSQL 17** на `localhost:5432` с базой `menyushka` (пользователь и пароль `menyushka`):
 
-1. База. Проще всего контейнером: `docker compose up -d db`. Или свой PostgreSQL: создайте базу `menyushka` и пользователя `menyushka` с тем же паролем. Другие параметры задаются переменными `DB_URL`, `DB_USER`, `DB_PASSWORD`.
-2. Бэкенд (порт 8000):
+    CREATE ROLE menyushka LOGIN PASSWORD 'menyushka';
+    CREATE DATABASE menyushka OWNER menyushka;
 
-        cd backend-java
-        mvn spring-boot:run
+Затем из корня проекта одна команда:
 
-3. Фронтенд (порт 5173, запросы `/api` уходят на бэкенд сами):
+    npm start
 
-        cd frontend
-        npm install
-        npm run dev
+Скрипт проверит окружение, соберёт бэкенд (первый раз пара минут), поднимет его на порту 8000 и фронтенд на **http://localhost:5173**. Остановка — Ctrl+C. Другие параметры базы задаются переменными `DB_URL`, `DB_USER`, `DB_PASSWORD`.
 
-Откройте **http://localhost:5173**.
+Ручной запуск по частям: `cd backend && mvn spring-boot:run`, затем `cd frontend && npm install && npm run dev`.
 
 ## Что умеет
 
@@ -43,7 +40,7 @@
 ## Устройство
 
 * `frontend/` — React 18, TypeScript, Vite, Tailwind CSS 4, Zustand, архитектура FSD (`app / pages / widgets / features / entities / shared`).
-* `backend-java/` — Java 21, Spring Boot 3.3, Spring Security (JWT), JPA/Hibernate, Flyway, PostgreSQL.
+* `backend/` — Java 21, Spring Boot 3.3, Spring Security (JWT), JPA/Hibernate, Flyway, PostgreSQL.
 * Интеграция: [VkusVill MCP](https://mcp.vkusvill.ru/mcp) (поиск товаров, аналоги, ссылка на корзину).
 
 Секрет подписи токенов и администратор настраиваются переменными `APP_JWT_SECRET`, `APP_ADMIN_EMAIL`, `APP_ADMIN_PASSWORD`; для продакшена их нужно задать, а `APP_DEV_MODE=false` отключает выдачу токена сброса пароля в ответе.

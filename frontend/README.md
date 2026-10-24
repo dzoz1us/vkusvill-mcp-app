@@ -7,7 +7,7 @@ React 18 + TypeScript + Vite + Tailwind CSS 4. Архитектура FSD: `app 
     npm install
     npm run dev
 
-Откройте http://localhost:5173. Запросы `/api` проксируются на бэкенд (`http://localhost:8000`, см. `vite.config.js`), поэтому сначала запустите `backend-java` и PostgreSQL (см. корневой README) или всё сразу командой `docker compose up --build`.
+Откройте http://localhost:5173. Запросы `/api` проксируются на бэкенд (`http://localhost:8000`, см. `vite.config.js`), поэтому сначала запустите `backend` и PostgreSQL (см. корневой README) или всё сразу командой `docker compose up --build`.
 
 ## Команды
 

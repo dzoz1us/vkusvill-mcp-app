@@ -18,7 +18,7 @@ services:
       retries: 20
 
   backend:
-    build: ./backend-java
+    build: ./backend
     environment:
       DB_URL: jdbc:postgresql://db:5432/menyushka
       DB_USER: menyushka

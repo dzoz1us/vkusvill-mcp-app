@@ -1,0 +1,11 @@
+{
+  "name": "menyushka",
+  "private": true,
+  "description": "Менюшка: меню на неделю и корзина во ВкусВилл",
+  "scripts": {
+    "start": "node scripts/start.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
