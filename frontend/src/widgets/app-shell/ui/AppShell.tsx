@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Bell, Calendar, LogIn, ShoppingBag, User, Utensils } from "lucide-react";
+import { Bell, Calendar, LogIn, ShoppingBag, Sparkles, User, Utensils } from "lucide-react";
 import { Icon, Logo, Sheet } from "@/shared/ui";
 import type { IconName } from "@/shared/ui";
 import { formatDate } from "@/shared/lib";
@@ -94,7 +94,7 @@ export default function AppShell() {
       ]
     : [
         { label: "Рецепты", to: "/catalog", icon: Utensils },
-        { label: "Составить меню", to: "/start", icon: Utensils },
+        { label: "Составить меню", to: "/start", icon: Sparkles },
         { label: "Войти", to: "/login", icon: LogIn },
       ];
 
