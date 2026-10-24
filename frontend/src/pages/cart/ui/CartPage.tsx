@@ -23,7 +23,7 @@ export default function CartPage() {
         icon={<FoodIcon name="confused-face" className="h-12 w-12" />}
         title="Корзина не нашлась"
         action={
-          <button onClick={() => navigate("/orders")} className="btn btn-primary w-full">
+          <button onClick={() => navigate("/orders")} className="btn btn-primary w-full sm:w-auto sm:min-w-[260px]">
             К заказам
           </button>
         }

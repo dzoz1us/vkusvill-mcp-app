@@ -17,9 +17,9 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
 /** Логотип со словом: значок и название чёрным. */
 export default function Logo({ className = "" }: { className?: string }) {
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <LogoMark />
-      <span className="font-display text-ink text-2xl font-bold tracking-tight">{APP_NAME}</span>
+    <span className={`inline-flex items-center gap-2 sm:gap-2.5 ${className}`}>
+      <LogoMark className="h-7 w-7 sm:h-9 sm:w-9" />
+      <span className="font-display text-ink text-xl font-bold tracking-tight sm:text-2xl">{APP_NAME}</span>
     </span>
   );
 }

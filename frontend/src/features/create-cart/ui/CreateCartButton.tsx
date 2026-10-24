@@ -27,7 +27,7 @@ export default function CreateCartButton({ planId }: { planId: string }) {
 
   return (
     <>
-      <button onClick={handleCreate} disabled={isLoading} className="btn btn-primary w-full">
+      <button onClick={handleCreate} disabled={isLoading} className="btn btn-primary w-full sm:w-auto sm:min-w-[260px]">
         {isLoading && <RefreshCw className="h-5 w-5 animate-spin" />}
         {isLoading ? "Собираем" : "Собрать корзину"}
       </button>

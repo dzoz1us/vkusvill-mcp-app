@@ -1,25 +1,26 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { animate, motion } from "motion/react";
-import { Check } from "lucide-react";
-import { FoodIcon, Logo, StepArt } from "@/shared/ui";
-import type { FoodIconName, StepArtName } from "@/shared/ui";
+import { Check, ClipboardCheck, Salad, ShoppingBasket } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { FoodIcon, Logo } from "@/shared/ui";
+import type { FoodIconName } from "@/shared/ui";
 import { formatPrice } from "@/shared/lib";
 import { useUserStore } from "@/entities/user";
 
 const HEADLINE = ["Меню", "на", "неделю", "и", "корзина", "во", "ВкусВилл"];
 
 /** Три шага: значок по смыслу шага */
-const STEPS: { art: StepArtName; title: string; text: string; bg: string }[] = [
-  { art: "question", title: "Отвечаете", text: "на семь коротких вопросов", bg: "bg-sky-soft" },
-  { art: "salad", title: "Получаете", text: "меню по дням и список покупок", bg: "bg-accent-soft" },
-  { art: "basket", title: "Заказываете", text: "одной ссылкой во ВкусВилл", bg: "bg-tomato-soft" },
+const STEPS: { icon: LucideIcon; title: string; text: string; tile: string }[] = [
+  { icon: ClipboardCheck, title: "Отвечаете", text: "на семь коротких вопросов", tile: "bg-sky-soft text-sky" },
+  { icon: Salad, title: "Получаете", text: "меню по дням и список покупок", tile: "bg-accent-soft text-accent-strong" },
+  { icon: ShoppingBasket, title: "Заказываете", text: "одной ссылкой во ВкусВилл", tile: "bg-tomato-soft text-tomato" },
 ];
 
 const MEALS: { icon: FoodIconName; label: string; dish: string }[] = [
-  { icon: "croissant", label: "Завтрак", dish: "Сырники со сметаной" },
+  { icon: "croissant", label: "Завтрак", dish: "Круассан с сыром" },
   { icon: "pot-of-food", label: "Обед", dish: "Борщ с говядиной" },
-  { icon: "shallow-pan-of-food", label: "Ужин", dish: "Лосось с брокколи" },
+  { icon: "shallow-pan-of-food", label: "Ужин", dish: "Курица с овощами" },
 ];
 
 const BUDGET = 1500;
@@ -99,7 +100,7 @@ function MenuPreview() {
             transition={{ duration: 0.4 }}
             className="text-ink mt-4 flex items-center gap-2 font-bold"
           >
-            <FoodIcon name="shopping-cart" className="h-5 w-5" />
+            <ShoppingBasket className="text-tomato h-5 w-5" strokeWidth={2} />
             Корзина: {shown >= 3 ? PRODUCTS : 0} продукта
           </motion.p>
         </div>
@@ -125,7 +126,7 @@ export default function HomePage() {
       <header className="relative mx-auto flex w-full max-w-6xl items-center justify-between px-5 pt-[calc(1.25rem+env(safe-area-inset-top))]">
         <Logo />
         <nav className="flex items-center gap-2">
-          <Link to="/catalog" className="nav-link">
+          <Link to="/catalog" className="nav-link hidden sm:inline-flex">
             Рецепты
           </Link>
           <Link to={user ? "/plans" : "/login"} className="btn btn-primary btn-sm">
@@ -136,7 +137,7 @@ export default function HomePage() {
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 px-5 pt-8 pb-6 md:grid-cols-2 md:gap-12">
         <div>
-          <h1 className="text-ink font-display text-[34px] leading-[1.12] font-bold tracking-tight sm:text-[44px] md:text-[48px]">
+          <h1 className="text-ink font-display text-[27px] leading-[1.15] font-bold tracking-tight sm:text-[40px] md:text-[44px]">
             {HEADLINE.map((word, i) => (
               <span key={i} className="mr-[0.28em] inline-block overflow-hidden align-bottom">
                 <motion.span
@@ -145,7 +146,7 @@ export default function HomePage() {
                   animate={{ y: 0 }}
                   transition={{ delay: 0.1 + i * 0.07, duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
                 >
-                  {word}
+                  {word === "ВкусВилл" ? <span className="text-accent-strong">{word}</span> : word}
                 </motion.span>
               </span>
             ))}
@@ -174,8 +175,8 @@ export default function HomePage() {
               transition={{ delay: i * 0.12, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               className="card flex items-center gap-4 !p-4"
             >
-              <span className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-[22px] ${s.bg}`}>
-                <StepArt name={s.art} className="h-14 w-14" />
+              <span className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[20px] ${s.tile}`}>
+                <s.icon className="h-7 w-7" strokeWidth={2} />
               </span>
               <div>
                 <p className="text-ink text-lg leading-tight font-bold">{s.title}</p>
@@ -192,7 +193,7 @@ export default function HomePage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mt-6"
         >
-          <button onClick={() => navigate("/start")} className="btn btn-primary w-full text-[22px] sm:text-[18px]">
+          <button onClick={() => navigate("/start")} className="btn btn-primary w-full sm:w-auto sm:min-w-[260px]">
             Старт
           </button>
         </motion.div>

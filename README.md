@@ -1,108 +1,51 @@
 # Менюшка
 
-Планировщик питания с подбором рецептов, списком покупок и интеграцией со ВкусВилл.
+Меню на неделю, список покупок и корзина во ВкусВилл. Выбираете людей, дни, бюджет (от 500 ₽) и предпочтения, а сервис подбирает блюда, считает продукты и собирает корзину из товаров ВкусВилл.
 
-## 🛠 Стек
+## Запуск одной командой
 
-* **Frontend:** React 18, TypeScript, Vite, Zustand, Tailwind CSS.
-* **Backend:** Java 21, Spring Boot 3.3, Spring Data JPA, Hibernate 6, Flyway, PostgreSQL.
-* **Интеграция:** VkusVill MCP (JSON-RPC 2.0) с кэшем товаров, подбором фасовок и генерацией share_basket-ссылок.
+Нужен только [Docker](https://www.docker.com/products/docker-desktop/).
 
-## 📂 Структура репозитория
+    docker compose up --build
 
-* `backend-java/` — Актуальный backend на Java
-* `backend/` — Python-версия (архив, для сравнения, не используется)
-* `frontend/` — React + TypeScript, архитектура FSD (`app / pages / widgets / features / entities / shared`)
-* `docs/` — Документация (архитектура, API, ERD)
+Через минуту-две откройте **http://localhost:8080**. База, рецепты (64) и товары заполняются сами при первом запуске.
 
-## 🚀 Быстрый запуск
+Администратор по умолчанию: `admin@vkusplan.ru` / `admin12345` (смените пароль в профиле).
 
-Требуются **JDK 21**, **Maven 3.9+** и **Node.js 20+**.
+Остановить: `docker compose down` (данные сохраняются), удалить вместе с данными: `docker compose down -v`.
 
-### Backend (Java)
+## Запуск без Docker (для разработки)
 
-Перейди в папку бэкенда:
+Нужны JDK 21, Maven 3.9+, Node.js 20+ и PostgreSQL 17.
 
-    cd backend-java
+1. База. Проще всего контейнером: `docker compose up -d db`. Или свой PostgreSQL: создайте базу `menyushka` и пользователя `menyushka` с тем же паролем. Другие параметры задаются переменными `DB_URL`, `DB_USER`, `DB_PASSWORD`.
+2. Бэкенд (порт 8000):
 
-Собери проект:
+        cd backend-java
+        mvn spring-boot:run
 
-    mvn clean package -DskipTests
+3. Фронтенд (порт 5173, запросы `/api` уходят на бэкенд сами):
 
-Первичное наполнение БД (41 ингредиент, 64 рецепта). *После сидинга процесс завершится — это нормально.*
+        cd frontend
+        npm install
+        npm run dev
 
-    java -jar target/vkusplan-backend-0.1.0.jar --spring.profiles.active=seed
+Откройте **http://localhost:5173**.
 
-Запуск приложения на порту 8000:
+## Что умеет
 
-    java -jar target/vkusplan-backend-0.1.0.jar
+* **Гость:** регистрация, вход, восстановление пароля, каталог рецептов с фильтрами (приём пищи, диета, время, категории, продукты), карточка рецепта.
+* **Клиент:** профиль, мастер меню на неделю (людей, дни, бюджет, предпочтения, диета, техника), правка плана (добавить, убрать, заменить блюдо, порции), сохранённые планы, избранное, список покупок (количества, замена товара, проверка наличия), корзина приложения, переход во ВкусВилл одной ссылкой, история заказов, статусы и уведомления, повтор заказа.
+* **Администратор:** пользователи и доступ, модерация и правка рецептов, категории, ингредиенты и сопоставление с товарами ВкусВилл, заказы и справочник статусов.
 
-*Миграции схемы БД применяются автоматически через Flyway при старте. API доступно по адресу: `http://localhost:8000`.*
+Стоимость плана никогда не выходит за бюджет, а в меню попадают только блюда, все продукты которых нашлись во ВкусВилл.
 
-### Frontend
+## Устройство
 
-    cd frontend
-    npm ci
-    npm run dev
+* `frontend/` — React 18, TypeScript, Vite, Tailwind CSS 4, Zustand, архитектура FSD (`app / pages / widgets / features / entities / shared`).
+* `backend-java/` — Java 21, Spring Boot 3.3, Spring Security (JWT), JPA/Hibernate, Flyway, PostgreSQL.
+* Интеграция: [VkusVill MCP](https://mcp.vkusvill.ru/mcp) (поиск товаров, аналоги, ссылка на корзину).
 
-Интерфейс будет доступен по адресу: `http://localhost:5173`.
+Секрет подписи токенов и администратор настраиваются переменными `APP_JWT_SECRET`, `APP_ADMIN_EMAIL`, `APP_ADMIN_PASSWORD`; для продакшена их нужно задать, а `APP_DEV_MODE=false` отключает выдачу токена сброса пароля в ответе.
 
-По умолчанию frontend использует mock-данные. Для работы с Java backend скопируй `frontend/.env.example` в `frontend/.env` и установи:
-
-    VITE_USE_MOCK=false
-    VITE_API_URL=
-
-*Пустой `VITE_API_URL` в dev-режиме включает Vite proxy на `localhost:8000`.*
-
-## ✅ Проверки
-
-### Backend
-
-    cd backend-java
-    mvn clean test
-
-Backend-тесты покрывают расчётное ядро (QuantityService, GroceryService, PricingService), алгоритм планирования (MealPlanService), REST-контроллеры и сидинг. MCP тестируется через in-memory H2 + mock-транспорт, интернет не требуется.
-
-### Frontend
-
-    cd frontend
-    npm run typecheck
-    npm run build
-
-## 🔌 VkusVill MCP
-
-Живая MCP-интеграция отключена по умолчанию. Для её включения открой `backend-java/src/main/resources/application.yml` и установи:
-
-    app:
-      enable-live-mcp: true
-
-После изменения пересобери jar (`mvn clean package -DskipTests`). Приложение начнёт обращаться к `https://mcp.vkusvill.ru/mcp` для поиска товаров и создания share_basket-ссылок.
-
-## 📡 API (основное)
-
-| Метод | Endpoint | Описание |
-| :--- | :--- | :--- |
-| `GET` | `/health` | Проверка статуса |
-| `GET` | `/api/recipes` | Список рецептов (пагинация, фильтр по диете) |
-| `GET` | `/api/recipes/{id}` | Детали рецепта |
-| `POST` | `/api/meal-plans/generate` | Создание плана питания |
-| `GET` | `/api/meal-plans/{id}` | Получить сохранённый план |
-| `POST` | `/api/meal-plans/{id}/replace-meal` | Заменить блюдо |
-| `GET` | `/api/meal-plans/{id}/grocery-list` | Список покупок |
-| `PATCH`| `/api/grocery-items/{id}` | Отметить «куплено» |
-| `POST` | `/api/meal-plans/{id}/grocery-items` | Добавить ручной товар |
-| `POST` | `/api/meal-plans/{id}/refresh-prices` | Обновить товары и цены через MCP |
-| `POST` | `/api/meal-plans/{id}/vkusvill-cart` | Создать share_basket-ссылку |
-
-Единый формат ошибок: `{"error": {"code": "...", "message": "...", "retryable": true|false}}`.
-
-## ⚠️ Известные ограничения
-
-* MCP-сервер экспериментальный, контракт может меняться.
-* Часть ингредиентов (pcs) не сопоставляется с товарами в граммах — такие позиции помечаются `requires_review` и не попадают в корзину без подтверждения.
-* Авторизация отсутствует (MVP).
-* База — PostgreSQL: `docker compose up -d` в `backend-java` поднимает её с настройками по умолчанию (БД, пользователь и пароль `edoplan`, порт 5432). Свои параметры — через `DB_URL`, `DB_USER`, `DB_PASSWORD`.
-
-## 🐍 Python-версия
-
-В папке `backend/` сохранена оригинальная Python-реализация (FastAPI + SQLAlchemy, 90+ тестов). Она полностью рабочая и оставлена как эталон для сравнения. Java-версия воспроизводит её контракт 1:1.
+Подробности по фронтенду: [frontend/README.md](frontend/README.md).

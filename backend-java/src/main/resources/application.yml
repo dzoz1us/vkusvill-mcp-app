@@ -13,9 +13,9 @@ spring:
       fail-on-unknown-properties: false
 
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/edoplan}
-    username: ${DB_USER:edoplan}
-    password: ${DB_PASSWORD:edoplan}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/menyushka}
+    username: ${DB_USER:menyushka}
+    password: ${DB_PASSWORD:menyushka}
 
   jpa:
     hibernate:
