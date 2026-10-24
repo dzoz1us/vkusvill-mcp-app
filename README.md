@@ -5,7 +5,7 @@
 ## 🛠 Стек
 
 * **Frontend:** React 18, TypeScript, Vite, Zustand, Tailwind CSS.
-* **Backend:** Java 21, Spring Boot 3.3, Spring Data JPA, Hibernate 6, Flyway, SQLite.
+* **Backend:** Java 21, Spring Boot 3.3, Spring Data JPA, Hibernate 6, Flyway, PostgreSQL.
 * **Интеграция:** VkusVill MCP (JSON-RPC 2.0) с кэшем товаров, подбором фасовок и генерацией share_basket-ссылок.
 
 ## 📂 Структура репозитория
@@ -101,7 +101,7 @@ Backend-тесты покрывают расчётное ядро (QuantityServi
 * MCP-сервер экспериментальный, контракт может меняться.
 * Часть ингредиентов (pcs) не сопоставляется с товарами в граммах — такие позиции помечаются `requires_review` и не попадают в корзину без подтверждения.
 * Авторизация отсутствует (MVP).
-* SQLite используется для MVP; PostgreSQL — в roadmap.
+* База — PostgreSQL: `docker compose up -d` в `backend-java` поднимает её с настройками по умолчанию (БД, пользователь и пароль `edoplan`, порт 5432). Свои параметры — через `DB_URL`, `DB_USER`, `DB_PASSWORD`.
 
 ## 🐍 Python-версия
 

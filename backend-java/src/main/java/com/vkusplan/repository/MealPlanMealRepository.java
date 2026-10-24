@@ -11,4 +11,6 @@ import com.vkusplan.domain.MealPlanMeal;
 public interface MealPlanMealRepository extends JpaRepository<MealPlanMeal, Integer> {
 
     List<MealPlanMeal> findByMealPlanId(Integer mealPlanId);
+
+    boolean existsByRecipeId(Integer recipeId);
 }

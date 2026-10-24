@@ -11,4 +11,8 @@ import com.vkusplan.domain.ProductMapping;
 public interface ProductMappingRepository extends JpaRepository<ProductMapping, Integer> {
 
     Optional<ProductMapping> findByIngredientId(Integer ingredientId);
+
+    java.util.List<ProductMapping> findAllByOrderByIdAsc();
+
+    Optional<ProductMapping> findByProductXmlId(String productXmlId);
 }

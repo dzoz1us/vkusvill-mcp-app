@@ -18,6 +18,8 @@ import lombok.NoArgsConstructor;
 public class MealPlanRead {
 
     private String id;
+    private String title;
+    private Boolean saved;
     private Instant createdAt;
     private OnboardingParams params;
 
@@ -27,5 +29,8 @@ public class MealPlanRead {
     private Double cartEstimatedCost;
     private Double budget;
     private Integer unresolvedItemsCount;
+
+    /** Сколько приёмов пищи не уместилось в бюджет при составлении плана. */
+    private Integer omittedMeals;
     private MealPlanStatus status;
 }

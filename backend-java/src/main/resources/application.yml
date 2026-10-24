@@ -13,17 +13,17 @@ spring:
       fail-on-unknown-properties: false
 
   datasource:
-    url: jdbc:sqlite:./app-java.db
-    driver-class-name: org.sqlite.JDBC
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/edoplan}
+    username: ${DB_USER:edoplan}
+    password: ${DB_PASSWORD:edoplan}
 
   jpa:
     hibernate:
       ddl-auto: validate
     properties:
       hibernate:
-        dialect: org.hibernate.community.dialect.SQLiteDialect
         format_sql: true
-    show-sql: true
+    show-sql: false
     open-in-view: false
 
   flyway:

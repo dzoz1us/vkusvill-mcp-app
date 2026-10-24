@@ -32,4 +32,10 @@ public class GroceryItemRead {
     private MatchStatus matchStatus;
     private Boolean isBought;
     private Boolean isManual;
+
+    /** Товар на вес: цена за 100 г, в корзину уходят килограммы. */
+    private Boolean soldByWeight;
+
+    /** Количество, которое уйдёт в корзину: штуки или килограммы. */
+    private Double cartQuantity;
 }

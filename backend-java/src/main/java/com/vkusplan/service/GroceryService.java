@@ -40,14 +40,31 @@ public class GroceryService {
             List<RecipeInput> recipes,
             int peopleCount
     ) {
-        if (peopleCount <= 0) {
-            throw new IllegalArgumentException("peopleCount must be positive");
+        List<Integer> servings = new ArrayList<>(recipes.size());
+        for (int i = 0; i < recipes.size(); i++) {
+            servings.add(peopleCount);
+        }
+        return aggregateIngredients(recipes, servings);
+    }
+
+    /** То же, но у каждого блюда свои порции (servingsPerRecipe[i] относится к recipes[i]). */
+    public List<AggregatedIngredient> aggregateIngredients(
+            List<RecipeInput> recipes,
+            List<Integer> servingsPerRecipe
+    ) {
+        if (recipes.size() != servingsPerRecipe.size()) {
+            throw new IllegalArgumentException("servings must match recipes");
         }
 
         // LinkedHashMap preserves insertion order.
         Map<Integer, AggregationEntry> totals = new LinkedHashMap<>();
 
-        for (RecipeInput recipe : recipes) {
+        for (int idx = 0; idx < recipes.size(); idx++) {
+            RecipeInput recipe = recipes.get(idx);
+            int peopleCount = servingsPerRecipe.get(idx);
+            if (peopleCount <= 0) {
+                throw new IllegalArgumentException("peopleCount must be positive");
+            }
             for (RecipeIngredientInput ing : recipe.ingredients()) {
                 CanonicalQuantity scaled = quantityService.scaleQuantity(
                         ing.quantity(),

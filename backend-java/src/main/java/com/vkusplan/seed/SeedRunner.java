@@ -31,9 +31,11 @@ public class SeedRunner implements CommandLineRunner {
         log.info("Starting seed...");
         SeedService.SeedSummary summary = seedService.runSeed();
         log.info(
-                "Seed complete: {} ingredients, {} recipes total.",
+                "Seed complete: {} ingredients, {} recipes, {} categories, {} products.",
                 summary.ingredients(),
-                summary.recipes()
+                summary.recipes(),
+                summary.categories(),
+                summary.products()
         );
     }
 }

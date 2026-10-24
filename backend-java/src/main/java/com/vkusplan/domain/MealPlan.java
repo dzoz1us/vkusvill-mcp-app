@@ -11,6 +11,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -33,9 +35,28 @@ public class MealPlan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /** Владелец плана. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(length = 200)
+    private String title;
+
+    /** Сохранён ли план пользователем в «Мои планы». */
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean saved = false;
+
+    /** Сколько приёмов пищи не уместилось в бюджет. */
+    @Column(name = "omitted_meals", nullable = false)
+    @Builder.Default
+    private Integer omittedMeals = 0;
+
     @Column(name = "people_count", nullable = false)
     private Integer peopleCount;
 
+    /** Бюджет на неделю, ₽. Ноль означает «без ограничения». */
     @Column(nullable = false)
     private Double budget;
 

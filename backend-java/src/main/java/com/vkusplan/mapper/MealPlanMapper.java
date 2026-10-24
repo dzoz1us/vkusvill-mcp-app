@@ -1,6 +1,7 @@
 package com.vkusplan.mapper;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -34,24 +35,35 @@ public class MealPlanMapper {
     public MealPlanRead toRead(MealPlan plan) {
         if (plan == null) return null;
 
-        List<DayMealRead> meals = new ArrayList<>(plan.getMeals().size());
-        for (MealPlanMeal m : plan.getMeals()) {
+        List<MealPlanMeal> ordered = new ArrayList<>(plan.getMeals());
+        ordered.sort(Comparator
+                .comparingInt((MealPlanMeal m) -> Day.fromValue(m.getDay()).ordinal())
+                .thenComparingInt(m -> MealType.fromValue(m.getMealType()).ordinal())
+                .thenComparingInt(m -> m.getSortIndex() == null ? 0 : m.getSortIndex())
+                .thenComparingInt(MealPlanMeal::getId));
+
+        List<DayMealRead> meals = new ArrayList<>(ordered.size());
+        for (MealPlanMeal m : ordered) {
             meals.add(DayMealRead.builder()
                     .id(String.valueOf(m.getId()))
                     .day(Day.fromValue(m.getDay()))
                     .mealType(MealType.fromValue(m.getMealType()))
                     .recipe(recipeMapper.toShort(m.getRecipe()))
+                    .servings(m.getServings() != null ? m.getServings() : plan.getPeopleCount())
                     .build());
         }
 
         return MealPlanRead.builder()
                 .id(String.valueOf(plan.getId()))
+                .title(plan.getTitle())
+                .saved(plan.getSaved())
                 .createdAt(plan.getCreatedAt())
                 .params(buildParams(plan))
                 .meals(meals)
                 .cartEstimatedCost(plan.getCartEstimatedCost())
                 .budget(plan.getBudget())
                 .unresolvedItemsCount(plan.getUnresolvedItemsCount())
+                .omittedMeals(plan.getOmittedMeals())
                 .status(MealPlanStatus.fromValue(plan.getStatus()))
                 .build();
     }

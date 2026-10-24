@@ -9,6 +9,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -66,6 +69,20 @@ public class Recipe {
 
     @Column(columnDefinition = "TEXT")
     private String steps;
+
+    /** Скрытые рецепты не попадают в каталог и в планы (модерация). */
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean published = true;
+
+    @ManyToMany(fetch = jakarta.persistence.FetchType.LAZY)
+    @JoinTable(
+            name = "recipe_category_links",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    @Builder.Default
+    private java.util.Set<RecipeCategory> categories = new java.util.HashSet<>();
 
     @OneToMany(
             mappedBy = "recipe",

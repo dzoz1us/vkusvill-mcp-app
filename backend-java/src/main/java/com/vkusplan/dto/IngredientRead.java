@@ -15,4 +15,7 @@ public class IngredientRead {
     private String name;
     private Double quantity;
     private String unit;
+
+    /** Для этого продукта есть товар во ВкусВилл. */
+    private Boolean available;
 }

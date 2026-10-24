@@ -25,6 +25,19 @@ public class RecipeDetail {
     private NutritionInfo nutrition;
     private Diet diet;
 
+    private String description;
+    private String mealType;
+
+    @Builder.Default
+    private List<CategoryRead> categories = new ArrayList<>();
+
+    @Builder.Default
+    private List<String> tags = new ArrayList<>();
+
+    private Boolean isFavorite;
+    private Boolean purchasable;
+    private Boolean published;
+
     @Builder.Default
     private List<Appliance> appliances = new ArrayList<>();
 

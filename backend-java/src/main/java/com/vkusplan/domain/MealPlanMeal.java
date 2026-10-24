@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,13 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(
-        name = "meal_plan_meals",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uq_plan_meal_slot",
-                columnNames = {"meal_plan_id", "day", "meal_type"}
-        )
-)
+@Table(name = "meal_plan_meals")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -49,4 +42,11 @@ public class MealPlanMeal {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
+
+    /** Порции именно этого блюда; null — как у всего плана. */
+    private Integer servings;
+
+    @Column(name = "sort_index", nullable = false)
+    @Builder.Default
+    private Integer sortIndex = 0;
 }

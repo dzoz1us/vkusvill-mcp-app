@@ -75,4 +75,8 @@ public class GroceryItem {
 
     @Column(name = "is_manual", nullable = false)
     private Boolean isManual;
+
+    @Column(name = "sold_by_weight", nullable = false)
+    @Builder.Default
+    private Boolean soldByWeight = false;
 }

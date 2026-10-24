@@ -7,6 +7,7 @@ import com.vkusplan.enums.Day;
 import com.vkusplan.enums.Diet;
 import com.vkusplan.enums.Preference;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -31,8 +32,8 @@ public class GenerateRequest {
     @NotEmpty
     private List<Day> days;
 
-    @NotNull
-    @Positive
+    /** Бюджет на неделю, ₽. Необязателен; если указан — не меньше 500. */
+    @DecimalMin(value = "500", message = "Минимальный бюджет — 500 ₽")
     private Double budget;
 
     @NotNull

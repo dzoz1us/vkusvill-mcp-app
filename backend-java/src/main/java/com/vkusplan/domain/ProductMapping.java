@@ -68,4 +68,17 @@ public class ProductMapping {
 
     @Column(name = "last_checked_at", nullable = false)
     private Instant lastCheckedAt;
+
+    /** Товар продаётся на вес: цена указана за 1 кг, в корзину уходят килограммы. */
+    @Column(name = "sold_by_weight", nullable = false)
+    @Builder.Default
+    private Boolean soldByWeight = false;
+
+    /** Вес одной штуки ингредиента (лук, морковь…), г, для пересчёта «шт» в граммы. */
+    @Column(name = "piece_weight_g")
+    private Double pieceWeightG;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean available = true;
 }

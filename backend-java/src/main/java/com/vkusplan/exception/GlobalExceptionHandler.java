@@ -18,6 +18,11 @@ import com.vkusplan.service.UnknownUnitException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<ErrorResponse> handleApi(ApiException e) {
+        return build(e.getCode(), e.getMessage(), e.getStatus(), false);
+    }
+
     @ExceptionHandler(NoSuitableRecipesException.class)
     public ResponseEntity<ErrorResponse> handleNoSuitable(NoSuitableRecipesException e) {
         return build(ErrorCode.NO_SUITABLE_RECIPES, e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY, false);

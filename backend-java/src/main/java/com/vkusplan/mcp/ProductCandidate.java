@@ -23,6 +23,9 @@ public class ProductCandidate {
 
     private String url;
 
+    /** Товар продаётся на вес: price — цена за 1 кг, в корзину уходят килограммы. */
+    private boolean soldByWeight;
+
     /** Filled by scorer. */
     private double matchScore;
 }

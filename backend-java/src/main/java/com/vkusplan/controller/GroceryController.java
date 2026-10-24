@@ -1,79 +1,45 @@
 package com.vkusplan.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vkusplan.domain.GroceryItem;
-import com.vkusplan.domain.MealPlan;
+import com.vkusplan.dto.GroceryDtos.ProductOption;
+import com.vkusplan.dto.GroceryDtos.ReplaceProductRequest;
 import com.vkusplan.dto.GroceryItemRead;
 import com.vkusplan.dto.GroceryItemUpdate;
 import com.vkusplan.dto.GroceryListResponse;
 import com.vkusplan.dto.ManualGroceryItemCreate;
-import com.vkusplan.enums.MatchStatus;
 import com.vkusplan.mapper.GroceryItemMapper;
-import com.vkusplan.repository.GroceryItemRepository;
-import com.vkusplan.repository.MealPlanRepository;
-import com.vkusplan.service.GroceryItemNotFoundException;
-import com.vkusplan.service.MealNotFoundException;
+import com.vkusplan.security.CurrentUser;
+import com.vkusplan.service.GroceryListService;
 
 import jakarta.validation.Valid;
 
+/** Список покупок: просмотр, правка количества, удаление, замена товара. */
 @RestController
 public class GroceryController {
 
-    private final GroceryItemRepository groceryItemRepository;
-    private final MealPlanRepository mealPlanRepository;
+    private final GroceryListService groceryListService;
     private final GroceryItemMapper groceryItemMapper;
 
-    public GroceryController(
-            GroceryItemRepository groceryItemRepository,
-            MealPlanRepository mealPlanRepository,
-            GroceryItemMapper groceryItemMapper
-    ) {
-        this.groceryItemRepository = groceryItemRepository;
-        this.mealPlanRepository = mealPlanRepository;
+    public GroceryController(GroceryListService groceryListService, GroceryItemMapper groceryItemMapper) {
+        this.groceryListService = groceryListService;
         this.groceryItemMapper = groceryItemMapper;
     }
 
     @GetMapping("/api/meal-plans/{planId}/grocery-list")
-    @Transactional(readOnly = true)
     public GroceryListResponse getGroceryList(@PathVariable Integer planId) {
-        MealPlan plan = mealPlanRepository.findById(planId)
-                .orElseThrow(() -> new MealNotFoundException(
-                        "Meal plan " + planId + " not found"
-                ));
-
-        List<GroceryItem> items = groceryItemRepository.findByMealPlanId(plan.getId());
-
-        int matched = 0, review = 0, notFound = 0;
-        double total = 0.0;
-
-        List<GroceryItemRead> dtos = new ArrayList<>(items.size());
-        for (GroceryItem item : items) {
-            dtos.add(groceryItemMapper.toRead(item));
-            total += item.getTotalPrice() != null ? item.getTotalPrice() : 0.0;
-
-            String status = item.getMatchStatus();
-            if (MatchStatus.MATCHED.getValue().equals(status)) matched++;
-            else if (MatchStatus.REQUIRES_REVIEW.getValue().equals(status)) review++;
-            else notFound++;
-        }
-
-        return GroceryListResponse.builder()
-                .items(dtos)
-                .totalCost(Math.round(total * 100.0) / 100.0)
-                .matchedCount(matched)
-                .reviewCount(review)
-                .notFoundCount(notFound)
-                .build();
+        return groceryListService.getList(planId, CurrentUser.id());
     }
 
     @PatchMapping("/api/grocery-items/{itemId}")
@@ -82,16 +48,13 @@ public class GroceryController {
             @PathVariable Integer itemId,
             @RequestBody GroceryItemUpdate update
     ) {
-        GroceryItem item = groceryItemRepository.findById(itemId)
-                .orElseThrow(() -> new GroceryItemNotFoundException(
-                        "Grocery item " + itemId + " not found"
-                ));
+        return groceryItemMapper.toRead(groceryListService.update(itemId, CurrentUser.id(), update));
+    }
 
-        if (update.getIsBought() != null) {
-            item.setIsBought(update.getIsBought());
-        }
-
-        return groceryItemMapper.toRead(groceryItemRepository.save(item));
+    @DeleteMapping("/api/grocery-items/{itemId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGroceryItem(@PathVariable Integer itemId) {
+        groceryListService.delete(itemId, CurrentUser.id());
     }
 
     @PostMapping("/api/meal-plans/{planId}/grocery-items")
@@ -100,24 +63,20 @@ public class GroceryController {
             @PathVariable Integer planId,
             @Valid @RequestBody ManualGroceryItemCreate request
     ) {
-        MealPlan plan = mealPlanRepository.findById(planId)
-                .orElseThrow(() -> new MealNotFoundException(
-                        "Meal plan " + planId + " not found"
-                ));
+        return groceryItemMapper.toRead(groceryListService.addManual(planId, CurrentUser.id(), request));
+    }
 
-        GroceryItem item = GroceryItem.builder()
-                .mealPlan(plan)
-                .ingredient(null)
-                .productName(request.getProductName())
-                .neededQuantity(request.getNeededQuantity())
-                .neededUnit(request.getNeededUnit())
-                .pricePerPackage(request.getPrice())
-                .totalPrice(request.getPrice())
-                .matchStatus(MatchStatus.MATCHED.getValue())
-                .isBought(false)
-                .isManual(true)
-                .build();
+    @GetMapping("/api/grocery-items/{itemId}/alternatives")
+    public List<ProductOption> alternatives(@PathVariable Integer itemId) {
+        return groceryListService.alternatives(itemId, CurrentUser.id());
+    }
 
-        return groceryItemMapper.toRead(groceryItemRepository.save(item));
+    @PostMapping("/api/grocery-items/{itemId}/replace-product")
+    @Transactional
+    public GroceryItemRead replaceProduct(
+            @PathVariable Integer itemId,
+            @Valid @RequestBody ReplaceProductRequest request
+    ) {
+        return groceryItemMapper.toRead(groceryListService.replaceProduct(itemId, CurrentUser.id(), request));
     }
 }

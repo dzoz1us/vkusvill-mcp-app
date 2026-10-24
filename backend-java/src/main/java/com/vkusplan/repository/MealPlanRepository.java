@@ -7,4 +7,6 @@ import com.vkusplan.domain.MealPlan;
 
 @Repository
 public interface MealPlanRepository extends JpaRepository<MealPlan, Integer> {
+
+    java.util.List<MealPlan> findByUserIdOrderByCreatedAtDesc(Integer userId);
 }

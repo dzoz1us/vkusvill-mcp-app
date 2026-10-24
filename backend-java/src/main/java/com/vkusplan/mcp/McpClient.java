@@ -62,6 +62,39 @@ public class McpClient {
         return parseProductList(result);
     }
 
+    /** Актуальные данные о товаре; пусто, если товар не найден (снят с продажи). */
+    public java.util.Optional<ProductCandidate> productDetails(int productId) {
+        Object result = callTool("vkusvill_product_details", Map.of("id", productId));
+        if (result == null) {
+            return java.util.Optional.empty();
+        }
+        JsonNode node = objectMapper.valueToTree(result);
+        if (node.has("ok") && !node.get("ok").asBoolean()) {
+            return java.util.Optional.empty();
+        }
+        return java.util.Optional.ofNullable(parseProduct(node.path("data")));
+    }
+
+    /** Аналоги товара из каталога ВкусВилл. */
+    public List<ProductCandidate> productAnalogs(int productId) {
+        Object result = callTool("vkusvill_product_analogs", Map.of("id", productId));
+        if (result == null) {
+            return List.of();
+        }
+        JsonNode node = objectMapper.valueToTree(result);
+        JsonNode items = node.path("data").path("products");
+        List<ProductCandidate> out = new ArrayList<>();
+        if (items.isArray()) {
+            for (JsonNode item : items) {
+                ProductCandidate p = parseProduct(item);
+                if (p != null) {
+                    out.add(p);
+                }
+            }
+        }
+        return out;
+    }
+
     public String cartLinkCreate(List<Map<String, Object>> products) {
         try {
             log.info("MCP cartLinkCreate raw JSON: {}", objectMapper.writeValueAsString(products));
@@ -206,6 +239,7 @@ public class McpClient {
         }
 
         String url = item.has("url") ? item.get("url").asText() : null;
+        boolean soldByWeight = !weight.isObject() && "кг".equals(item.path("unit").asText(""));
 
         return ProductCandidate.builder()
                 .productId(productId)
@@ -215,6 +249,7 @@ public class McpClient {
                 .packageQuantity(packageQuantity)
                 .packageUnit(packageUnit)
                 .url(url)
+                .soldByWeight(soldByWeight)
                 .build();
     }
 

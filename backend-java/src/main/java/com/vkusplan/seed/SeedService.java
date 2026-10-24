@@ -13,11 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vkusplan.domain.Ingredient;
+import com.vkusplan.domain.ProductMapping;
 import com.vkusplan.domain.Recipe;
+import com.vkusplan.domain.RecipeCategory;
 import com.vkusplan.domain.RecipeAppliance;
 import com.vkusplan.domain.RecipeIngredient;
 import com.vkusplan.domain.RecipeTag;
 import com.vkusplan.repository.IngredientRepository;
+import com.vkusplan.repository.ProductMappingRepository;
+import com.vkusplan.repository.RecipeCategoryRepository;
 import com.vkusplan.repository.RecipeRepository;
 
 /**
@@ -31,15 +35,21 @@ public class SeedService {
 
     private final IngredientRepository ingredientRepository;
     private final RecipeRepository recipeRepository;
+    private final ProductMappingRepository productMappingRepository;
+    private final RecipeCategoryRepository categoryRepository;
     private final ObjectMapper objectMapper;
 
     public SeedService(
             IngredientRepository ingredientRepository,
             RecipeRepository recipeRepository,
+            ProductMappingRepository productMappingRepository,
+            RecipeCategoryRepository categoryRepository,
             ObjectMapper objectMapper
     ) {
         this.ingredientRepository = ingredientRepository;
         this.recipeRepository = recipeRepository;
+        this.productMappingRepository = productMappingRepository;
+        this.categoryRepository = categoryRepository;
         this.objectMapper = objectMapper;
     }
 
@@ -47,7 +57,9 @@ public class SeedService {
     public SeedSummary runSeed() {
         Map<String, Ingredient> ingredients = seedIngredients();
         int recipes = seedRecipes(ingredients);
-        return new SeedSummary(ingredients.size(), recipes);
+        int categories = seedCategories();
+        int products = seedProducts(ingredients);
+        return new SeedSummary(ingredients.size(), recipes, categories, products);
     }
 
     // ------------------------------------------------------------------
@@ -149,6 +161,70 @@ public class SeedService {
     }
 
     // ------------------------------------------------------------------
+    // Categories
+    // ------------------------------------------------------------------
+
+    /** Создаёт категории и назначает их только тем рецептам, у которых категорий ещё нет. */
+    private int seedCategories() {
+        Map<String, RecipeCategory> byName = new HashMap<>();
+        int order = 0;
+        for (Map.Entry<String, String> e : CategoryRules.CATEGORIES.entrySet()) {
+            final int sort = order++;
+            RecipeCategory c = categoryRepository.findByNameIgnoreCase(e.getKey())
+                    .orElseGet(() -> categoryRepository.save(RecipeCategory.builder()
+                            .name(e.getKey())
+                            .slug(e.getValue())
+                            .sortOrder(sort)
+                            .build()));
+            byName.put(e.getKey(), c);
+        }
+
+        for (Recipe recipe : recipeRepository.findAll()) {
+            if (!recipe.getCategories().isEmpty()) {
+                continue;
+            }
+            for (String name : CategoryRules.forRecipe(recipe.getName(), recipe.getMealType())) {
+                recipe.getCategories().add(byName.get(name));
+            }
+            recipeRepository.save(recipe);
+        }
+        return (int) categoryRepository.count();
+    }
+
+    // ------------------------------------------------------------------
+    // Products (VkusVill catalog)
+    // ------------------------------------------------------------------
+
+    /** Сопоставляет ингредиенты с товарами ВкусВилл; уже существующие связи не трогает. */
+    private int seedProducts(Map<String, Ingredient> ingredients) {
+        List<ProductSeedDto> dtos = readJson("seed/products.json",
+                new TypeReference<List<ProductSeedDto>>() {});
+
+        for (ProductSeedDto dto : dtos) {
+            Ingredient ing = ingredients.get(dto.getNormalizedName());
+            if (ing == null || productMappingRepository.findByIngredientId(ing.getId()).isPresent()) {
+                continue;
+            }
+            productMappingRepository.save(ProductMapping.builder()
+                    .ingredient(ing)
+                    .productXmlId(dto.getXmlId())
+                    .productName(dto.getName())
+                    .productUrl(dto.getUrl())
+                    .packageQuantity(dto.getPackageQuantity())
+                    .packageUnit(dto.getPackageUnit())
+                    .lastPrice(dto.getPrice())
+                    .soldByWeight(Boolean.TRUE.equals(dto.getSoldByWeight()))
+                    .pieceWeightG(dto.getPieceWeightG())
+                    .available(true)
+                    .matchScore(10.0)
+                    .matchStatus("matched")
+                    .lastCheckedAt(java.time.Instant.now())
+                    .build());
+        }
+        return (int) productMappingRepository.count();
+    }
+
+    // ------------------------------------------------------------------
     // Helpers
     // ------------------------------------------------------------------
 
@@ -168,5 +244,5 @@ public class SeedService {
         }
     }
 
-    public record SeedSummary(int ingredients, int recipes) {}
+    public record SeedSummary(int ingredients, int recipes, int categories, int products) {}
 }

@@ -22,6 +22,7 @@ spring:
     enabled: false
 
 app:
+  auto-seed: false
   enable-live-mcp: false
   mcp-timeout-ms: 2000
 

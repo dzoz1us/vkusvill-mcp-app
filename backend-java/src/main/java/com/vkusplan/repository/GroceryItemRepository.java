@@ -20,4 +20,8 @@ public interface GroceryItemRepository extends JpaRepository<GroceryItem, Intege
     @Modifying
     @Query("DELETE FROM GroceryItem g WHERE g.mealPlan.id = :planId")
     void deleteByMealPlanId(@Param("planId") Integer planId);
+
+    @Modifying
+    @Query("DELETE FROM GroceryItem g WHERE g.mealPlan.id = :planId AND g.isManual = false")
+    void deleteGeneratedByMealPlanId(@Param("planId") Integer planId);
 }

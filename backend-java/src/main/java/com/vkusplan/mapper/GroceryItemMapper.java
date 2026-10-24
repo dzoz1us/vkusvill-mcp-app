@@ -30,6 +30,18 @@ public class GroceryItemMapper {
                 .matchStatus(MatchStatus.fromValue(item.getMatchStatus()))
                 .isBought(item.getIsBought())
                 .isManual(item.getIsManual())
+                .soldByWeight(item.getSoldByWeight())
+                .cartQuantity(cartQuantity(item))
                 .build();
+    }
+
+    /** Сколько отправить в корзину ВкусВилл. */
+    public static Double cartQuantity(GroceryItem item) {
+        if (item.getPackageCount() == null) return null;
+        if (Boolean.TRUE.equals(item.getSoldByWeight())) {
+            double step = item.getPackageQuantity() != null ? item.getPackageQuantity() : 100.0;
+            return Math.round(item.getPackageCount() * step) / 1000.0;
+        }
+        return item.getPackageCount().doubleValue();
     }
 }

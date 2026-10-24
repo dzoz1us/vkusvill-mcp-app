@@ -18,4 +18,7 @@ public class DayMealRead {
     private Day day;
     private MealType mealType;
     private RecipeShort recipe;
+
+    /** Порции этого блюда (по умолчанию — число людей в плане). */
+    private Integer servings;
 }
