@@ -2,7 +2,8 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { api } from "@/shared/api";
-import { APP_NAME, errorText } from "@/shared/lib";
+import { errorText } from "@/shared/lib";
+import { Logo } from "@/shared/ui";
 import { useUserStore } from "@/entities/user";
 
 export type AuthMode = "login" | "register" | "forgot" | "reset";
@@ -66,8 +67,8 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
   return (
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col justify-center px-5 py-10">
-      <Link to="/" className="font-display text-ink mb-8 text-2xl font-bold tracking-tight">
-        {APP_NAME}
+      <Link to="/" className="mb-8 self-start" aria-label="На главную">
+        <Logo />
       </Link>
       <h1 className="heading mb-6">{TITLES[mode]}</h1>
 

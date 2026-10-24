@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import type { Variants } from "motion/react";
-import { APP_NAME } from "@/shared/lib";
-import { FoodIcon } from "@/shared/ui";
+import { DishArt, FoodIcon, Logo } from "@/shared/ui";
 import type { FoodIconName } from "@/shared/ui";
 import { useUserStore } from "@/entities/user";
 
 const HEADLINE = ["Меню", "на", "неделю", "и", "корзина", "во", "ВкусВилл"];
-
-/** Неделя: каждый день получает своё блюдо, по очереди подсвечивается */
-const WEEK: { day: string; icon: FoodIconName }[] = [
-  { day: "Пн", icon: "pancakes" },
-  { day: "Вт", icon: "spaghetti" },
-  { day: "Ср", icon: "broccoli" },
-  { day: "Чт", icon: "tomato" },
-  { day: "Пт", icon: "fish" },
-  { day: "Сб", icon: "croissant" },
-  { day: "Вс", icon: "strawberry" },
-];
 
 /** Три шага: значок показывает само действие */
 const STEPS: { icon: FoodIconName; title: string; text: string }[] = [
@@ -27,48 +13,17 @@ const STEPS: { icon: FoodIconName; title: string; text: string }[] = [
   { icon: "shopping-cart", title: "Заказываете", text: "одной ссылкой во ВкусВилл" },
 ];
 
-const word: Variants = {
-  hidden: { y: "105%" },
-  show: (i: number) => ({ y: 0, transition: { delay: 0.12 + i * 0.07, duration: 0.65, ease: [0.16, 1, 0.3, 1] } }),
-};
+const CARDS = [
+  { name: "Борщ с говядиной", rotate: -7, x: "-4%", y: "4%", w: "52%", delay: 0.15 },
+  { name: "Паста болоньезе", rotate: 5, x: "40%", y: "0%", w: "52%", delay: 0.3 },
+  { name: "Запечённый лосось с брокколи", rotate: -2, x: "16%", y: "46%", w: "56%", delay: 0.45 },
+];
 
-/** Неделя по кругу: блюда по очереди «выходят» и подсвечивают свой день */
-function WeekStrip() {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const t = setInterval(() => setActive((i) => (i + 1) % WEEK.length), 1100);
-    return () => clearInterval(t);
-  }, []);
-
-  return (
-    <div className="grid grid-cols-7 gap-1.5 sm:gap-2" role="img" aria-label="Меню на неделю: каждый день свое блюдо">
-      {WEEK.map((d, i) => {
-        const on = i === active;
-        return (
-          <motion.div
-            key={d.day}
-            initial={{ opacity: 0, y: 26, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: on ? 1.06 : 1 }}
-            transition={{ delay: 0.5 + i * 0.09, type: "spring", stiffness: 200, damping: 14 }}
-            className={`flex flex-col items-center gap-1 rounded-[22px] border-2 bg-white py-2.5 transition-colors duration-300 ${
-              on ? "border-accent-strong" : "border-line"
-            }`}
-          >
-            <span className="text-ink text-xs font-bold">{d.day}</span>
-            <motion.span
-              animate={on ? { y: [0, -6, 0], rotate: [0, -8, 6, 0] } : { y: 0, rotate: 0 }}
-              transition={{ duration: 0.7, ease: "easeInOut" }}
-              className="flex h-9 w-9 items-center justify-center sm:h-11 sm:w-11"
-            >
-              <FoodIcon name={d.icon} className="h-full w-full" />
-            </motion.span>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-}
+const FLOATERS: { icon: FoodIconName; className: string; delay: number }[] = [
+  { icon: "tomato", className: "left-[2%] top-[42%] h-14 w-14", delay: 0.7 },
+  { icon: "lemon", className: "right-[4%] top-[34%] h-12 w-12", delay: 0.85 },
+  { icon: "avocado", className: "right-[10%] bottom-[2%] h-14 w-14", delay: 1 },
+];
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -76,16 +31,17 @@ export default function HomePage() {
 
   return (
     <div className="relative flex min-h-[100dvh] flex-col overflow-hidden">
-      {/* Мягкое зелёное пятно за композицией */}
+      {/* Один плоский салатовый круг за блюдами */}
       <motion.div
         aria-hidden="true"
-        className="bg-accent-soft absolute -top-24 -right-32 h-[460px] w-[460px] rounded-full md:top-1/4 md:right-[-8%] md:h-[640px] md:w-[640px]"
-        animate={{ scale: [1, 1.08, 1] }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+        initial={{ scale: 0.6, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="bg-accent-soft absolute -top-24 -right-32 h-[520px] w-[520px] rounded-full md:top-1/2 md:right-[-8%] md:h-[760px] md:w-[760px] md:-translate-y-1/2"
       />
 
       <header className="relative mx-auto flex w-full max-w-6xl items-center justify-between px-5 pt-[calc(1.25rem+env(safe-area-inset-top))]">
-        <span className="font-display text-ink text-2xl font-bold tracking-tight">{APP_NAME}</span>
+        <Logo />
         <nav className="flex items-center gap-2">
           <Link to="/catalog" className="nav-link">
             Рецепты
@@ -96,29 +52,66 @@ export default function HomePage() {
         </nav>
       </header>
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center gap-8 px-5 pt-8 pb-10 md:max-w-2xl">
-        <div>
+      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 px-5 pt-6 pb-6 md:grid-cols-2 md:gap-12">
+        <div className="order-2 md:order-1">
           <h1 className="text-ink font-display text-[34px] leading-[1.12] font-bold tracking-tight sm:text-5xl md:text-[56px]">
-            {HEADLINE.map((w, i) => (
+            {HEADLINE.map((word, i) => (
               <span key={i} className="mr-[0.28em] inline-block overflow-hidden align-bottom">
-                <motion.span className="inline-block" variants={word} custom={i} initial="hidden" animate="show">
-                  {w}
+                <motion.span
+                  className="inline-block"
+                  initial={{ y: "110%" }}
+                  animate={{ y: 0 }}
+                  transition={{ delay: 0.1 + i * 0.07, duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}
+                >
+                  {word}
                 </motion.span>
               </span>
             ))}
           </h1>
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.6 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75, duration: 0.5 }}
             className="text-muted mt-5 max-w-md text-lg"
           >
             Семь вопросов — и у вас рецепты на каждый день, список покупок и ссылка на корзину.
           </motion.p>
         </div>
 
-        <WeekStrip />
+        {/* Коллаж из блюд, овощи подпрыгивают */}
+        <div className="relative order-1 mx-auto aspect-[1/1.02] w-full max-w-[420px] md:order-2 md:max-w-[520px]">
+          {CARDS.map((c) => (
+            <motion.div
+              key={c.name}
+              initial={{ opacity: 0, y: 60, rotate: c.rotate * 2.2 }}
+              animate={{ opacity: 1, y: 0, rotate: c.rotate }}
+              transition={{ delay: c.delay, type: "spring", stiffness: 90, damping: 14 }}
+              style={{ left: c.x, top: c.y, width: c.w }}
+              className="absolute"
+            >
+              <div className="animate-bob" style={{ animationDelay: `${c.delay * 3}s` }}>
+                <DishArt
+                  recipeName={c.name}
+                  className="aspect-square w-full rounded-[36px] border-[6px] border-white shadow-[0_24px_48px_-20px_rgba(22,26,16,0.45)]"
+                />
+              </div>
+            </motion.div>
+          ))}
+          {FLOATERS.map((f) => (
+            <motion.div
+              key={f.icon}
+              initial={{ scale: 0, rotate: -40 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: f.delay, type: "spring", stiffness: 260, damping: 14 }}
+              className={`absolute ${f.className}`}
+            >
+              <FoodIcon name={f.icon} className="h-full w-full drop-shadow-md" />
+            </motion.div>
+          ))}
+        </div>
+      </div>
 
+      <div className="relative mx-auto w-full max-w-6xl px-5 pb-12">
         <div className="grid gap-3 sm:grid-cols-3">
           {STEPS.map((s, i) => (
             <motion.div
@@ -145,6 +138,7 @@ export default function HomePage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-6"
         >
           <button onClick={() => navigate("/start")} className="btn btn-primary w-full text-[22px]">
             Старт

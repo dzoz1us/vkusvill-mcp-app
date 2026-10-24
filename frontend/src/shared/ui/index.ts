@@ -10,3 +10,4 @@ export { default as StateCard } from "./StateCard";
 export { default as Toast } from "./Toast";
 export { default as Produce } from "./produce/Produce";
 export type { ProduceName } from "./produce/Produce";
+export { default as Logo, LogoMark } from "./Logo";

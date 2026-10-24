@@ -428,8 +428,8 @@ body {
 
 /* ---------- Нижнее меню «жидкое стекло» (только телефон) ---------- */
 .tabbar {
-  background: linear-gradient(180deg, #ffffff 0%, #f1f9dc 100%);
-  box-shadow: 0 14px 30px -14px rgb(74 126 14 / 45%), inset 0 0 0 1px rgb(90 150 18 / 18%);
+  background: linear-gradient(180deg, #ffffff 0%, #f4faea 100%);
+  box-shadow: 0 10px 24px -14px rgb(22 26 16 / 28%), inset 0 0 0 1px rgb(22 26 16 / 8%);
   position: fixed;
   left: 0;
   right: 0;
@@ -472,8 +472,8 @@ body {
   z-index: 0;
   background: #ffffff;
   box-shadow:
-    0 2px 8px rgb(74 126 14 / 22%),
-    inset 0 0 0 1px rgb(90 150 18 / 22%);
+    0 2px 8px rgb(22 26 16 / 14%),
+    inset 0 0 0 1px rgb(22 26 16 / 8%);
   will-change: left, width;
   transition:
     box-shadow 0.25s,
