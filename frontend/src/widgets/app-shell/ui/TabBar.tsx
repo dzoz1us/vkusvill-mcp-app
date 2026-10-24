@@ -209,7 +209,7 @@ export default function TabBar({ tabs }: { tabs: TabItem[] }) {
       {target >= 0 && <span ref={pill} className="tabpill" aria-hidden="true" />}
       {tabs.map((t, i) => (
         <NavLink key={t.to} to={t.to} draggable={false} className={cx("tab", i === shown && "cur")}>
-          <t.icon className="h-7 w-7" strokeWidth={i === shown ? 2.5 : 1.8} />
+          <t.icon className="h-6 w-6" strokeWidth={2} />
           <span className="sr-only">
             {t.label}
             {t.badge ? ", есть новые" : ""}

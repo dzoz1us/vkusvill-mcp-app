@@ -94,6 +94,8 @@ export default function CatalogPage() {
     setFavorite(false);
   };
   const dirty = q || meal || diet || category || maxTime || ingredients.length || favorite;
+  const activeCount = [meal, diet, category, maxTime, favorite, ...ingredients].filter(Boolean).length;
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   return (
     <div className="page">
@@ -110,7 +112,19 @@ export default function CatalogPage() {
         />
       </div>
 
-      <div className="space-y-3">
+      <div className="mb-4 flex items-center gap-3">
+        <button className="chip" aria-expanded={filtersOpen} onClick={() => setFiltersOpen(!filtersOpen)}>
+          Фильтры{activeCount > 0 ? ` · ${activeCount}` : ""}
+        </button>
+        {dirty && (
+          <button className="link text-sm" onClick={reset}>
+            Сбросить
+          </button>
+        )}
+      </div>
+
+      {filtersOpen && (
+      <div className="mb-6 space-y-3">
         <div className="tabs">
           {user && (
             <Chip on={favorite} onClick={() => setFavorite(!favorite)}>
@@ -163,12 +177,8 @@ export default function CatalogPage() {
             ))}
           </div>
         )}
-        {dirty && (
-          <button className="link text-sm" onClick={reset}>
-            Сбросить фильтры
-          </button>
-        )}
       </div>
+      )}
 
       <div className="mt-6 grid gap-3">
         {items === null && Array.from({ length: 4 }).map((_, i) => <div key={i} className="skeleton h-[116px]" />)}

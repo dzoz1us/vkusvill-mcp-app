@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { animate, motion } from "motion/react";
 import { Check } from "lucide-react";
-import { Icon, FoodIcon, Logo } from "@/shared/ui";
-import type { FoodIconName, IconName } from "@/shared/ui";
+import { FoodIcon, Logo, StepArt } from "@/shared/ui";
+import type { FoodIconName, StepArtName } from "@/shared/ui";
 import { formatPrice } from "@/shared/lib";
 import { useUserStore } from "@/entities/user";
 
 const HEADLINE = ["Меню", "на", "неделю", "и", "корзина", "во", "ВкусВилл"];
 
 /** Три шага: значок по смыслу шага */
-const STEPS: { icon: IconName; tone: string; bg: string; title: string; text: string }[] = [
-  { icon: "list-checks", tone: "text-sky", bg: "bg-sky-soft", title: "Отвечаете", text: "на семь коротких вопросов" },
-  { icon: "calendar-check", tone: "text-accent-strong", bg: "bg-accent-soft", title: "Получаете", text: "меню по дням и список покупок" },
-  { icon: "shopping-cart", tone: "text-tomato", bg: "bg-tomato-soft", title: "Заказываете", text: "одной ссылкой во ВкусВилл" },
+const STEPS: { art: StepArtName; title: string; text: string; bg: string }[] = [
+  { art: "question", title: "Отвечаете", text: "на семь коротких вопросов", bg: "bg-sky-soft" },
+  { art: "salad", title: "Получаете", text: "меню по дням и список покупок", bg: "bg-accent-soft" },
+  { art: "basket", title: "Заказываете", text: "одной ссылкой во ВкусВилл", bg: "bg-tomato-soft" },
 ];
 
 const MEALS: { icon: FoodIconName; label: string; dish: string }[] = [
@@ -99,7 +99,7 @@ function MenuPreview() {
             transition={{ duration: 0.4 }}
             className="text-ink mt-4 flex items-center gap-2 font-bold"
           >
-            <Icon name="shopping-cart" className="text-tomato h-5 w-5" />
+            <FoodIcon name="shopping-cart" className="h-5 w-5" />
             Корзина: {shown >= 3 ? PRODUCTS : 0} продукта
           </motion.p>
         </div>
@@ -136,7 +136,7 @@ export default function HomePage() {
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 px-5 pt-8 pb-6 md:grid-cols-2 md:gap-12">
         <div>
-          <h1 className="text-ink font-display text-[34px] leading-[1.12] font-bold tracking-tight sm:text-5xl md:text-[56px]">
+          <h1 className="text-ink font-display text-[34px] leading-[1.12] font-bold tracking-tight sm:text-[44px] md:text-[48px]">
             {HEADLINE.map((word, i) => (
               <span key={i} className="mr-[0.28em] inline-block overflow-hidden align-bottom">
                 <motion.span
@@ -174,8 +174,8 @@ export default function HomePage() {
               transition={{ delay: i * 0.12, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               className="card flex items-center gap-4 !p-4"
             >
-              <span className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[22px] ${s.bg}`}>
-                <Icon name={s.icon} className={`h-8 w-8 ${s.tone}`} />
+              <span className={`flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-[22px] ${s.bg}`}>
+                <StepArt name={s.art} className="h-14 w-14" />
               </span>
               <div>
                 <p className="text-ink text-lg leading-tight font-bold">{s.title}</p>
@@ -192,7 +192,7 @@ export default function HomePage() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="mt-6"
         >
-          <button onClick={() => navigate("/start")} className="btn btn-primary w-full text-[22px]">
+          <button onClick={() => navigate("/start")} className="btn btn-primary w-full text-[22px] sm:text-[18px]">
             Старт
           </button>
         </motion.div>

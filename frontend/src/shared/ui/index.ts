@@ -11,3 +11,8 @@ export { default as Toast } from "./Toast";
 export { default as Produce } from "./produce/Produce";
 export type { ProduceName } from "./produce/Produce";
 export { default as Logo, LogoMark } from "./Logo";
+export { default as StepArt } from "./art/StepArt";
+export type { StepArtName } from "./art/StepArt";
+export { default as DayPhase } from "./art/DayPhase";
+export type { DayPhaseName } from "./art/DayPhase";
+export { default as ProductArt } from "./art/ProductArt";

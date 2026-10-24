@@ -60,10 +60,10 @@ body {
     @apply grid min-h-[44px] grid-cols-[44px_1fr_44px] items-center gap-3 pt-[calc(1rem+env(safe-area-inset-top))] pb-4;
   }
   .page-title {
-    @apply text-ink text-center text-[28px] leading-tight font-extrabold tracking-tight sm:text-[36px];
+    @apply text-ink text-center text-[26px] leading-tight font-extrabold tracking-tight sm:text-[28px];
   }
   .heading {
-    @apply text-ink text-[28px] leading-tight font-extrabold tracking-tight sm:text-[36px];
+    @apply text-ink text-[26px] leading-tight font-extrabold tracking-tight sm:text-[28px];
   }
   /* Заголовок верхнего уровня: на той же высоте, что и шапка со стрелкой */
   .page-head {
@@ -75,7 +75,7 @@ body {
 
   /* ---------- Кнопки ---------- */
   .btn {
-    @apply inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full border-2 px-8 text-center text-[19px] leading-tight font-bold transition-[transform,background-color,border-color,box-shadow] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
+    @apply inline-flex min-h-[52px] items-center justify-center gap-2 whitespace-nowrap rounded-full border-2 px-7 text-center text-[18px] leading-tight font-bold sm:min-h-[44px] sm:px-6 sm:text-[16px] transition-[transform,background-color,border-color,box-shadow] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
   }
   .btn-primary {
     @apply bg-accent-strong border-accent-strong hover:bg-accent-strong-dark hover:border-accent-strong-dark text-white;
@@ -126,7 +126,7 @@ body {
   }
 
   .chip {
-    @apply border-line text-ink hover:border-ink inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border bg-transparent px-4 text-base font-semibold transition-colors select-none;
+    @apply border-line text-ink hover:border-ink inline-flex min-h-[44px] items-center justify-center gap-2 whitespace-nowrap rounded-full border bg-transparent px-4 text-base font-semibold transition-colors select-none;
   }
   .chip-active {
     @apply border-accent-strong ring-accent-strong ring-1;
@@ -195,7 +195,7 @@ body {
     @apply text-accent-strong hover:text-accent-strong-dark font-bold underline-offset-4 hover:underline;
   }
   .btn-sm {
-    @apply min-h-[48px] px-6 text-[17px];
+    @apply min-h-[44px] px-5 text-[16px] sm:text-[15px];
   }
 
   /* ---------- Навигация ---------- */
@@ -206,7 +206,7 @@ body {
     @apply mx-auto flex h-16 w-full max-w-5xl items-center gap-3 px-4;
   }
   .nav-link {
-    @apply text-ink hover:text-accent-strong inline-flex min-h-[44px] items-center gap-2 rounded-full px-3 text-base font-bold transition-colors;
+    @apply text-ink hover:text-accent-strong inline-flex min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full px-3 text-[18px] font-bold transition-colors;
   }
   .nav-link-active {
     @apply text-accent-strong;

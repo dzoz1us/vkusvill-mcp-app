@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api } from "@/shared/api";
 import type { Order } from "@/shared/api";
 import { formatPrice } from "@/shared/lib";
-import { FoodIcon, PageHeader, PageSkeleton, StateCard } from "@/shared/ui";
+import { FoodIcon, PageHeader, PageSkeleton, ProductArt, StateCard } from "@/shared/ui";
 
 /** Корзина приложения: что понадобится для меню, перед переходом во ВкусВилл. */
 export default function CartPage() {
@@ -45,11 +45,14 @@ export default function CartPage() {
         <div className="data-frame">
           {order.items.map((it, i) => (
             <div key={i} className="data-row">
+              <div className="flex min-w-0 items-center gap-3">
+                <ProductArt name={it.product_name} className="h-12 w-12 flex-shrink-0" />
               <div className="min-w-0">
                 <p className="font-bold">{it.product_name}</p>
                 <p className="text-muted text-sm">
                   {it.sold_by_weight ? `${it.cart_quantity} кг` : `${it.package_count} шт.`}
                 </p>
+              </div>
               </div>
               <span className="data-value whitespace-nowrap">
                 {it.total_price != null ? formatPrice(Math.round(it.total_price)) : "—"}

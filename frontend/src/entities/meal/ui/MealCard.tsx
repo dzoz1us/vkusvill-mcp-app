@@ -2,13 +2,13 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import type { DayMeal } from "@/shared/api";
 import { MEAL_LABELS } from "@/shared/lib";
-import { DishArt, FoodIcon } from "@/shared/ui";
-import type { FoodIconName } from "@/shared/ui";
+import { DayPhase, DishArt } from "@/shared/ui";
+import type { DayPhaseName } from "@/shared/ui";
 
-const MEAL_STYLE: Record<string, { icon: FoodIconName }> = {
-  breakfast: { icon: "croissant" },
-  lunch: { icon: "pot-of-food" },
-  dinner: { icon: "shallow-pan-of-food" },
+const MEAL_STYLE: Record<string, { phase: DayPhaseName }> = {
+  breakfast: { phase: "sunrise" },
+  lunch: { phase: "day" },
+  dinner: { phase: "sunset" },
 };
 
 interface MealCardProps {
@@ -34,7 +34,7 @@ export default function MealCard({ meal, actions }: MealCardProps) {
 
       <div className="min-w-0 flex-1">
         <p className="text-muted mb-1 flex items-center gap-1.5 text-sm font-semibold">
-          <FoodIcon name={style.icon} className="h-5 w-5" />
+          <DayPhase phase={style.phase} className="h-6 w-6" />
           {MEAL_LABELS[meal.meal_type]}
         </p>
         <Link

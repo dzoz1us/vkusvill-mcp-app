@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Bell, BookOpen, CalendarDays, ChefHat, LogIn, ShoppingBag, User } from "lucide-react";
+import { Bell, Calendar, LogIn, ShoppingBag, User, Utensils } from "lucide-react";
 import { Icon, Logo, Sheet } from "@/shared/ui";
 import type { IconName } from "@/shared/ui";
 import { formatDate } from "@/shared/lib";
@@ -31,7 +31,7 @@ function Bell_() {
     <>
       <button className="icon-btn relative" onClick={() => setOpen(true)} aria-label="Уведомления" title="Уведомления">
         <Bell />
-        {unread > 0 && <span className="badge">{unread}</span>}
+        {unread > 0 && <span className="bg-accent-strong absolute top-2 right-2 h-2.5 w-2.5 rounded-full ring-2 ring-white" aria-hidden="true" />}
       </button>
       {open && (
         <Sheet title="Уведомления" onClose={() => setOpen(false)}>
@@ -87,14 +87,14 @@ export default function AppShell() {
   // нижнее меню: 4 пункта, «Профиль» последний; админка открывается из профиля
   const tabs: TabItem[] = user
     ? [
-        { label: "Рецепты", to: "/catalog", icon: BookOpen },
-        { label: "Планы", to: "/plans", icon: CalendarDays },
+        { label: "Рецепты", to: "/catalog", icon: Utensils },
+        { label: "Планы", to: "/plans", icon: Calendar },
         { label: "Заказы", to: "/orders", icon: ShoppingBag, badge: unread > 0 },
         { label: "Профиль", to: "/profile", icon: User, also: ["/admin"] },
       ]
     : [
-        { label: "Рецепты", to: "/catalog", icon: BookOpen },
-        { label: "Составить меню", to: "/start", icon: ChefHat },
+        { label: "Рецепты", to: "/catalog", icon: Utensils },
+        { label: "Составить меню", to: "/start", icon: Utensils },
         { label: "Войти", to: "/login", icon: LogIn },
       ];
 
