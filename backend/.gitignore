@@ -24,3 +24,6 @@ Thumbs.db
 
 # Env
 .env
+
+# Данные встроенного PostgreSQL (npm start без DB_URL)
+data/
