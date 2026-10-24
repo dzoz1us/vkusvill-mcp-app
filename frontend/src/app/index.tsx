@@ -11,6 +11,7 @@ import { PlansPage } from "@/pages/plans";
 import { OrdersPage } from "@/pages/orders";
 import { ProfilePage } from "@/pages/profile";
 import { AdminPage } from "@/pages/admin";
+import { CartPage } from "@/pages/cart";
 import { LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage } from "@/pages/auth";
 import { AppShell } from "@/widgets/app-shell";
 import { RequireAuth } from "@/features/auth";
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="/plans" element={<RequireAuth><PlansPage /></RequireAuth>} />
           <Route path="/plan/:id" element={<RequireAuth><MealPlanPage /></RequireAuth>} />
           <Route path="/plan/:id/grocery" element={<RequireAuth><GroceryListPage /></RequireAuth>} />
+          <Route path="/cart/:orderId" element={<RequireAuth><CartPage /></RequireAuth>} />
           <Route path="/orders" element={<RequireAuth><OrdersPage /></RequireAuth>} />
           <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
           <Route path="/admin" element={<RequireAuth admin><AdminPage /></RequireAuth>} />

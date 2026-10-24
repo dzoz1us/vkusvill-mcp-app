@@ -40,8 +40,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="page pt-6">
-      <h1 className="heading mb-5">Профиль</h1>
+    <div className="page">
+      <h1 className="heading page-head">Профиль</h1>
 
       {user.role === "ADMIN" && (
         <Link to="/admin" className="btn btn-outline mb-4 w-full">

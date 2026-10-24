@@ -1,29 +1,112 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion } from "motion/react";
-import { DishArt, FoodIcon, Logo } from "@/shared/ui";
-import type { FoodIconName } from "@/shared/ui";
+import { animate, motion } from "motion/react";
+import { Check } from "lucide-react";
+import { Icon, FoodIcon, Logo } from "@/shared/ui";
+import type { FoodIconName, IconName } from "@/shared/ui";
+import { formatPrice } from "@/shared/lib";
 import { useUserStore } from "@/entities/user";
 
 const HEADLINE = ["Меню", "на", "неделю", "и", "корзина", "во", "ВкусВилл"];
 
-/** Три шага: значок показывает само действие */
-const STEPS: { icon: FoodIconName; title: string; text: string }[] = [
-  { icon: "cooking", title: "Отвечаете", text: "на семь коротких вопросов" },
-  { icon: "calendar", title: "Получаете", text: "меню по дням и список покупок" },
-  { icon: "shopping-cart", title: "Заказываете", text: "одной ссылкой во ВкусВилл" },
+/** Три шага: значок по смыслу шага */
+const STEPS: { icon: IconName; tone: string; bg: string; title: string; text: string }[] = [
+  { icon: "list-checks", tone: "text-sky", bg: "bg-sky-soft", title: "Отвечаете", text: "на семь коротких вопросов" },
+  { icon: "calendar-check", tone: "text-accent-strong", bg: "bg-accent-soft", title: "Получаете", text: "меню по дням и список покупок" },
+  { icon: "shopping-cart", tone: "text-tomato", bg: "bg-tomato-soft", title: "Заказываете", text: "одной ссылкой во ВкусВилл" },
 ];
 
-const CARDS = [
-  { name: "Борщ с говядиной", rotate: -7, x: "-4%", y: "4%", w: "52%", delay: 0.15 },
-  { name: "Паста болоньезе", rotate: 5, x: "40%", y: "0%", w: "52%", delay: 0.3 },
-  { name: "Запечённый лосось с брокколи", rotate: -2, x: "16%", y: "46%", w: "56%", delay: 0.45 },
+const MEALS: { icon: FoodIconName; label: string; dish: string }[] = [
+  { icon: "croissant", label: "Завтрак", dish: "Сырники со сметаной" },
+  { icon: "pot-of-food", label: "Обед", dish: "Борщ с говядиной" },
+  { icon: "shallow-pan-of-food", label: "Ужин", dish: "Лосось с брокколи" },
 ];
 
-const FLOATERS: { icon: FoodIconName; className: string; delay: number }[] = [
-  { icon: "tomato", className: "left-[2%] top-[42%] h-14 w-14", delay: 0.7 },
-  { icon: "lemon", className: "right-[4%] top-[34%] h-12 w-12", delay: 0.85 },
-  { icon: "avocado", className: "right-[10%] bottom-[2%] h-14 w-14", delay: 1 },
-];
+const BUDGET = 1500;
+const COST = 1340;
+const PRODUCTS = 23;
+
+/** Живой пример: блюда по очереди попадают в меню, бюджет заполняется, корзина считает продукты. */
+function MenuPreview() {
+  const [step, setStep] = useState(0); // сколько блюд уже в меню (0..3), потом пауза и заново
+  const [cost, setCost] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setStep((s) => (s >= 4 ? 0 : s + 1)), 1200);
+    return () => clearInterval(t);
+  }, []);
+
+  const shown = Math.min(step, 3);
+  const target = step === 0 ? 0 : step >= 3 ? COST : Math.round((COST / 3) * step);
+
+  useEffect(() => {
+    const controls = animate(cost, target, { duration: 0.9, ease: "easeOut", onUpdate: (v) => setCost(Math.round(v)) });
+    return () => controls.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40, rotate: -2 }}
+      animate={{ opacity: 1, y: 0, rotate: -1.5 }}
+      transition={{ delay: 0.3, type: "spring", stiffness: 90, damping: 14 }}
+      className="mx-auto w-full max-w-[420px]"
+    >
+      <div className="animate-bob">
+        <div className="card !rounded-[36px] border-2 !p-5 shadow-[0_24px_48px_-26px_rgba(22,26,16,0.45)]">
+          <p className="text-ink text-xl font-extrabold">Понедельник</p>
+
+          <ul className="mt-3 space-y-2.5">
+            {MEALS.map((m, i) => {
+              const on = i < shown;
+              return (
+                <li key={m.label} className="flex items-center gap-3">
+                  <FoodIcon name={m.icon} className="h-9 w-9 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-muted text-xs font-semibold">{m.label}</p>
+                    <motion.p
+                      animate={{ opacity: on ? 1 : 0.25, x: on ? 0 : -6 }}
+                      transition={{ duration: 0.4 }}
+                      className="text-ink truncate font-bold"
+                    >
+                      {m.dish}
+                    </motion.p>
+                  </div>
+                  <motion.span
+                    animate={{ scale: on ? 1 : 0.6, opacity: on ? 1 : 0 }}
+                    transition={{ type: "spring", stiffness: 420, damping: 18 }}
+                    className="bg-accent-strong flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-white"
+                  >
+                    <Check className="h-4 w-4" strokeWidth={3.5} />
+                  </motion.span>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="mt-5">
+            <div className="text-ink flex items-baseline justify-between font-bold">
+              <span>{formatPrice(cost)}</span>
+              <span className="text-muted text-sm font-semibold">из {formatPrice(BUDGET)}</span>
+            </div>
+            <div className="border-line mt-2 h-3 overflow-hidden rounded-full border bg-white" aria-hidden="true">
+              <motion.div className="bg-accent-strong h-full rounded-full" animate={{ width: `${(cost / BUDGET) * 100}%` }} transition={{ duration: 0.4 }} />
+            </div>
+          </div>
+
+          <motion.p
+            animate={{ opacity: shown >= 3 ? 1 : 0.3 }}
+            transition={{ duration: 0.4 }}
+            className="text-ink mt-4 flex items-center gap-2 font-bold"
+          >
+            <Icon name="shopping-cart" className="text-tomato h-5 w-5" />
+            Корзина: {shown >= 3 ? PRODUCTS : 0} продукта
+          </motion.p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -31,7 +114,6 @@ export default function HomePage() {
 
   return (
     <div className="relative flex min-h-[100dvh] flex-col overflow-hidden">
-      {/* Один плоский салатовый круг за блюдами */}
       <motion.div
         aria-hidden="true"
         initial={{ scale: 0.6, opacity: 0 }}
@@ -52,8 +134,8 @@ export default function HomePage() {
         </nav>
       </header>
 
-      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 px-5 pt-6 pb-6 md:grid-cols-2 md:gap-12">
-        <div className="order-2 md:order-1">
+      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 px-5 pt-8 pb-6 md:grid-cols-2 md:gap-12">
+        <div>
           <h1 className="text-ink font-display text-[34px] leading-[1.12] font-bold tracking-tight sm:text-5xl md:text-[56px]">
             {HEADLINE.map((word, i) => (
               <span key={i} className="mr-[0.28em] inline-block overflow-hidden align-bottom">
@@ -74,41 +156,11 @@ export default function HomePage() {
             transition={{ delay: 0.75, duration: 0.5 }}
             className="text-muted mt-5 max-w-md text-lg"
           >
-            Семь вопросов — и у вас рецепты на каждый день, список покупок и ссылка на корзину.
+            Семь вопросов — и у вас рецепты на каждый день, список покупок и корзина продуктов.
           </motion.p>
         </div>
 
-        {/* Коллаж из блюд, овощи подпрыгивают */}
-        <div className="relative order-1 mx-auto aspect-[1/1.02] w-full max-w-[420px] md:order-2 md:max-w-[520px]">
-          {CARDS.map((c) => (
-            <motion.div
-              key={c.name}
-              initial={{ opacity: 0, y: 60, rotate: c.rotate * 2.2 }}
-              animate={{ opacity: 1, y: 0, rotate: c.rotate }}
-              transition={{ delay: c.delay, type: "spring", stiffness: 90, damping: 14 }}
-              style={{ left: c.x, top: c.y, width: c.w }}
-              className="absolute"
-            >
-              <div className="animate-bob" style={{ animationDelay: `${c.delay * 3}s` }}>
-                <DishArt
-                  recipeName={c.name}
-                  className="aspect-square w-full rounded-[36px] border-[6px] border-white shadow-[0_24px_48px_-20px_rgba(22,26,16,0.45)]"
-                />
-              </div>
-            </motion.div>
-          ))}
-          {FLOATERS.map((f) => (
-            <motion.div
-              key={f.icon}
-              initial={{ scale: 0, rotate: -40 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ delay: f.delay, type: "spring", stiffness: 260, damping: 14 }}
-              className={`absolute ${f.className}`}
-            >
-              <FoodIcon name={f.icon} className="h-full w-full drop-shadow-md" />
-            </motion.div>
-          ))}
-        </div>
+        <MenuPreview />
       </div>
 
       <div className="relative mx-auto w-full max-w-6xl px-5 pb-12">
@@ -122,8 +174,8 @@ export default function HomePage() {
               transition={{ delay: i * 0.12, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               className="card flex items-center gap-4 !p-4"
             >
-              <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center">
-                <FoodIcon name={s.icon} className="h-12 w-12" />
+              <span className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[22px] ${s.bg}`}>
+                <Icon name={s.icon} className={`h-8 w-8 ${s.tone}`} />
               </span>
               <div>
                 <p className="text-ink text-lg leading-tight font-bold">{s.title}</p>

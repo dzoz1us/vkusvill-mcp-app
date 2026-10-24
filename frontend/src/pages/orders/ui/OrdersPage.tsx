@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "@/shared/api";
 import type { Order } from "@/shared/api";
 import { errorText, formatDate, formatPrice } from "@/shared/lib";
@@ -8,10 +8,11 @@ import { FoodIcon, Toast } from "@/shared/ui";
 export function statusTone(o: Pick<Order, "status_code" | "status_final">): string {
   if (o.status_code === "CANCELLED") return "pill-bad";
   if (o.status_final) return "pill-ok";
-  return "pill-warn";
+  return "pill-neutral";
 }
 
 export default function OrdersPage() {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -40,8 +41,7 @@ export default function OrdersPage() {
     setBusy(id);
     try {
       const order = await api.repeatOrder(id);
-      if (order.cart_url) window.location.href = order.cart_url;
-      else await load();
+      navigate(`/cart/${order.id}`);
     } catch (e) {
       setError(errorText(e, "Не удалось повторить заказ"));
     } finally {
@@ -50,8 +50,8 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="page pt-6">
-      <h1 className="heading mb-5">Заказы</h1>
+    <div className="page">
+      <h1 className="heading page-head">Заказы</h1>
 
       {orders === null && (
         <div className="space-y-3">
@@ -91,11 +91,9 @@ export default function OrdersPage() {
             <div className="mt-3 flex flex-wrap gap-2">
               {o.status_code === "CREATED" && (
                 <>
-                  {o.cart_url && (
-                    <a href={o.cart_url} className="btn btn-primary btn-sm">
-                      Открыть корзину
-                    </a>
-                  )}
+                  <Link to={`/cart/${o.id}`} className="btn btn-primary btn-sm">
+                    Корзина
+                  </Link>
                   <button className="btn btn-outline btn-sm" disabled={busy === o.id} onClick={() => confirm(o.id)}>
                     Я оформил заказ
                   </button>

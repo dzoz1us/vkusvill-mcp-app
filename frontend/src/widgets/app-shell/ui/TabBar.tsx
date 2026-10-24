@@ -1,13 +1,12 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Icon } from "@/shared/ui";
-import type { IconName } from "@/shared/ui";
+import type { LucideIcon } from "lucide-react";
 
 export interface TabItem {
   label: string;
   to: string;
-  icon: IconName;
+  icon: LucideIcon;
   also?: string[];
   badge?: boolean;
 }
@@ -210,7 +209,7 @@ export default function TabBar({ tabs }: { tabs: TabItem[] }) {
       {target >= 0 && <span ref={pill} className="tabpill" aria-hidden="true" />}
       {tabs.map((t, i) => (
         <NavLink key={t.to} to={t.to} draggable={false} className={cx("tab", i === shown && "cur")}>
-          <Icon name={t.icon} className="h-7 w-7" />
+          <t.icon className="h-7 w-7" strokeWidth={i === shown ? 2.5 : 1.8} />
           <span className="sr-only">
             {t.label}
             {t.badge ? ", есть новые" : ""}

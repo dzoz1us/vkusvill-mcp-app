@@ -4,11 +4,12 @@ import { APP_NAME } from "@/shared/lib";
 export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
   return (
     <svg viewBox="0 0 40 40" className={className} aria-hidden="true" focusable="false">
-      <rect width="40" height="40" rx="13" fill="#5a9612" />
-      <path d="M8 20h24a12 12 0 0 1-12 12h0A12 12 0 0 1 8 20z" fill="#fff" />
-      <rect x="14" y="31" width="12" height="2.6" rx="1.3" fill="#fff" />
-      <path d="M15 16c-2-2.4 2-3.6 0-6M20 16c-2-2.4 2-3.6 0-6" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" opacity="0.85" />
-      <path d="M25 15c0-4.4 3.2-7 7.6-7.2C32.8 12.6 30 15.4 25 15z" fill="#a4d63b" />
+      <g transform="rotate(38 20 20)">
+        <path d="M22.500 5C17 5 15.500 12 12 18.500 8.500 25 11.500 36 22.500 36s14-11 10.500-17.500C29.500 12 28 5 22.500 5z" fill="#1f7a2c" />
+        <path d="M20 3C14.500 3 13 10 9.500 16.500 6 23 9 34 20 34s14-11 10.500-17.500C27 10 25.500 3 20 3z" fill="#3aa23a" />
+        <path d="M20 7.500c-3.600 0-4.800 6-7.800 11.500-2 3.800.8 10.500 7.800 10.500s9.800-6.700 7.800-10.500C24.800 13.500 23.600 7.500 20 7.500z" fill="#a8d95c" />
+        <circle cx="20" cy="23" r="5" fill="#8a4a1c" />
+      </g>
     </svg>
   );
 }

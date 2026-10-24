@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bookmark } from "lucide-react";
+import { Bookmark, Plus } from "lucide-react";
 import { api } from "@/shared/api";
 import type { PlanSummary } from "@/shared/api";
 import { DAY_SHORT, formatDate, formatPrice } from "@/shared/lib";
@@ -19,11 +19,11 @@ export default function PlansPage() {
   }, []);
 
   return (
-    <div className="page pt-6">
-      <div className="mb-5 flex items-center justify-between gap-3">
+    <div className="page">
+      <div className="page-head justify-between gap-3">
         <h1 className="heading">Мои планы</h1>
-        <button className="btn btn-primary btn-sm" onClick={() => navigate("/start")}>
-          Новый план
+        <button className="icon-btn !border-accent-strong !bg-accent-strong !text-white" onClick={() => navigate("/start")} aria-label="Новый план" title="Новый план">
+          <Plus />
         </button>
       </div>
 

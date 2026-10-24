@@ -21,8 +21,8 @@ export default function AdminPage() {
   const Active = TABS.find((t) => t.key === tab)!.Component;
 
   return (
-    <div className="page max-w-4xl pt-6">
-      <h1 className="heading mb-5">Администрирование</h1>
+    <div className="page max-w-4xl">
+      <h1 className="heading page-head">Администрирование</h1>
       <div className="tabs mb-6" role="tablist">
         {TABS.map((t) => (
           <button

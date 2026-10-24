@@ -21,7 +21,7 @@ export default function BudgetProgress({
       <div className="data-row">
         <span className="data-label">Стоимость</span>
         <span className={`data-value ${getBudgetColor(rawPercent)}`}>
-          {formatPrice(currentCost)}
+          {formatPrice(Math.round(currentCost))}
         </span>
       </div>
       <div className="px-5 py-4">

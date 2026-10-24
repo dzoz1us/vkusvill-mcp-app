@@ -41,9 +41,7 @@ export const getBudgetColor = (percent: number): string => {
 };
 
 export const getBudgetBarColor = (percent: number): string => {
-  if (percent > 100) return "bg-danger";
-  if (percent > 85) return "bg-mustard";
-  return "bg-accent";
+  return percent > 100 ? "bg-danger" : "bg-accent-strong";
 };
 
 export const APP_NAME = "Менюшка";

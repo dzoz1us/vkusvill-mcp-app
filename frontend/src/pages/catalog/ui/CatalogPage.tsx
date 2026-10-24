@@ -96,8 +96,8 @@ export default function CatalogPage() {
   const dirty = q || meal || diet || category || maxTime || ingredients.length || favorite;
 
   return (
-    <div className="page pt-6">
-      <h1 className="heading mb-5">Рецепты</h1>
+    <div className="page">
+      <h1 className="heading page-head">Рецепты</h1>
 
       <div className="relative mb-4">
         <Search className="text-muted pointer-events-none absolute top-1/2 left-5 h-5 w-5 -translate-y-1/2" />

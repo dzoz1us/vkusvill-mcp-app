@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Bell } from "lucide-react";
+import { Bell, BookOpen, CalendarDays, ChefHat, LogIn, ShoppingBag, User } from "lucide-react";
 import { Icon, Logo, Sheet } from "@/shared/ui";
 import type { IconName } from "@/shared/ui";
 import { formatDate } from "@/shared/lib";
@@ -87,15 +87,15 @@ export default function AppShell() {
   // нижнее меню: 4 пункта, «Профиль» последний; админка открывается из профиля
   const tabs: TabItem[] = user
     ? [
-        { label: "Рецепты", to: "/catalog", icon: "book-open-text" },
-        { label: "Планы", to: "/plans", icon: "calendar-check" },
-        { label: "Заказы", to: "/orders", icon: "shopping-cart", badge: unread > 0 },
-        { label: "Профиль", to: "/profile", icon: "user", also: ["/admin"] },
+        { label: "Рецепты", to: "/catalog", icon: BookOpen },
+        { label: "Планы", to: "/plans", icon: CalendarDays },
+        { label: "Заказы", to: "/orders", icon: ShoppingBag, badge: unread > 0 },
+        { label: "Профиль", to: "/profile", icon: User, also: ["/admin"] },
       ]
     : [
-        { label: "Рецепты", to: "/catalog", icon: "book-open-text" },
-        { label: "Составить меню", to: "/start", icon: "fork-knife" },
-        { label: "Войти", to: "/login", icon: "user" },
+        { label: "Рецепты", to: "/catalog", icon: BookOpen },
+        { label: "Составить меню", to: "/start", icon: ChefHat },
+        { label: "Войти", to: "/login", icon: LogIn },
       ];
 
   return (

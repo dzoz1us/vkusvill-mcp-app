@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { RefreshCw } from "lucide-react";
 import { api } from "@/shared/api";
 import { errorText } from "@/shared/lib";
 import { Toast } from "@/shared/ui";
 
-/** «Перейти во ВкусВилл»: собирает одну корзину, сохраняет заказ в истории и сразу открывает ВкусВилл. */
+/** «Собрать корзину»: создаёт заказ и открывает корзину приложения со списком продуктов. */
 export default function CreateCartButton({ planId }: { planId: string }) {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -16,7 +18,7 @@ export default function CreateCartButton({ planId }: { planId: string }) {
     try {
       const order = await api.createOrder(planId);
       if (!order.cart_url) throw new Error("В корзину ничего не попало");
-      window.location.href = order.cart_url;
+      navigate(`/cart/${order.id}`);
     } catch (e) {
       setError(errorText(e, "Не удалось собрать корзину"));
       setIsLoading(false);
@@ -27,7 +29,7 @@ export default function CreateCartButton({ planId }: { planId: string }) {
     <>
       <button onClick={handleCreate} disabled={isLoading} className="btn btn-primary w-full">
         {isLoading && <RefreshCw className="h-5 w-5 animate-spin" />}
-        {isLoading ? "Собираем корзину" : "Перейти во ВкусВилл"}
+        {isLoading ? "Собираем" : "Собрать корзину"}
       </button>
       {error && <Toast message={error} onHide={() => setError(null)} />}
     </>

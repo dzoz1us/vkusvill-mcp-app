@@ -60,10 +60,14 @@ body {
     @apply grid min-h-[44px] grid-cols-[44px_1fr_44px] items-center gap-3 pt-[calc(1rem+env(safe-area-inset-top))] pb-4;
   }
   .page-title {
-    @apply text-ink text-center text-[26px] leading-tight font-extrabold tracking-tight sm:text-[34px];
+    @apply text-ink text-center text-[28px] leading-tight font-extrabold tracking-tight sm:text-[36px];
   }
   .heading {
-    @apply text-ink text-[32px] leading-[1.1] font-extrabold tracking-tight sm:text-[40px];
+    @apply text-ink text-[28px] leading-tight font-extrabold tracking-tight sm:text-[36px];
+  }
+  /* Заголовок верхнего уровня: на той же высоте, что и шапка со стрелкой */
+  .page-head {
+    @apply flex min-h-[44px] items-center pt-4 pb-4;
   }
   .subheading {
     @apply text-muted mt-2 text-lg;
@@ -133,6 +137,9 @@ body {
   }
   .pill-ok {
     @apply text-ink border-accent bg-accent-soft;
+  }
+  .pill-neutral {
+    @apply border-line bg-white text-ink;
   }
   .pill-warn {
     @apply border-mustard bg-mustard-soft text-ink;
@@ -428,8 +435,10 @@ body {
 
 /* ---------- Нижнее меню «жидкое стекло» (только телефон) ---------- */
 .tabbar {
-  background: linear-gradient(180deg, #ffffff 0%, #f4faea 100%);
-  box-shadow: 0 10px 24px -14px rgb(22 26 16 / 28%), inset 0 0 0 1px rgb(22 26 16 / 8%);
+  background: rgb(255 255 255 / 82%);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: 0 8px 22px -12px rgb(22 26 16 / 30%), inset 0 0 0 1px rgb(22 26 16 / 10%);
   position: fixed;
   left: 0;
   right: 0;
