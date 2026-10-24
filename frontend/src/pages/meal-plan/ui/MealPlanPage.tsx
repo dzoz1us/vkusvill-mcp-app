@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { AlertTriangle, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { FoodIcon, PageHeader, PageSkeleton, StateCard } from "@/shared/ui";
 import { useMealPlanStore, BudgetProgress } from "@/entities/meal-plan";
 import { MealPlanDays } from "@/widgets/meal-plan-days";
@@ -60,13 +60,6 @@ export default function MealPlanPage() {
           currentCost={currentPlan.cart_estimated_cost}
           budget={currentPlan.budget}
         />
-
-        {currentPlan.unresolved_items_count > 0 && (
-          <div className="alert alert-warn">
-            <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" />
-            <p>Не подобрано в ВкусВилл: {currentPlan.unresolved_items_count}</p>
-          </div>
-        )}
 
         <MealPlanDays planId={planId} meals={currentPlan.meals} />
 

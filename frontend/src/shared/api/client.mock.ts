@@ -378,7 +378,7 @@ export const api = {
     let remaining = itemCount;
     let cartNum = 1;
     while (remaining > 0) {
-      const count = Math.min(remaining, 20); // лимит корзины ВкусВилл
+      const count = Math.min(remaining, 100); // одна корзина ВкусВилл
       carts.push({
         cart_url: `https://vkusvill.ru/cart?plan=${planId}&cart=${cartNum}&items=${count}`,
         items_count: count,
