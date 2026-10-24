@@ -23,6 +23,7 @@ spring:
 
 app:
   auto-seed: false
+  strict-catalog: false
   enable-live-mcp: false
   mcp-timeout-ms: 2000
 

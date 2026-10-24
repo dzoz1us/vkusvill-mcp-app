@@ -13,7 +13,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.menyushka.support.TestAuthConfig;
 
 import com.menyushka.domain.Ingredient;
 import com.menyushka.domain.Recipe;
@@ -29,6 +32,7 @@ import com.menyushka.repository.RecipeRepository;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Import(TestAuthConfig.class)
 class GroceryControllerTest {
 
     @Autowired MockMvc mockMvc;

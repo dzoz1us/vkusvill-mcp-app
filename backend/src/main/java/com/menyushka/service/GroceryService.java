@@ -40,6 +40,9 @@ public class GroceryService {
             List<RecipeInput> recipes,
             int peopleCount
     ) {
+        if (peopleCount < 1) {
+            throw new IllegalArgumentException("Количество человек должно быть больше нуля");
+        }
         List<Integer> servings = new ArrayList<>(recipes.size());
         for (int i = 0; i < recipes.size(); i++) {
             servings.add(peopleCount);

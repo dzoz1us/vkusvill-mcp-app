@@ -12,7 +12,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.menyushka.support.TestAuthConfig;
 
 import com.menyushka.domain.Ingredient;
 import com.menyushka.domain.Recipe;
@@ -29,6 +32,7 @@ import com.menyushka.repository.RecipeRepository;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
+@Import(TestAuthConfig.class)
 class VkusVillControllerTest {
 
     @Autowired MockMvc mockMvc;
@@ -103,14 +107,13 @@ class VkusVillControllerTest {
     }
 
     @Test
-    void refreshPricesWithoutLiveMcpReturnsSameCost() throws Exception {
-        // enable-live-mcp is false in test profile -> no MCP calls,
-        // everything remains not_found, cost stays zero.
+    void refreshPricesWithoutLiveMcpReturnsServiceUnavailable() throws Exception {
+        // enable-live-mcp is false in test profile: без MCP цены не проверить,
+        // поэтому клиент получает понятную повторяемую ошибку, а не старую цену.
         mockMvc.perform(post("/api/meal-plans/" + planId + "/refresh-prices"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.plan_id").value(planId))
-                .andExpect(jsonPath("$.cost_changed").value(false))
-                .andExpect(jsonPath("$.new_cost").value(0.0));
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.error.code").value("VKUSVILL_MCP_UNAVAILABLE"))
+                .andExpect(jsonPath("$.error.retryable").value(true));
     }
 
     @Test
@@ -121,18 +124,16 @@ class VkusVillControllerTest {
     }
 
     @Test
-    void createCartWithNoMatchedItemsReturnsEmptyCarts() throws Exception {
-        // Nothing matched (live MCP off) -> empty carts, but unresolved counter
-        // reflects remaining items.
-        mockMvc.perform(post("/api/meal-plans/" + planId + "/vkusvill-cart"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.carts.length()").value(0))
-                .andExpect(jsonPath("$.unresolved_items").value(1));
+    void orderWithNoMatchedItemsIsRejected() throws Exception {
+        // Ни один товар не сопоставлен (MCP выключен) — в корзину нечего положить.
+        mockMvc.perform(post("/api/meal-plans/" + planId + "/order"))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.error.code").value("NOTHING_TO_ORDER"));
     }
 
     @Test
-    void createCartPlanNotFound() throws Exception {
-        mockMvc.perform(post("/api/meal-plans/999999/vkusvill-cart"))
+    void orderPlanNotFound() throws Exception {
+        mockMvc.perform(post("/api/meal-plans/999999/order"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error.code").value("NOT_FOUND"));
     }

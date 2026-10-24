@@ -20,7 +20,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ErrorResponse> handleApi(ApiException e) {
-        return build(e.getCode(), e.getMessage(), e.getStatus(), false);
+        // Недоступность ВкусВилл временная: клиенту можно повторить запрос позже
+        boolean retryable = e.getCode() == ErrorCode.VKUSVILL_MCP_UNAVAILABLE;
+        return build(e.getCode(), e.getMessage(), e.getStatus(), retryable);
     }
 
     @ExceptionHandler(NoSuitableRecipesException.class)
