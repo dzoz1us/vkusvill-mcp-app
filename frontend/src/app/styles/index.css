@@ -1,0 +1,354 @@
+@import "@fontsource-variable/onest";
+@import "@fontsource-variable/unbounded";
+@import "tailwindcss";
+
+/* Палитра: салатовый акцент, тёплые «продуктовые» оттенки для разнообразия. Фон белый. */
+@theme {
+  --font-sans: "Onest Variable", system-ui, sans-serif;
+  --font-display: "Unbounded Variable", "Onest Variable", sans-serif;
+
+  --color-accent: #a4d63b; /* салатовый */
+  --color-accent-dark: #8fc226;
+  --color-accent-strong: #5a9612; /* насыщенный салатовый: фон кнопок и отметок под белый текст */
+  --color-accent-strong-dark: #4a7e0e;
+  --color-accent-soft: #f2f9dd;
+  --color-accent-ink: #3d5a05; /* текст и значки на белом */
+  --color-tomato: #e4572e;
+  --color-tomato-soft: #fdebe5;
+  --color-mustard: #f2b134;
+  --color-mustard-soft: #fff4d6;
+  --color-berry: #c2416c;
+  --color-berry-soft: #fbe7ee;
+  --color-sky: #4a9fd8;
+  --color-sky-soft: #e5f2fb;
+  --color-line: #e7e9df;
+  --color-ink: #161a10;
+  --color-muted: #6c7263;
+  --color-danger: #c02626;
+  --color-danger-soft: #fdeded;
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #fff;
+  color: var(--color-ink);
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent-ink);
+  outline-offset: 3px;
+}
+
+@layer components {
+  /* ---------- Страницы ---------- */
+  .page {
+    @apply mx-auto w-full max-w-2xl px-4 pb-[calc(2rem+env(safe-area-inset-bottom))];
+  }
+  .page-header {
+    @apply grid min-h-[44px] grid-cols-[44px_1fr_44px] items-center gap-3 pt-[calc(1rem+env(safe-area-inset-top))] pb-4;
+  }
+  .page-title {
+    @apply text-center text-[26px] leading-tight font-extrabold tracking-tight sm:text-[34px];
+  }
+  .heading {
+    @apply text-[32px] leading-[1.1] font-extrabold tracking-tight sm:text-[40px];
+  }
+  .subheading {
+    @apply text-muted mt-2 text-lg;
+  }
+
+  /* ---------- Кнопки ---------- */
+  .btn {
+    @apply inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full border-2 px-8 text-center text-[19px] leading-tight font-bold transition-[transform,background-color,border-color,box-shadow] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply bg-accent-strong border-accent-strong hover:bg-accent-strong-dark hover:border-accent-strong-dark text-white shadow-[0_12px_26px_-12px_rgba(74,126,14,0.85)];
+  }
+  .btn-outline {
+    @apply border-line text-ink hover:border-ink bg-white;
+  }
+  .btn-danger {
+    @apply bg-danger-soft text-danger border-danger-soft hover:border-danger;
+  }
+
+  /* Круглые кнопки-значки */
+  .icon-btn {
+    @apply border-line text-ink hover:border-ink inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border bg-white transition-[border-color,transform] duration-150 select-none active:scale-95 disabled:opacity-40;
+  }
+  .icon-btn svg {
+    @apply h-[22px] w-[22px];
+  }
+
+  /* ---------- Карточки и таблицы ---------- */
+  .card {
+    @apply border-line rounded-[32px] border bg-white p-5;
+  }
+  .data-frame {
+    @apply border-line divide-line divide-y overflow-hidden rounded-[32px] border bg-white;
+  }
+  .data-row {
+    @apply flex items-center justify-between gap-4 px-6 py-4;
+  }
+  .data-label {
+    @apply text-muted;
+  }
+  .data-value {
+    @apply text-right font-bold;
+  }
+  .block-title {
+    @apply text-[22px] leading-tight font-extrabold tracking-tight;
+  }
+
+  /* Выбираемая карточка (мастер) */
+  .select-card {
+    @apply border-line relative flex min-h-[96px] flex-col items-center justify-center gap-2 rounded-[28px] border-2 bg-white px-3 py-4 text-center text-lg font-bold transition-[border-color,background-color,transform] duration-150 select-none active:scale-[0.97];
+  }
+  .select-card[aria-checked="true"],
+  .select-card[aria-pressed="true"] {
+    @apply border-accent bg-accent-soft;
+  }
+
+  .chip {
+    @apply border-line text-ink hover:border-ink inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border bg-white px-4 text-base font-semibold transition-colors select-none;
+  }
+  .chip-active {
+    @apply border-accent bg-accent-soft;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap;
+  }
+  .pill-ok {
+    @apply text-accent-ink border-accent bg-accent-soft;
+  }
+  .pill-warn {
+    @apply border-mustard bg-mustard-soft text-[#8a5a00];
+  }
+  .pill-bad {
+    @apply text-danger border-danger bg-danger-soft;
+  }
+
+  /* Плитка с иконкой; цвет фона — модификатором */
+  .tile {
+    @apply bg-accent-soft text-accent-ink flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[22px];
+  }
+  .tile img {
+    @apply h-9 w-9;
+  }
+  .tile-leaf {
+    @apply bg-accent-soft;
+  }
+  .tile-sun {
+    @apply bg-mustard-soft;
+  }
+  .tile-berry {
+    @apply bg-berry-soft;
+  }
+  .tile-tomato {
+    @apply bg-tomato-soft;
+  }
+  .tile-sky {
+    @apply bg-sky-soft;
+  }
+
+  .alert {
+    @apply flex items-start gap-3 rounded-[28px] border p-4 text-sm font-medium;
+  }
+  .alert-warn {
+    @apply border-mustard bg-mustard-soft text-[#8a5a00];
+  }
+  .alert-bad {
+    @apply border-danger bg-danger-soft text-danger;
+  }
+
+  /* ---------- Поля ---------- */
+  .field {
+    @apply border-line focus:border-accent-dark w-full rounded-full border-2 bg-white px-6 py-3.5 text-center text-3xl font-bold outline-none;
+  }
+  .checkbox {
+    @apply border-line flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg border-2 bg-white transition-colors;
+  }
+  .checkbox-on {
+    @apply bg-accent-strong border-accent-strong text-white;
+  }
+
+  /* ---------- Окно по центру ---------- */
+  .sheet-backdrop {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4;
+  }
+  .sheet {
+    @apply w-full max-w-md rounded-[36px] bg-white p-6;
+  }
+
+  .toast {
+    @apply fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] left-4 z-[60] mx-auto max-w-md rounded-full px-6 py-3.5 text-center text-sm font-semibold;
+  }
+  .toast-bad {
+    @apply border-danger bg-danger-soft text-danger border;
+  }
+
+  .skeleton {
+    @apply border-line animate-pulse rounded-[32px] border bg-white;
+  }
+
+  /* ---------- Мастер ---------- */
+  .wizard {
+    @apply mx-auto flex min-h-[100dvh] w-full max-w-lg flex-col px-5;
+  }
+  .wizard-bar {
+    @apply flex items-center gap-4 pt-[calc(1rem+env(safe-area-inset-top))];
+  }
+  .track {
+    @apply bg-line h-2 flex-1 overflow-hidden rounded-full;
+  }
+  .track-fill {
+    @apply bg-accent h-full rounded-full;
+  }
+  .wizard-cta {
+    @apply sticky bottom-0 -mx-5 bg-gradient-to-t from-white via-white to-transparent px-5 pt-6 pb-[calc(1.25rem+env(safe-area-inset-bottom))];
+  }
+
+  /* Ползунок бюджета */
+  input[type="range"].slider {
+    @apply h-10 w-full cursor-pointer appearance-none bg-transparent;
+  }
+  input[type="range"].slider::-webkit-slider-runnable-track {
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(
+      to right,
+      var(--color-accent) var(--fill, 0%),
+      var(--color-line) var(--fill, 0%)
+    );
+  }
+  input[type="range"].slider::-moz-range-track {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--color-line);
+  }
+  input[type="range"].slider::-moz-range-progress {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--color-accent);
+  }
+  input[type="range"].slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 36px;
+    width: 36px;
+    margin-top: -13px;
+    border-radius: 999px;
+    background: var(--color-mustard);
+    border: 4px solid #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.15s;
+  }
+  input[type="range"].slider:active::-webkit-slider-thumb {
+    transform: scale(1.12);
+  }
+  input[type="range"].slider::-moz-range-thumb {
+    height: 28px;
+    width: 28px;
+    border-radius: 999px;
+    background: var(--color-mustard);
+    border: 4px solid #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* ---------- Анимации ---------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loadingBar {
+  0% {
+    width: 0%;
+    margin-left: 0%;
+  }
+  50% {
+    width: 60%;
+    margin-left: 20%;
+  }
+  100% {
+    width: 0%;
+    margin-left: 100%;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+.animate-loading-bar {
+  animation: loadingBar 3s ease-in-out infinite;
+}
+
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+.animate-orbit {
+  animation: orbit 14s linear infinite;
+}
+
+.animate-orbit-reverse {
+  animation: orbit 14s linear infinite reverse;
+}
+
+.animate-bob {
+  animation: bob 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,4 +1,4 @@
-# Edimo
+# Всласть
 
 Планировщик питания с подбором рецептов, списком покупок и интеграцией со ВкусВилл.
 
@@ -12,7 +12,7 @@
 
 * `backend-java/` — Актуальный backend на Java
 * `backend/` — Python-версия (архив, для сравнения, не используется)
-* `frontend/` — React-приложение
+* `frontend/` — React + TypeScript, архитектура FSD (`app / pages / widgets / features / entities / shared`)
 * `docs/` — Документация (архитектура, API, ERD)
 
 ## 🚀 Быстрый запуск
