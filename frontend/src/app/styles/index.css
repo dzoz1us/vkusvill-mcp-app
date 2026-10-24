@@ -23,7 +23,7 @@
   --color-sky-soft: #e5f2fb;
   --color-line: #e7e9df;
   --color-ink: #161a10;
-  --color-muted: #6c7263;
+  --color-muted: #4b5244;
   --color-danger: #c02626;
   --color-danger-soft: #fdeded;
 }
@@ -74,11 +74,11 @@ body {
     @apply inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full border-2 px-8 text-center text-[19px] leading-tight font-bold transition-[transform,background-color,border-color,box-shadow] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
   }
   .btn-primary {
-    @apply bg-accent-strong border-accent-strong hover:bg-accent-strong-dark hover:border-accent-strong-dark text-white shadow-[0_12px_26px_-12px_rgba(74,126,14,0.85)];
+    @apply bg-accent-strong border-accent-strong hover:bg-accent-strong-dark hover:border-accent-strong-dark text-white;
   }
   /* Вторичные кнопки: без заливки, акцентный контур и текст, плоские */
   .btn-outline {
-    @apply border-accent-strong text-accent-strong hover:bg-accent-soft bg-transparent;
+    @apply border-line text-ink hover:border-ink bg-transparent;
   }
   .btn-danger {
     @apply bg-danger-soft text-danger border-danger-soft hover:border-danger;
@@ -122,7 +122,7 @@ body {
   }
 
   .chip {
-    @apply border-line text-accent-strong hover:border-accent-strong inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border bg-transparent px-4 text-base font-semibold transition-colors select-none;
+    @apply border-line text-ink hover:border-ink inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border bg-transparent px-4 text-base font-semibold transition-colors select-none;
   }
   .chip-active {
     @apply border-accent-strong ring-accent-strong ring-1;
@@ -132,10 +132,10 @@ body {
     @apply inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap;
   }
   .pill-ok {
-    @apply text-accent-ink border-accent bg-accent-soft;
+    @apply text-ink border-accent bg-accent-soft;
   }
   .pill-warn {
-    @apply border-mustard bg-mustard-soft text-[#8a5a00];
+    @apply border-mustard bg-mustard-soft text-ink;
   }
   .pill-bad {
     @apply text-danger border-danger bg-danger-soft;
@@ -168,7 +168,7 @@ body {
     @apply flex items-start gap-3 rounded-[28px] border p-4 text-sm font-medium;
   }
   .alert-warn {
-    @apply border-mustard bg-mustard-soft text-[#8a5a00];
+    @apply border-mustard bg-mustard-soft text-ink;
   }
   .alert-bad {
     @apply border-danger bg-danger-soft text-danger;
@@ -193,16 +193,16 @@ body {
 
   /* ---------- Навигация ---------- */
   .topbar {
-    @apply border-line sticky top-0 z-40 border-b bg-white/90 backdrop-blur;
+    @apply sticky top-0 z-40 bg-white;
   }
   .topbar-inner {
     @apply mx-auto flex h-16 w-full max-w-5xl items-center gap-3 px-4;
   }
   .nav-link {
-    @apply text-ink hover:bg-accent-soft inline-flex min-h-[44px] items-center gap-2 rounded-full px-4 text-base font-bold transition-colors;
+    @apply text-ink hover:text-accent-strong inline-flex min-h-[44px] items-center gap-2 rounded-full px-3 text-base font-bold transition-colors;
   }
   .nav-link-active {
-    @apply bg-accent-soft text-accent-strong;
+    @apply text-accent-strong;
   }
   .tabs {
     @apply flex gap-2 overflow-x-auto pb-1;
@@ -234,7 +234,7 @@ body {
   }
 
   .toast-ok {
-    @apply border-accent bg-accent-soft text-accent-ink border;
+    @apply border-accent bg-accent-soft text-ink border;
   }
 
   .skeleton {
@@ -428,6 +428,8 @@ body {
 
 /* ---------- Нижнее меню «жидкое стекло» (только телефон) ---------- */
 .tabbar {
+  background: linear-gradient(180deg, #ffffff 0%, #f1f9dc 100%);
+  box-shadow: 0 14px 30px -14px rgb(74 126 14 / 45%), inset 0 0 0 1px rgb(90 150 18 / 18%);
   position: fixed;
   left: 0;
   right: 0;
@@ -442,7 +444,6 @@ body {
   border-radius: 999px;
   overflow: hidden;
   z-index: 50;
-  background: rgb(32 40 56 / 11%);
   touch-action: pan-y;
   -webkit-user-select: none;
   user-select: none;
@@ -459,7 +460,7 @@ body {
   place-items: center;
   min-height: 50px;
   border-radius: 999px;
-  color: #202838;
+  color: #161a10;
   background: transparent;
 }
 .tabbar .tabpill {
@@ -469,11 +470,10 @@ body {
   left: 5px;
   border-radius: 999px;
   z-index: 0;
-  background: linear-gradient(rgb(255 255 255 / 58%), rgb(255 255 255 / 36%));
+  background: #ffffff;
   box-shadow:
-    0 2px 8px rgb(32 40 56 / 10%),
-    inset 0 1px 0 rgb(255 255 255 / 85%),
-    inset 0 0 0 1px rgb(255 255 255 / 35%);
+    0 2px 8px rgb(74 126 14 / 22%),
+    inset 0 0 0 1px rgb(90 150 18 / 22%);
   will-change: left, width;
   transition:
     box-shadow 0.25s,

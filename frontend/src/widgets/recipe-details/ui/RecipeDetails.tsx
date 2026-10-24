@@ -35,15 +35,15 @@ export default function RecipeDetails({ recipe }: { recipe: Recipe }) {
           <div className="data-frame">
             <div className="data-row">
               <span className="data-label">Белки</span>
-              <span className="data-value text-berry">{n.protein} г</span>
+              <span className="data-value text-ink">{n.protein} г</span>
             </div>
             <div className="data-row">
               <span className="data-label">Жиры</span>
-              <span className="data-value text-[#b07400]">{n.fat} г</span>
+              <span className="data-value">{n.fat} г</span>
             </div>
             <div className="data-row">
               <span className="data-label">Углеводы</span>
-              <span className="data-value text-accent-ink">{n.carbs} г</span>
+              <span className="data-value text-ink">{n.carbs} г</span>
             </div>
           </div>
         </section>
@@ -63,7 +63,7 @@ export default function RecipeDetails({ recipe }: { recipe: Recipe }) {
         <ol className="space-y-4">
           {recipe.steps.map((step, i) => (
             <li key={i} className="flex gap-4">
-              <span className="bg-accent-soft text-accent-ink flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl font-bold">
+              <span className="bg-accent-soft text-ink flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl font-bold">
                 {i + 1}
               </span>
               <p className="pt-1">{step}</p>

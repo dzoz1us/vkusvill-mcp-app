@@ -1,13 +1,13 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Icon } from "@/shared/ui";
-import type { IconName } from "@/shared/ui";
+import { FoodIcon } from "@/shared/ui";
+import type { FoodIconName } from "@/shared/ui";
 
 export interface TabItem {
   label: string;
   to: string;
-  icon: IconName;
+  icon: FoodIconName;
   also?: string[];
   badge?: boolean;
 }
@@ -210,7 +210,7 @@ export default function TabBar({ tabs }: { tabs: TabItem[] }) {
       {target >= 0 && <span ref={pill} className="tabpill" aria-hidden="true" />}
       {tabs.map((t, i) => (
         <NavLink key={t.to} to={t.to} draggable={false} className={cx("tab", i === shown && "cur")}>
-          <Icon name={t.icon} className="h-7 w-7" />
+          <FoodIcon name={t.icon} className="h-8 w-8" />
           <span className="sr-only">
             {t.label}
             {t.badge ? ", есть новые" : ""}

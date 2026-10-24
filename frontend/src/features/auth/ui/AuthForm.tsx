@@ -66,7 +66,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
   return (
     <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-col justify-center px-5 py-10">
-      <Link to="/" className="font-display text-accent-ink mb-8 text-2xl font-bold tracking-tight">
+      <Link to="/" className="font-display text-ink mb-8 text-2xl font-bold tracking-tight">
         {APP_NAME}
       </Link>
       <h1 className="heading mb-6">{TITLES[mode]}</h1>

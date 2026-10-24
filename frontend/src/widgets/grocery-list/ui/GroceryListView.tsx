@@ -23,7 +23,7 @@ export default function GroceryListView({ planId, list }: { planId: string; list
         </div>
         <div className="data-row">
           <span className="data-label">Куплено</span>
-          <span className="data-value text-accent-ink">
+          <span className="data-value text-ink">
             {formatPrice(Math.round(boughtCost))} · {boughtItems.length}/{list.items.length}
           </span>
         </div>

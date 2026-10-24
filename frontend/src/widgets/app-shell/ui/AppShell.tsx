@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Bell } from "lucide-react";
-import { Icon, Sheet } from "@/shared/ui";
-import type { IconName } from "@/shared/ui";
+import { FoodIcon, Sheet } from "@/shared/ui";
+import type { FoodIconName } from "@/shared/ui";
 import { APP_NAME, formatDate } from "@/shared/lib";
 import { useUserStore } from "@/entities/user";
 import { useNotificationStore } from "@/entities/notification";
 import TabBar from "./TabBar";
 import type { TabItem } from "./TabBar";
 
-const LINKS: { to: string; label: string; icon: IconName; auth?: boolean }[] = [
-  { to: "/catalog", label: "Рецепты", icon: "book-open-text" },
-  { to: "/plans", label: "Планы", icon: "calendar-check", auth: true },
+const LINKS: { to: string; label: string; icon: FoodIconName; auth?: boolean }[] = [
+  { to: "/catalog", label: "Рецепты", icon: "open-book" },
+  { to: "/plans", label: "Планы", icon: "calendar", auth: true },
   { to: "/orders", label: "Заказы", icon: "shopping-cart", auth: true },
-  { to: "/profile", label: "Профиль", icon: "user", auth: true },
+  { to: "/profile", label: "Профиль", icon: "busts-in-silhouette", auth: true },
 ];
 
 function Bell_() {
@@ -82,33 +82,33 @@ export default function AppShell() {
 
   const unread = useNotificationStore((s) => s.unread);
   const links = LINKS.filter((l) => !l.auth || user);
-  if (user?.role === "ADMIN") links.push({ to: "/admin", label: "Админка", icon: "storefront" });
+  if (user?.role === "ADMIN") links.push({ to: "/admin", label: "Админка", icon: "cooking" });
 
   // нижнее меню: 4 пункта, «Профиль» последний; админка открывается из профиля
   const tabs: TabItem[] = user
     ? [
-        { label: "Рецепты", to: "/catalog", icon: "book-open-text" },
-        { label: "Планы", to: "/plans", icon: "calendar-check" },
+        { label: "Рецепты", to: "/catalog", icon: "open-book" },
+        { label: "Планы", to: "/plans", icon: "calendar" },
         { label: "Заказы", to: "/orders", icon: "shopping-cart", badge: unread > 0 },
-        { label: "Профиль", to: "/profile", icon: "user", also: ["/admin"] },
+        { label: "Профиль", to: "/profile", icon: "busts-in-silhouette", also: ["/admin"] },
       ]
     : [
-        { label: "Рецепты", to: "/catalog", icon: "book-open-text" },
-        { label: "Составить меню", to: "/start", icon: "calendar-check" },
-        { label: "Войти", to: "/login", icon: "user" },
+        { label: "Рецепты", to: "/catalog", icon: "open-book" },
+        { label: "Составить меню", to: "/start", icon: "cooking" },
+        { label: "Войти", to: "/login", icon: "busts-in-silhouette" },
       ];
 
   return (
     <>
       <header className="topbar">
         <div className="topbar-inner">
-          <Link to="/" className="font-display text-accent-ink mr-2 text-xl font-bold tracking-tight">
+          <Link to="/" className="font-display text-ink mr-2 text-xl font-bold tracking-tight">
             {APP_NAME}
           </Link>
           <nav className="hidden flex-1 gap-1 md:flex">
             {links.map((l) => (
               <NavLink key={l.to} to={l.to} className={({ isActive }) => `nav-link ${isActive ? "nav-link-active" : ""}`}>
-                <Icon name={l.icon} className="h-5 w-5" />
+                <FoodIcon name={l.icon} className="h-6 w-6" />
                 {l.label}
               </NavLink>
             ))}

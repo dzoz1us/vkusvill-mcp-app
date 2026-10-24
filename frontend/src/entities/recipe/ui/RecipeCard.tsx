@@ -14,7 +14,7 @@ export default function RecipeCard({ recipe, actions }: { recipe: RecipeShort; a
       <div className="min-w-0 flex-1">
         <Link
           to={`/recipe/${recipe.id}`}
-          className="hover:text-accent-ink block text-[17px] leading-snug font-bold transition-colors"
+          className="hover:text-accent-strong block text-[17px] leading-snug font-bold transition-colors"
         >
           {recipe.name}
         </Link>

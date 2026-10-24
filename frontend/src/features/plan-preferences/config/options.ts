@@ -1,4 +1,4 @@
-import type { FoodIconName, IconName } from "@/shared/ui";
+import type { FoodIconName } from "@/shared/ui";
 import type { DayOfWeek, DietType, PreferenceTag } from "@/shared/api";
 
 export const DAYS: { value: DayOfWeek; short: string; full: string }[] = [
@@ -18,25 +18,24 @@ export const WEEKEND: DayOfWeek[] = ["sat", "sun"];
 export const PREFERENCES: {
   value: PreferenceTag;
   label: string;
-  icon: IconName;
-  tone: string;
+  icon: FoodIconName;
 }[] = [
-  { value: "quick", label: "Быстро", icon: "lightning", tone: "text-[#d99a00]" },
-  { value: "low_calorie", label: "Лёгкое", icon: "leaf", tone: "text-accent-ink" },
-  { value: "family", label: "Семейное", icon: "users-three", tone: "text-sky" },
-  { value: "healthy", label: "Здоровое", icon: "heart", tone: "text-berry" },
-  { value: "high_protein", label: "Белок", icon: "barbell", tone: "text-tomato" },
-  { value: "budget", label: "Бюджетное", icon: "coins", tone: "text-[#d99a00]" },
-  { value: "hearty", label: "Сытное", icon: "hamburger", tone: "text-tomato" },
+  { value: "quick", label: "Быстро", icon: "high-voltage" },
+  { value: "low_calorie", label: "Лёгкое", icon: "green-salad" },
+  { value: "family", label: "Семейное", icon: "busts-in-silhouette" },
+  { value: "healthy", label: "Здоровое", icon: "green-heart" },
+  { value: "high_protein", label: "Белок", icon: "poultry-leg" },
+  { value: "budget", label: "Бюджетное", icon: "money-bag" },
+  { value: "hearty", label: "Сытное", icon: "pot-of-food" },
 ];
 
 export const DIETS: {
   value: DietType;
   label: string;
   emoji?: FoodIconName;
-  glyph?: IconName;
+  glyph?: FoodIconName;
 }[] = [
-  { value: "none", label: "Без ограничений", glyph: "fork-knife" },
+  { value: "none", label: "Без ограничений", glyph: "cooking" },
   { value: "vegetarian", label: "Вегетарианство", emoji: "carrot" },
   { value: "vegan", label: "Веганство", emoji: "leafy-green" },
   { value: "pescatarian", label: "Пескетарианство", emoji: "fish" },

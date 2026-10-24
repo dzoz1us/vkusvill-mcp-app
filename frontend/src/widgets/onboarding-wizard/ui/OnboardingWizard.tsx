@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, animate, motion } from "motion/react";
 import { ArrowLeft, Check, Minus, Plus } from "lucide-react";
-import { FoodIcon, Icon } from "@/shared/ui";
+import { FoodIcon } from "@/shared/ui";
 import { formatPrice } from "@/shared/lib";
 import { useMealPlanStore } from "@/entities/meal-plan";
 import {
@@ -22,11 +22,11 @@ import {
 import KitchenScene from "./KitchenScene";
 
 const PERSON_TONES = [
-  "bg-accent-soft text-accent-ink",
+  "bg-accent-soft text-ink",
   "bg-sky-soft text-sky",
   "bg-berry-soft text-berry",
   "bg-tomato-soft text-tomato",
-  "bg-mustard-soft text-[#b07400]",
+  "bg-mustard-soft text-ink",
 ];
 
 const SPRING = { type: "spring", stiffness: 520, damping: 28 } as const;
@@ -83,8 +83,8 @@ function StepShop() {
         className="select-card relative min-h-[170px]"
       >
         <CheckBadge on />
-        <span className="bg-accent-soft text-accent-ink flex h-14 w-14 items-center justify-center rounded-[20px]">
-          <Icon name="storefront" className="h-8 w-8" />
+        <span className="bg-accent-soft text-ink flex h-14 w-14 items-center justify-center rounded-[20px]">
+          <FoodIcon name="shopping-cart" className="h-9 w-9" />
         </span>
         <span className="font-display text-ink text-[30px] leading-none font-bold">
           ВкусВилл
@@ -151,7 +151,7 @@ function StepPeople() {
                 transition={SPRING}
                 className={`flex h-12 w-12 items-center justify-center rounded-full ${tone}`}
               >
-                <Icon name="user" className="h-7 w-7" />
+                <FoodIcon name="busts-in-silhouette" className="h-7 w-7" />
               </motion.span>
             );
           })}
@@ -276,7 +276,7 @@ function StepPrefs() {
   const { form, toggleListItem } = usePlanPreferencesStore();
   return (
     <div className="grid grid-cols-2 gap-3">
-      {PREFERENCES.map(({ value, label, icon, tone }, i) => {
+      {PREFERENCES.map(({ value, label, icon }, i) => {
         const on = form.preferences.includes(value);
         return (
           <motion.button
@@ -290,7 +290,7 @@ function StepPrefs() {
             className="select-card"
           >
             <CheckBadge on={on} />
-            <Icon name={icon} className={`h-9 w-9 ${tone}`} />
+            <FoodIcon name={icon} className="h-9 w-9" />
             {label}
           </motion.button>
         );
@@ -321,7 +321,7 @@ function StepDiet() {
             {emoji ? (
               <FoodIcon name={emoji} className="h-10 w-10" />
             ) : (
-              <Icon name={glyph!} className="h-10 w-10 text-accent-ink" />
+              <FoodIcon name={glyph!} className="h-10 w-10" />
             )}
             <span className="text-base leading-tight">{label}</span>
           </motion.button>

@@ -36,8 +36,8 @@ export const formatCalories = (calories: number): string => {
 
 export const getBudgetColor = (percent: number): string => {
   if (percent > 100) return "text-danger";
-  if (percent > 85) return "text-[#b07400]";
-  return "text-accent-ink";
+  if (percent > 85) return "text-ink";
+  return "text-ink";
 };
 
 export const getBudgetBarColor = (percent: number): string => {

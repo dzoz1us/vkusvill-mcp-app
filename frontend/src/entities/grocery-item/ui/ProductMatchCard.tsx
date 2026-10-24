@@ -40,7 +40,7 @@ export default function ProductMatchCard({ item, onToggle, actions }: ProductMat
         <div className="min-w-0 flex-1">
           <p className={`font-bold ${item.is_bought ? "line-through" : ""}`}>
             {item.product_url ? (
-              <a href={item.product_url} target="_blank" rel="noopener noreferrer" className="hover:text-accent-ink">
+              <a href={item.product_url} target="_blank" rel="noopener noreferrer" className="hover:text-accent-strong">
                 {item.product_name}
               </a>
             ) : (

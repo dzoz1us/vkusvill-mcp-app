@@ -2,13 +2,13 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import type { DayMeal } from "@/shared/api";
 import { MEAL_LABELS } from "@/shared/lib";
-import { Icon, DishArt } from "@/shared/ui";
-import type { IconName } from "@/shared/ui";
+import { DishArt, FoodIcon } from "@/shared/ui";
+import type { FoodIconName } from "@/shared/ui";
 
-const MEAL_STYLE: Record<string, { icon: IconName; tone: string }> = {
-  breakfast: { icon: "sun-horizon", tone: "text-[#d99a00]" },
-  lunch: { icon: "sun", tone: "text-accent-ink" },
-  dinner: { icon: "moon-stars", tone: "text-berry" },
+const MEAL_STYLE: Record<string, { icon: FoodIconName }> = {
+  breakfast: { icon: "croissant" },
+  lunch: { icon: "pot-of-food" },
+  dinner: { icon: "shallow-pan-of-food" },
 };
 
 interface MealCardProps {
@@ -34,12 +34,12 @@ export default function MealCard({ meal, actions }: MealCardProps) {
 
       <div className="min-w-0 flex-1">
         <p className="text-muted mb-1 flex items-center gap-1.5 text-sm font-semibold">
-          <Icon name={style.icon} className={`h-[18px] w-[18px] ${style.tone}`} />
+          <FoodIcon name={style.icon} className="h-5 w-5" />
           {MEAL_LABELS[meal.meal_type]}
         </p>
         <Link
           to={`/recipe/${recipe.id}`}
-          className="hover:text-accent-ink block text-[17px] leading-snug font-bold transition-colors"
+          className="hover:text-accent-strong block text-[17px] leading-snug font-bold transition-colors"
         >
           {recipe.name}
         </Link>
