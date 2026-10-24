@@ -60,10 +60,10 @@ body {
     @apply grid min-h-[44px] grid-cols-[44px_1fr_44px] items-center gap-3 pt-[calc(1rem+env(safe-area-inset-top))] pb-4;
   }
   .page-title {
-    @apply text-accent-strong text-center text-[26px] leading-tight font-extrabold tracking-tight sm:text-[34px];
+    @apply text-ink text-center text-[26px] leading-tight font-extrabold tracking-tight sm:text-[34px];
   }
   .heading {
-    @apply text-accent-strong text-[32px] leading-[1.1] font-extrabold tracking-tight sm:text-[40px];
+    @apply text-ink text-[32px] leading-[1.1] font-extrabold tracking-tight sm:text-[40px];
   }
   .subheading {
     @apply text-muted mt-2 text-lg;
@@ -108,7 +108,7 @@ body {
     @apply text-right font-bold;
   }
   .block-title {
-    @apply text-accent-strong text-[22px] leading-tight font-extrabold tracking-tight;
+    @apply text-ink text-[22px] leading-tight font-extrabold tracking-tight;
   }
 
   /* Выбираемая карточка (мастер) */
@@ -341,21 +341,48 @@ body {
   }
 }
 
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 @keyframes orbit {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(5deg);
+  }
+}
+
+@keyframes blob {
+  0%,
+  100% {
+    border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+    transform: rotate(0deg);
+  }
+  33% {
+    border-radius: 42% 58% 46% 54% / 56% 44% 56% 44%;
+    transform: rotate(40deg);
+  }
+  66% {
+    border-radius: 52% 48% 38% 62% / 44% 58% 42% 56%;
+    transform: rotate(-30deg);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(90, 150, 18, 0.5);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 18px rgba(90, 150, 18, 0);
   }
 }
 
@@ -378,16 +405,24 @@ body {
   animation: loadingBar 3s ease-in-out infinite;
 }
 
-.animate-marquee {
-  animation: marquee 38s linear infinite;
-}
-
 .animate-orbit {
   animation: orbit 14s linear infinite;
 }
 
 .animate-orbit-reverse {
   animation: orbit 14s linear infinite reverse;
+}
+
+.animate-sway {
+  animation: sway 5.5s ease-in-out infinite;
+}
+
+.animate-blob {
+  animation: blob 22s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulseRing 2.4s ease-out 2s infinite;
 }
 
 .animate-bob {

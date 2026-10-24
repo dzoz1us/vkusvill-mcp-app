@@ -8,3 +8,5 @@ export { default as DishArt } from "./dish-art/DishArt";
 export { default as Sheet } from "./Sheet";
 export { default as StateCard } from "./StateCard";
 export { default as Toast } from "./Toast";
+export { default as Produce } from "./produce/Produce";
+export type { ProduceName } from "./produce/Produce";
