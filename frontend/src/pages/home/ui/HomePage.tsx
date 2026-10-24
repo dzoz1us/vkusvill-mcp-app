@@ -152,7 +152,7 @@ export default function HomePage() {
           >
             <Produce name={s.produce} className="h-14 w-14 flex-shrink-0" />
             <div>
-              <p className="text-accent-ink text-lg leading-tight font-bold">{s.title}</p>
+              <p className="text-ink text-lg leading-tight font-bold">{s.title}</p>
               <p className="text-muted text-sm">{s.text}</p>
             </div>
           </motion.div>

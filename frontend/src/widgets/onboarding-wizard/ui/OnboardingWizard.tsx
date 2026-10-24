@@ -86,7 +86,7 @@ function StepShop() {
         <span className="bg-accent-soft text-accent-ink flex h-14 w-14 items-center justify-center rounded-[20px]">
           <Icon name="storefront" className="h-8 w-8" />
         </span>
-        <span className="font-display text-accent-ink text-[30px] leading-none font-bold">
+        <span className="font-display text-ink text-[30px] leading-none font-bold">
           ВкусВилл
         </span>
       </div>

@@ -46,7 +46,7 @@ export const getBudgetBarColor = (percent: number): string => {
   return "bg-accent";
 };
 
-export const APP_NAME = "Едоплан";
+export const APP_NAME = "Менюшка";
 
 /** Дата из секунд (Instant бэкенда) в вид «3 октября, 14:20». */
 export const formatDate = (seconds: number | string): string => {
