@@ -6,6 +6,8 @@ import type { IconName } from "@/shared/ui";
 import { APP_NAME, formatDate } from "@/shared/lib";
 import { useUserStore } from "@/entities/user";
 import { useNotificationStore } from "@/entities/notification";
+import TabBar from "./TabBar";
+import type { TabItem } from "./TabBar";
 
 const LINKS: { to: string; label: string; icon: IconName; auth?: boolean }[] = [
   { to: "/catalog", label: "Рецепты", icon: "book-open-text" },
@@ -78,8 +80,23 @@ export default function AppShell() {
     if (!user) clear();
   }, [user, clear]);
 
+  const unread = useNotificationStore((s) => s.unread);
   const links = LINKS.filter((l) => !l.auth || user);
   if (user?.role === "ADMIN") links.push({ to: "/admin", label: "Админка", icon: "storefront" });
+
+  // нижнее меню: 4 пункта, «Профиль» последний; админка открывается из профиля
+  const tabs: TabItem[] = user
+    ? [
+        { label: "Рецепты", to: "/catalog", icon: "book-open-text" },
+        { label: "Планы", to: "/plans", icon: "calendar-check" },
+        { label: "Заказы", to: "/orders", icon: "shopping-cart", badge: unread > 0 },
+        { label: "Профиль", to: "/profile", icon: "user", also: ["/admin"] },
+      ]
+    : [
+        { label: "Рецепты", to: "/catalog", icon: "book-open-text" },
+        { label: "Составить меню", to: "/start", icon: "calendar-check" },
+        { label: "Войти", to: "/login", icon: "user" },
+      ];
 
   return (
     <>
@@ -105,18 +122,11 @@ export default function AppShell() {
         </div>
       </header>
 
-      <div className="pb-20 md:pb-0">
+      <div className="pb-[110px] md:pb-0">
         <Outlet />
       </div>
 
-      <nav className="tabbar" aria-label="Разделы">
-        {links.map((l) => (
-          <NavLink key={l.to} to={l.to} className={({ isActive }) => `tab ${isActive ? "tab-active" : ""}`}>
-            <Icon name={l.icon} className="h-6 w-6" />
-            {l.label}
-          </NavLink>
-        ))}
-      </nav>
+      <TabBar tabs={tabs} />
     </>
   );
 }

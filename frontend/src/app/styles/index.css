@@ -71,34 +71,22 @@ body {
 
   /* ---------- Кнопки ---------- */
   .btn {
-    @apply inline-flex min-h-[52px] items-center justify-center gap-2 rounded-full border-2 px-7 text-center text-[18px] leading-tight font-bold transition-[transform,background-color,border-color,box-shadow,color] duration-200 select-none active:translate-y-0 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40;
+    @apply inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full border-2 px-8 text-center text-[19px] leading-tight font-bold transition-[transform,background-color,border-color,box-shadow] duration-150 select-none active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
   }
   .btn-primary {
-    @apply border-accent-strong relative overflow-hidden bg-gradient-to-b from-[#6aae1a] to-[#4f8a0e] text-white shadow-[0_14px_28px_-12px_rgba(74,126,14,0.9)] hover:-translate-y-0.5 hover:shadow-[0_18px_32px_-12px_rgba(74,126,14,0.95)];
+    @apply bg-accent-strong border-accent-strong hover:bg-accent-strong-dark hover:border-accent-strong-dark text-white shadow-[0_12px_26px_-12px_rgba(74,126,14,0.85)];
   }
-  /* Блик пробегает по основной кнопке при наведении */
-  .btn-primary::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.38) 50%, transparent 65%);
-    transform: translateX(-120%);
-    transition: transform 0.7s ease;
-    pointer-events: none;
-  }
-  .btn-primary:hover::after {
-    transform: translateX(120%);
-  }
+  /* Вторичные кнопки: без заливки, акцентный контур и текст, плоские */
   .btn-outline {
-    @apply border-line text-ink hover:border-accent-strong hover:text-accent-strong bg-white shadow-[0_6px_16px_-10px_rgba(22,26,16,0.35)] hover:-translate-y-0.5;
+    @apply border-accent-strong text-accent-strong hover:bg-accent-soft bg-transparent;
   }
   .btn-danger {
-    @apply bg-danger-soft text-danger border-danger-soft hover:border-danger hover:-translate-y-0.5;
+    @apply bg-danger-soft text-danger border-danger-soft hover:border-danger;
   }
 
   /* Круглые кнопки-значки */
   .icon-btn {
-    @apply border-line text-ink hover:border-accent-strong hover:text-accent-strong inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border bg-white shadow-[0_6px_14px_-10px_rgba(22,26,16,0.4)] transition-[border-color,transform,color] duration-150 select-none hover:-translate-y-0.5 active:scale-95 disabled:opacity-40;
+    @apply border-line text-ink hover:border-accent-strong hover:text-accent-strong inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full border bg-white transition-[border-color,color,transform] duration-150 select-none active:scale-95 disabled:opacity-40;
   }
   .icon-btn svg {
     @apply h-[22px] w-[22px];
@@ -134,10 +122,10 @@ body {
   }
 
   .chip {
-    @apply border-line text-ink hover:border-ink inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border bg-white px-4 text-base font-semibold transition-colors select-none;
+    @apply border-line text-accent-strong hover:border-accent-strong inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full border bg-transparent px-4 text-base font-semibold transition-colors select-none;
   }
   .chip-active {
-    @apply border-accent bg-accent-soft;
+    @apply border-accent-strong ring-accent-strong ring-1;
   }
 
   .pill {
@@ -215,18 +203,6 @@ body {
   }
   .nav-link-active {
     @apply bg-accent-soft text-accent-strong;
-  }
-  .tabbar {
-    @apply border-line fixed inset-x-0 bottom-0 z-40 grid grid-flow-col auto-cols-fr border-t bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden;
-  }
-  .tab {
-    @apply text-muted flex flex-col items-center gap-0.5 py-2 text-[11px] font-bold;
-  }
-  .tab-active {
-    @apply text-accent-strong;
-  }
-  .badge {
-    @apply bg-tomato absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] font-bold text-white;
   }
   .tabs {
     @apply flex gap-2 overflow-x-auto pb-1;
@@ -447,5 +423,94 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Нижнее меню «жидкое стекло» (только телефон) ---------- */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  bottom: calc(4px + env(safe-area-inset-bottom, 0px));
+  width: min(318px, calc(100% - 32px));
+  height: 62px;
+  padding: 5px;
+  display: grid;
+  grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr));
+  gap: 2px;
+  border-radius: 999px;
+  overflow: hidden;
+  z-index: 50;
+  background: rgb(32 40 56 / 11%);
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+}
+@media (min-width: 768px) {
+  .tabbar {
+    display: none;
+  }
+}
+.tabbar .tab {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 50px;
+  border-radius: 999px;
+  color: #202838;
+  background: transparent;
+}
+.tabbar .tabpill {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  border-radius: 999px;
+  z-index: 0;
+  background: linear-gradient(rgb(255 255 255 / 58%), rgb(255 255 255 / 36%));
+  box-shadow:
+    0 2px 8px rgb(32 40 56 / 10%),
+    inset 0 1px 0 rgb(255 255 255 / 85%),
+    inset 0 0 0 1px rgb(255 255 255 / 35%);
+  will-change: left, width;
+  transition:
+    box-shadow 0.25s,
+    transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.tabbar.press .tabpill {
+  transform: scale(1.1, 1.08);
+  box-shadow:
+    0 8px 18px rgb(32 40 56 / 16%),
+    inset 0 1px 0 rgb(255 255 255 / 85%),
+    inset 0 0 0 1px rgb(255 255 255 / 35%);
+}
+.tabbar .tab.cur {
+  font-weight: 800;
+}
+.tabbar .tab .dot {
+  position: absolute;
+  top: 12px;
+  left: calc(50% + 8px);
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-accent-strong);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tabbar .tabpill {
+    transition: none;
   }
 }

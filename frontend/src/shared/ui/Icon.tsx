@@ -13,6 +13,7 @@ export type IconName =
   | "hamburger"
   | "heart"
   | "leaf"
+  | "list-checks"
   | "lightning"
   | "magnifying-glass"
   | "minus"

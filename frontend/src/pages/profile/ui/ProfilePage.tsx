@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "@/shared/api";
 import { errorText } from "@/shared/lib";
 import { Toast } from "@/shared/ui";
@@ -42,6 +42,12 @@ export default function ProfilePage() {
   return (
     <div className="page pt-6">
       <h1 className="heading mb-5">Профиль</h1>
+
+      {user.role === "ADMIN" && (
+        <Link to="/admin" className="btn btn-outline mb-4 w-full">
+          Администрирование
+        </Link>
+      )}
 
       <form onSubmit={submit} className="space-y-4">
         <div>
