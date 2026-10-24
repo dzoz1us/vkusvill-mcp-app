@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // Forward /api/* to FastAPI in dev so CORS is a non-issue.
+      // Forward /api/* to Java-бэкенд in dev so CORS is a non-issue.
       "/api": {
         target: "http://localhost:8000",
         changeOrigin: true,

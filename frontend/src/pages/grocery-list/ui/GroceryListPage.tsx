@@ -39,7 +39,7 @@ export default function GroceryListPage() {
     <div className="page">
       <PageHeader title="Покупки" onBack={() => navigate(-1)} />
       <main className="space-y-6">
-        <GroceryListView list={groceryList} />
+        <GroceryListView planId={id!} list={groceryList} />
         {id && <CreateCartButton planId={id} />}
       </main>
     </div>

@@ -12,7 +12,7 @@
   --color-accent-strong: #5a9612; /* насыщенный салатовый: фон кнопок и отметок под белый текст */
   --color-accent-strong-dark: #4a7e0e;
   --color-accent-soft: #f2f9dd;
-  --color-accent-ink: #3d5a05; /* текст и значки на белом */
+  --color-accent-ink: #5a9612; /* акцентные тексты и заголовки — тот же зелёный, что у кнопок */
   --color-tomato: #e4572e;
   --color-tomato-soft: #fdebe5;
   --color-mustard: #f2b134;
@@ -60,10 +60,10 @@ body {
     @apply grid min-h-[44px] grid-cols-[44px_1fr_44px] items-center gap-3 pt-[calc(1rem+env(safe-area-inset-top))] pb-4;
   }
   .page-title {
-    @apply text-center text-[26px] leading-tight font-extrabold tracking-tight sm:text-[34px];
+    @apply text-accent-strong text-center text-[26px] leading-tight font-extrabold tracking-tight sm:text-[34px];
   }
   .heading {
-    @apply text-[32px] leading-[1.1] font-extrabold tracking-tight sm:text-[40px];
+    @apply text-accent-strong text-[32px] leading-[1.1] font-extrabold tracking-tight sm:text-[40px];
   }
   .subheading {
     @apply text-muted mt-2 text-lg;
@@ -108,7 +108,7 @@ body {
     @apply text-right font-bold;
   }
   .block-title {
-    @apply text-[22px] leading-tight font-extrabold tracking-tight;
+    @apply text-accent-strong text-[22px] leading-tight font-extrabold tracking-tight;
   }
 
   /* Выбираемая карточка (мастер) */
@@ -174,6 +174,51 @@ body {
   }
 
   /* ---------- Поля ---------- */
+  .input {
+    @apply border-line focus:border-accent-dark placeholder:text-muted/70 w-full rounded-full border-2 bg-white px-5 py-3 text-lg font-medium outline-none;
+  }
+  textarea.input {
+    @apply rounded-[28px];
+  }
+  .label {
+    @apply text-muted mb-1.5 ml-4 block text-sm font-semibold;
+  }
+  .link {
+    @apply text-accent-strong hover:text-accent-strong-dark font-bold underline-offset-4 hover:underline;
+  }
+  .btn-sm {
+    @apply min-h-[44px] px-5 text-base;
+  }
+
+  /* ---------- Навигация ---------- */
+  .topbar {
+    @apply border-line sticky top-0 z-40 border-b bg-white/90 backdrop-blur;
+  }
+  .topbar-inner {
+    @apply mx-auto flex h-16 w-full max-w-5xl items-center gap-3 px-4;
+  }
+  .nav-link {
+    @apply text-ink hover:bg-accent-soft inline-flex min-h-[44px] items-center gap-2 rounded-full px-4 text-base font-bold transition-colors;
+  }
+  .nav-link-active {
+    @apply bg-accent-soft text-accent-strong;
+  }
+  .tabbar {
+    @apply border-line fixed inset-x-0 bottom-0 z-40 grid grid-flow-col auto-cols-fr border-t bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden;
+  }
+  .tab {
+    @apply text-muted flex flex-col items-center gap-0.5 py-2 text-[11px] font-bold;
+  }
+  .tab-active {
+    @apply text-accent-strong;
+  }
+  .badge {
+    @apply bg-tomato absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[11px] font-bold text-white;
+  }
+  .tabs {
+    @apply flex gap-2 overflow-x-auto pb-1;
+  }
+
   .field {
     @apply border-line focus:border-accent-dark w-full rounded-full border-2 bg-white px-6 py-3.5 text-center text-3xl font-bold outline-none;
   }
@@ -197,6 +242,10 @@ body {
   }
   .toast-bad {
     @apply border-danger bg-danger-soft text-danger border;
+  }
+
+  .toast-ok {
+    @apply border-accent bg-accent-soft text-accent-ink border;
   }
 
   .skeleton {

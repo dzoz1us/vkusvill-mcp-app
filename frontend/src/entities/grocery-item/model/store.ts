@@ -7,6 +7,8 @@ interface GroceryState {
   groceryState: NetworkState;
 
   loadGroceryList: (planId: string) => Promise<void>;
+  /** Тихое обновление после правки позиции: без скелетона и скачков страницы. */
+  refresh: (planId: string) => Promise<void>;
   setBought: (itemId: string, isBought: boolean) => void;
 }
 
@@ -21,6 +23,15 @@ export const useGroceryStore = create<GroceryState>((set) => ({
       set({ groceryList: list, groceryState: "success" });
     } catch {
       set({ groceryState: "error" });
+    }
+  },
+
+  refresh: async (planId) => {
+    try {
+      const list = await api.getGroceryList(planId);
+      set({ groceryList: list, groceryState: "success" });
+    } catch {
+      // оставляем прежний список
     }
   },
 

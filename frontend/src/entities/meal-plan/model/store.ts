@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { api } from "@/shared/api";
+import { errorText } from "@/shared/lib";
 import type { MealPlan, NetworkState, OnboardingParams } from "@/shared/api";
 
 interface MealPlanState {
@@ -22,12 +23,11 @@ export const useMealPlanStore = create<MealPlanState>((set) => ({
     set({ planState: "loading", planError: null });
     try {
       const plan = await api.generateMealPlan(params);
-      localStorage.setItem(`meal-plan-${plan.id}`, JSON.stringify(plan));
       set({ currentPlan: plan, planState: "success" });
-    } catch {
+    } catch (e) {
       set({
         planState: "error",
-        planError: "Не удалось создать план. Попробуйте ещё раз.",
+        planError: errorText(e, "Не удалось создать план. Попробуйте ещё раз."),
       });
     }
   },
@@ -43,7 +43,6 @@ export const useMealPlanStore = create<MealPlanState>((set) => ({
   },
 
   setPlan: (plan) => {
-    localStorage.setItem(`meal-plan-${plan.id}`, JSON.stringify(plan));
     set({ currentPlan: plan });
   },
 

@@ -15,7 +15,7 @@ import {
   PREFERENCES,
   DIETS,
   BUDGET_MAX,
-  minBudgetFor,
+  BUDGET_MIN,
   BUDGET_STEP,
   BUDGET_PRESETS,
 } from "@/features/plan-preferences";
@@ -215,7 +215,7 @@ function StepDays() {
 
 function StepBudget() {
   const { form, setFormField } = usePlanPreferencesStore();
-  const min = minBudgetFor(form.people_count, form.days.length);
+  const min = BUDGET_MIN;
   const budget = Math.min(BUDGET_MAX, Math.max(min, form.budget));
   const shown = useAnimatedNumber(budget);
   const fill = ((budget - min) / (BUDGET_MAX - min)) * 100;
@@ -224,7 +224,7 @@ function StepBudget() {
       ? Math.round(budget / form.people_count / form.days.length)
       : null;
 
-  // Если людей или дней стало больше, бюджет подтягивается к минимуму
+  // Бюджет не может быть меньше минимума
   useEffect(() => {
     if (form.budget !== budget) setFormField("budget", budget);
   }, [form.budget, budget, setFormField]);
@@ -363,7 +363,7 @@ export default function OnboardingWizard() {
       { key: "shop", title: "Выберите магазин", ok: true, node: <StepShop /> },
       { key: "people", title: "Сколько вас?", ok: form.people_count >= 1, node: <StepPeople /> },
       { key: "days", title: "В какие дни готовите?", ok: form.days.length > 0, node: <StepDays /> },
-      { key: "budget", title: "Бюджет на неделю", ok: form.budget >= minBudgetFor(form.people_count, form.days.length), node: <StepBudget /> },
+      { key: "budget", title: "Бюджет на неделю", ok: form.budget >= BUDGET_MIN, node: <StepBudget /> },
       { key: "prefs", title: "Что любите?", sub: "Можно пропустить", ok: true, node: <StepPrefs /> },
       { key: "diet", title: "Есть ограничения?", ok: true, node: <StepDiet /> },
       { key: "kitchen", title: "Что есть на кухне?", sub: "Отметьте хотя бы одно", ok: form.appliances.length > 0, node: <StepAppliances /> },

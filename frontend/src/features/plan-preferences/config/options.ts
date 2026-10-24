@@ -42,14 +42,8 @@ export const DIETS: {
   { value: "pescatarian", label: "Пескетарианство", emoji: "fish" },
 ];
 
-export const BUDGET_MIN = 1000;
+export const BUDGET_MIN = 500;
 export const BUDGET_MAX = 20000;
-export const BUDGET_STEP = 500;
-export const BUDGET_PRESETS = [3000, 5000, 8000, 12000];
+export const BUDGET_STEP = 100;
+export const BUDGET_PRESETS = [1000, 3000, 5000, 8000];
 
-/** Самый скромный бюджет, в который меню гарантированно укладывается (≈150 ₽ на человека в день). */
-export const minBudgetFor = (people: number, days: number): number =>
-  Math.max(
-    BUDGET_MIN,
-    Math.ceil((people * Math.max(1, days) * 150) / BUDGET_STEP) * BUDGET_STEP,
-  );

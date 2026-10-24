@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import type { DayMeal } from "@/shared/api";
 import { MEAL_LABELS } from "@/shared/lib";
 import { Icon, DishArt } from "@/shared/ui";
@@ -47,19 +46,9 @@ export default function MealCard({ meal, actions }: MealCardProps) {
         <p className="text-muted mt-0.5 text-sm">
           {recipe.cook_time_minutes} мин{n && ` · ${n.calories} ккал`}
         </p>
+        {actions && <div className="mt-2 flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
 
-      <div className="flex flex-shrink-0 flex-col gap-2">
-        {actions}
-        <Link
-          to={`/recipe/${recipe.id}`}
-          className="icon-btn"
-          aria-label="Открыть рецепт"
-          title="Открыть рецепт"
-        >
-          <ArrowRight />
-        </Link>
-      </div>
     </article>
   );
 }
